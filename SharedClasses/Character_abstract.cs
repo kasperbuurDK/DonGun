@@ -1,8 +1,11 @@
 ﻿using System;
 
-public class Class1
+namespace SharedClasses
 {
-	public Class1()
+	public class Character_abstract
 	{
+		public Character_abstract()
+		{
+		}
 	}
 }
