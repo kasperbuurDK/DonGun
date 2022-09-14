@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SharedClassLibrary
 {
-	public class Character_abstract
+	public abstract class Character_abstract
 	{
         // Data fields
         // 6 main stats
@@ -18,7 +18,7 @@ namespace SharedClassLibrary
         private int _hp;
         private int _resource; // magic, fury, energy, etc.
 
-
+        private Race_abstract _race;
 
         // Properties 
         public int Strength
@@ -67,6 +67,12 @@ namespace SharedClassLibrary
         {
             set { _resource = value; }
             get { return _resource; }
+        }
+
+        public Race_abstract Race
+        {
+            set { _race = value; }
+            get { return _race; }
         }
 
         // Constructors

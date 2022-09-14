@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace SharedClasses
+namespace SharedClassLibrary
 {
-	public class Mastery_abstract
+	public abstract class Mastery_abstract
 	{
+
 		public Mastery_abstract()
 		{
 		}
