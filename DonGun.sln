@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedClasses", "SharedClas
 		Mastery_abstract.cs = Mastery_abstract.cs
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClassLibrary", "SharedClassLibrary\SharedClassLibrary.csproj", "{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{FB76122A-E573-4F0E-BB96-52076DEFD4E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB76122A-E573-4F0E-BB96-52076DEFD4E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB76122A-E573-4F0E-BB96-52076DEFD4E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
