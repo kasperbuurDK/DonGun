@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
-namespace SharedClasses
+namespace SharedClassLibrary
 {
 	public class Character_abstract
 	{
