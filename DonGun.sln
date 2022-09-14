@@ -5,7 +5,13 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerSide", "PlayerSide\PlayerSide.csproj", "{564B7937-1AA9-40AE-A5DE-C2195E9CBA50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonSide", "DonSide\DonSide.csproj", "{FB76122A-E573-4F0E-BB96-52076DEFD4E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonSide", "DonSide\DonSide.csproj", "{FB76122A-E573-4F0E-BB96-52076DEFD4E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedClasses", "SharedClasses", "{D3B5D8DB-E179-495F-B405-C3B668DA01FA}"
+	ProjectSection(SolutionItems) = preProject
+		Character_abstract.cs = Character_abstract.cs
+		Mastery_abstract.cs = Mastery_abstract.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
