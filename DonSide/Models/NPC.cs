@@ -1,6 +1,13 @@
-﻿namespace DonSide.Models
+﻿using SharedClassLibrary;
+
+namespace DonSide.Models
+
+   
+
 {
-    public class NPC
+    public class NPC : Character_abstract   
     {
+
+
     }
 }
