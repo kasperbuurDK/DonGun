@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="myChar"
+             x:Class="PlayerSide.CharView">
+    <ContentView.Content>
+        <Frame
+            CornerRadius="10"
+            WidthRequest="400"
+            HeightRequest="100"
+            Padding="0">
+            <Grid
+                Padding="2"
+                RowSpacing="2"
+                ColumnSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2.5*"/>
+                </Grid.ColumnDefinitions>
+                <Frame
+                    BackgroundColor="Grey"
+                    Grid.Column="1"
+                    Padding="0"
+                    Margin="0">
+                    <ProgressBar x:Name="progressBarHp" Progress="{Binding CharHpProperty, Source={x:Reference myChar}}" HorizontalOptions="Fill" ScaleY="15" ProgressColor="Red"/>
+                </Frame>
+                <Frame
+                    BackgroundColor="Gray"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Padding="0"
+                    Margin="0">
+                    <ProgressBar x:Name="progressBarRes" Progress="{Binding CharResProperty, Source={x:Reference myChar}}" HorizontalOptions="Fill" ScaleY="15" ProgressColor="Blue"/>
+                </Frame>
+                <Frame
+                    BackgroundColor="Grey"
+                    Grid.RowSpan="2"
+                    Padding="0"
+                    Margin="0">
+                    <Image
+                    Source="male_dark.png"
+                    Aspect="Fill"
+                    HorizontalOptions="Fill" 
+                    Grid.RowSpan="2"/>
+                </Frame>
+            </Grid>
+        </Frame>
+    </ContentView.Content>
+</ContentView>
