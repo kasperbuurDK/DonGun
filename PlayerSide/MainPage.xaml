@@ -6,7 +6,7 @@
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
-            Padding="30,0"
+            Padding="30"
             VerticalOptions="Center">
 
             <Image
@@ -28,11 +28,27 @@
                 FontSize="18"
                 HorizontalOptions="Center" />
 
+            <ProgressBar x:Name="progressBar1" Margin="5" Progress="0.0" ScaleY="3" ProgressColor="Red"/>
+
+            <Label
+                x:Name="ProgressCount"
+                Text=" "
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+            
             <Button
-                x:Name="CounterBtn"
+                x:Name="CounterBtnPos"
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
+                Clicked="OnCounterPosClicked"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="CounterBtnNeg"
+                Text="Click me"
+                SemanticProperties.Hint="Counts the number of times you click"
+                Clicked="OnCounterNegClicked"
                 HorizontalOptions="Center" />
 
         </VerticalStackLayout>

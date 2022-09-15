@@ -2,23 +2,33 @@
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	float count = 0F;
 
-	public MainPage()
+    public MainPage()
 	{
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	private async void OnCounterPosClicked(object sender, EventArgs e)
 	{
-		count++;
+		count += 0.1F;
+        OpdateCountLabel();
+        await progressBar1.ProgressTo(count, 500, Easing.Linear);
+    }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+    private async void OnCounterNegClicked(object sender, EventArgs e)
+    {
+        count -= 0.1F;
+        OpdateCountLabel();
+        await progressBar1.ProgressTo(count, 250, Easing.CubicOut);
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private void OpdateCountLabel()
+    {
+        ProgressCount.Text = $"{count}";
+
+        SemanticScreenReader.Announce(ProgressCount.Text);
+    }
+
 }
 
