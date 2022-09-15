@@ -14,7 +14,7 @@ namespace SharedClassLibrary
         {
         }
 
-        enum RaceType
+        public enum RaceType
         {
             Elf,
             Human,

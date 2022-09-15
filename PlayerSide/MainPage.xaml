@@ -6,7 +6,7 @@
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
-            Padding="30,0"
+            Padding="30"
             VerticalOptions="Center">
 
             <Image
@@ -28,6 +28,8 @@
                 FontSize="18"
                 HorizontalOptions="Center" />
 
+            <ProgressBar x:Name="progressBar1" Margin="0.12" Progress="0.0" Scale="1.5" ProgressColor="Red"/>
+            
             <Button
                 x:Name="CounterBtn"
                 Text="Click me"
