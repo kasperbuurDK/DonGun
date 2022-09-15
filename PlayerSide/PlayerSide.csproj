@@ -49,7 +49,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="NewContent1.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Remove="NewContent1.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Images\female_blonde.jpg" />
+	  <None Remove="Resources\Images\female_blonde_young.jpg" />
+	  <None Remove="Resources\Images\female_dark.jpg" />
+	  <None Remove="Resources\Images\female_white.jpg" />
+	  <None Remove="Resources\Images\male_blonde.jpg" />
+	  <None Remove="Resources\Images\male_dark.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="CharView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:PlayerSide"
              x:Class="PlayerSide.MainPage">
 
     <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30"
-            VerticalOptions="Center">
-
+        <FlexLayout 
+            Direction="Column"
+            AlignItems="Center">
+            
             <Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
@@ -27,8 +27,11 @@
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I"
                 FontSize="18"
                 HorizontalOptions="Center" />
-
-            <ProgressBar x:Name="progressBar1" Margin="5" Progress="0.0" ScaleY="3" ProgressColor="Red"/>
+            
+            <custom:CharView 
+                x:Name="CharPc"
+                CharHp="0.5"
+                CharRes="0.5"/>
 
             <Label
                 x:Name="ProgressCount"
@@ -51,7 +54,7 @@
                 Clicked="OnCounterNegClicked"
                 HorizontalOptions="Center" />
 
-        </VerticalStackLayout>
+        </FlexLayout>
     </ScrollView>
 
 </ContentPage>
