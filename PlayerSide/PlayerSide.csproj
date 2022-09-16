@@ -64,7 +64,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <MauiImage Include="Resources\Images\*" />
     <MauiImage Include="Resources\Images\char\*" />
     <MauiImage Include="Resources\Images\deight\*" />
     <MauiImage Include="Resources\Images\dfour\*" />
@@ -73,26 +72,4 @@
     <MauiImage Include="Resources\Images\dtwelve\*" />
     <MauiImage Include="Resources\Images\dtwenty\*" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <AndroidResource Remove="Resources\Images\droll_template.svg\**" />
-	  <Compile Remove="Resources\Images\droll_template.svg\**" />
-	  <EmbeddedResource Remove="Resources\Images\droll_template.svg\**" />
-	  <MauiCss Remove="Resources\Images\droll_template.svg\**" />
-	  <MauiImage Remove="Resources\Images\droll_template.svg\**" />
-	  <MauiXaml Remove="Resources\Images\droll_template.svg\**" />
-	  <None Remove="Resources\Images\droll_template.svg\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-    <Folder Include="Resources\Images\daroll_temp.svg" />
-    <Folder Include="Resources\Images\dotnet_bot.svg" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="DicePage.xaml.cs">
-	    <DependentUpon>DicePage.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
 </Project>
