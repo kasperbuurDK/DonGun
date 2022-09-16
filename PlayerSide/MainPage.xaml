@@ -5,57 +5,75 @@
              x:Class="PlayerSide.MainPage">
 
     <ScrollView>
-        <FlexLayout 
-            Direction="Column"
-            AlignItems="Center">
-            
+        <Grid
+                Padding="2"
+                RowSpacing="2"
+                ColumnSpacing="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
             <Image
-                Source="dotnet_bot.png"
+                x:Name="DiceRolls"
+                BackgroundColor="Transparent"  
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="200"
-                HorizontalOptions="Center" />
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Grid.ColumnSpan="2"/>
 
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+            <Frame 
+                Margin="1"
+                BorderColor="Black"
+                CornerRadius="20"
+                HeightRequest="60"
+                WidthRequest="60"
+                IsClippedToBounds="False"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Grid.Row="1">
+                <ImageButton 
+                    x:Name="RollBtn"
+                    BackgroundColor="White"
+                    Source="rolling_dice_cup"
+                    Clicked="OnRollClicked"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    Scale="2.3"/>
+            </Frame>
 
-            <Label
-                x:Name="DiceRollLabel"
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-            
             <custom:CharView 
                 x:Name="CharPc"
                 CharHp="0.5"
-                CharRes="0.5"/>
-
-            <Label
-                x:Name="ProgressCount"
-                Text=" "
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+                CharRes="0.5"
+                Grid.Row="2"
+                Grid.ColumnSpan="2"/>
             
             <Button
                 x:Name="CounterBtnPos"
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterPosClicked"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" 
+                Grid.Row="3"/>
 
             <Button
                 x:Name="CounterBtnNeg"
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterNegClicked"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center"
+                Grid.Row="3"
+                Grid.Column="1"/>
 
-        </FlexLayout>
+        </Grid>
     </ScrollView>
 
 </ContentPage>
