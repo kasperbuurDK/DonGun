@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DevExpress.Data.Utils;
+using DevExpress.Utils;
+using DevExpress.Xpo.Logger;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,6 +15,7 @@ namespace SharedClassLibrary
     {
         private int _max;
         private int _min;
+        private float _startSpeed;
         private TimeSpan _timeSpan;
 
         public event EventHandler Rolled;
@@ -55,6 +59,18 @@ namespace SharedClassLibrary
             get { return _timeSpan; }
         }
 
+        public float StartSpeed
+        {
+            set
+            {
+                if (value > (float)RollingDuration.TotalMilliseconds)
+                    _startSpeed = (float) (RollingDuration.TotalMilliseconds/2);
+                else
+                    _startSpeed = value;
+            }
+            get { return _startSpeed; }
+        }
+
         public Dice(int max, int min)
         {
             Maximum = max;
@@ -78,19 +94,24 @@ namespace SharedClassLibrary
         private void OnWorkerDoWork(object? sender, DoWorkEventArgs e)
         {
             DateTime finishTime = DateTime.UtcNow + RollingDuration;
-            float easeValue = (float)RollingDuration.TotalMilliseconds;
+            float time, duration = (float)RollingDuration.TotalMilliseconds;
+            int sleepDuration;
 
             while (finishTime > DateTime.UtcNow)
             {
                 Result = Rand.Next(Minimum, Maximum + 1);
+                time = (float)(finishTime - DateTime.UtcNow).TotalMilliseconds;
+                sleepDuration = (int)((duration - time) * OutQuad(time.Remap(0, duration, 1, 0)));
                 Worker.ReportProgress(0);
-                Thread.Sleep(25);
+                Thread.Sleep(sleepDuration);
             }
         }
-        public static float InQuad(float t) => t * t;
-        public static float OutQuad(float t) => 1 - InQuad(1 - t);
+        public static float OutQuad(float x)
+        {
+            return (float) (1 - Math.Pow(1 - x, 3));
+        }
 
-        private void OnWorkerProgressChanged(object? sender, ProgressChangedEventArgs e)
+    private void OnWorkerProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
             RaiseEvent(RollingChanged);
         }

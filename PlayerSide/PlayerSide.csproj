@@ -39,30 +39,12 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Remove="NewContent1.xaml.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Remove="NewContent1.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Resources\Images\female_blonde.jpg" />
-	  <None Remove="Resources\Images\female_blonde_young.jpg" />
-	  <None Remove="Resources\Images\female_dark.jpg" />
-	  <None Remove="Resources\Images\female_white.jpg" />
-	  <None Remove="Resources\Images\male_blonde.jpg" />
-	  <None Remove="Resources\Images\male_dark.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -73,6 +55,23 @@
 	  <MauiXaml Update="CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Include="Resources\Images\char\*" />
+    <MauiImage Include="Resources\Images\deight\*" />
+    <MauiImage Include="Resources\Images\dfour\*" />
+    <MauiImage Include="Resources\Images\dhundred\*" />
+    <MauiImage Include="Resources\Images\dsix\*" />
+    <MauiImage Include="Resources\Images\dtwelve\*" />
+    <MauiImage Include="Resources\Images\dtwenty\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <Folder Include="Resources\Images\daroll_temp.svg" />
+    <Folder Include="Resources\Images\dotnet_bot.svg" />
+    <Folder Include="Resources\Images\droll_template.svg" />
 	</ItemGroup>
 
 </Project>
