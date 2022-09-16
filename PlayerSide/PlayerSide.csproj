@@ -55,6 +55,12 @@
 	  <MauiXaml Update="CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="DemoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="DicePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,9 +75,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Resources\Images\droll_template.svg\**" />
+	  <Compile Remove="Resources\Images\droll_template.svg\**" />
+	  <EmbeddedResource Remove="Resources\Images\droll_template.svg\**" />
+	  <MauiCss Remove="Resources\Images\droll_template.svg\**" />
+	  <MauiImage Remove="Resources\Images\droll_template.svg\**" />
+	  <MauiXaml Remove="Resources\Images\droll_template.svg\**" />
+	  <None Remove="Resources\Images\droll_template.svg\**" />
+	</ItemGroup>
+
+	<ItemGroup>
     <Folder Include="Resources\Images\daroll_temp.svg" />
     <Folder Include="Resources\Images\dotnet_bot.svg" />
-    <Folder Include="Resources\Images\droll_template.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="DicePage.xaml.cs">
+	    <DependentUpon>DicePage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

@@ -5,10 +5,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:PlayerSide"
     Shell.FlyoutBehavior="Disabled">
-
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <TabBar>
+        <Tab 
+            Title="Main"
+            Icon="rolling_dice_cup">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+        <Tab 
+            Title="Demo"
+            Icon="rolling_dice_cup">
+            <ShellContent ContentTemplate="{DataTemplate local:DemoPage}" />
+        </Tab>
+        <Tab 
+            Title="Dice"
+            Icon="rolling_dice_cup">
+            <ShellContent ContentTemplate="{DataTemplate local:DicePage}" />
+        </Tab>
+    </TabBar>
 </Shell>
