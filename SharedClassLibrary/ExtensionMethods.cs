@@ -12,5 +12,28 @@ namespace SharedClassLibrary
         {
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
+        public enum NumAsAlpha
+        {
+            a = 1,
+            b,
+            c,
+            d,
+            e,
+            f,
+            g,
+            h,
+            i,
+            j,
+            k,
+            l,
+            m,
+            n,
+            o,
+            p,
+            q,
+            r,
+            s,
+            t
+        }
     }
 }

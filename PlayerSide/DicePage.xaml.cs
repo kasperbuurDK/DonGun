@@ -1,93 +1,107 @@
+using DevExpress.DirectX.Common.Direct2D;
 using SharedClassLibrary;
-using System;
 
 namespace PlayerSide;
 
 public partial class DicePage : ContentPage
 {
-    private D20 _d20;
+    private readonly Cup _cup;
+
+    private readonly Image _topHideScr = new Image() {Aspect = Aspect.Fill, Source = String.Format($"gray_wood")};
     public DicePage()
     {
         InitializeComponent();
-        InitializeDice();
+        _cup = new Cup(8);
+        _cup.Rolled += OnCupRolled;
     }
-
-    private void OnRollClicked(object sender, EventArgs e)
+    void OnCupRolled(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
-    }
-
-    private void InitializeDice()
-    {
-        _d20 = new D20();
-        _d20.RollingChanged += OnDiceRollingChanged;
-        _d20.Rolled += OnDiceRolled;
+        ToggleIs…nable(true);
     }
 
     void OnDiceRolled(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = true;
+        // UI/Main Thread must handle all roles redraws...
+        ((MauiDice)sender).SetImage(); 
     }
 
-    void OnDiceRollingChanged(object sender, EventArgs e)
+    private void InitialiseDice(string prefix, int from, int to)
     {
-        DiceRolls.Source = _d20.ImageName();
+        Image image = new()
+        {  
+            BackgroundColor = Colors.Transparent,
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center
+        };
+        MauiDice dice = new(prefix, from, to, image);
+        dice.RollingChanged += OnDiceRolled;
+        _cup.Add(dice);
+        int row = (int)Math.Floor((float)(_cup.DiceList.Count-1) / 2F);
+        int col = (_cup.DiceList.Count % 2);
+        DiceView.MainGrid.Add(image, col, row);
     }
 
     private void OnAdd8BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("deight", 1, 8);
     }
+
     private void OnAdd4BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("dfour", 1, 4);
     }
     private void OnAdd10BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("dhundred", 1, 10);
     }
-    private void OnAdd00BtnClicked(object sender, EventArgs e)
-    {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
-    }
+
     private void OnAdd6BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("dsix", 1, 6);
     }
     private void OnAdd12BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("dtwelve", 1, 12);
     }
     private void OnAdd20BtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        InitialiseDice("dtwenty", 1, 20);
     }
     private void OnRemoveDiceBtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        RemoveDiceFromPage();
     }
     private void OnClearDiceBtnClicked(object sender, EventArgs e)
     {
-        RollBtn.IsEnabled = false;
-        DiceRolls.RelRotateTo(360, (uint)_d20.RollingDuration.TotalMilliseconds, Easing.CubicOut);
-        _d20.Roll();
+        while(_cup.DiceList.Count > 0)
+        {
+            RemoveDiceFromPage();
+        }
+    }
+    private void OnRollClicked(object sender, EventArgs e)
+    {
+        ToggleIs…nable(false);
+        _cup.RollCup();
+    }
+
+    private void RemoveDiceFromPage()
+    {
+        MauiDice temp = (MauiDice)_cup.Remove();
+        if (temp != null)
+            DiceView.MainGrid.Remove(temp.DiceImage);
+    }
+
+    private void ToggleIs…nable(bool e)
+    {
+        RollBtn.IsEnabled = e;
+        Add00Btn.IsEnabled=e;
+        Add10Btn.IsEnabled=e;
+        Add12Btn.IsEnabled = e;
+        Add20Btn.IsEnabled = e;
+        Add4Btn.IsEnabled = e;
+        Add6Btn.IsEnabled = e;
+        Add8Btn.IsEnabled = e;
+        ClearDiceBtn.IsEnabled = e;
+        RemoveDiceBtn.IsEnabled=e;
     }
 }
