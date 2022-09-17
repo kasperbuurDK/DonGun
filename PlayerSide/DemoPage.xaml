@@ -18,35 +18,6 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Image
-                x:Name="DiceRolls"
-                BackgroundColor="Transparent"  
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                Grid.ColumnSpan="2"/>
-
-            <Frame 
-                Margin="1"
-                BorderColor="Black"
-                CornerRadius="20"
-                HeightRequest="60"
-                WidthRequest="60"
-                IsClippedToBounds="False"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                Grid.Row="1">
-                <ImageButton 
-                    x:Name="RollBtn"
-                    BackgroundColor="White"
-                    Source="rolling_dice_cup"
-                    Clicked="OnRollClicked"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand"
-                    Scale="2.3"/>
-            </Frame>
-
             <custom:CharView 
                 x:Name="CharPc"
                 CharHp="0.5"

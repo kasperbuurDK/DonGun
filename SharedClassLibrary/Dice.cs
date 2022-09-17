@@ -15,7 +15,7 @@ namespace SharedClassLibrary
     {
         private int _max;
         private int _min;
-        private float _startSpeed;
+        private const int _maxSleep = 500; 
         private TimeSpan _timeSpan;
 
         public event EventHandler Rolled;
@@ -59,18 +59,6 @@ namespace SharedClassLibrary
             get { return _timeSpan; }
         }
 
-        public float StartSpeed
-        {
-            set
-            {
-                if (value > (float)RollingDuration.TotalMilliseconds)
-                    _startSpeed = (float) (RollingDuration.TotalMilliseconds/2);
-                else
-                    _startSpeed = value;
-            }
-            get { return _startSpeed; }
-        }
-
         public Dice(int max, int min)
         {
             Maximum = max;
@@ -83,7 +71,7 @@ namespace SharedClassLibrary
             Worker.RunWorkerCompleted += OnWorkerRunWorkerCompleted;
         }
 
-        public void Roll()
+        public virtual void Roll()
         {
             if (!Worker.IsBusy)
             {
@@ -101,9 +89,9 @@ namespace SharedClassLibrary
             {
                 Result = Rand.Next(Minimum, Maximum + 1);
                 time = (float)(finishTime - DateTime.UtcNow).TotalMilliseconds;
-                sleepDuration = (int)((duration - time) * OutQuad(time.Remap(0, duration, 1, 0)));
+                sleepDuration = (int)((duration - time) * OutQuad(time.Remap(0, duration, 1, 0))+50);
                 Worker.ReportProgress(0);
-                Thread.Sleep(sleepDuration);
+                Thread.Sleep(sleepDuration > _maxSleep ? _maxSleep : sleepDuration);
             }
         }
         public static float OutQuad(float x)
@@ -111,7 +99,7 @@ namespace SharedClassLibrary
             return (float) (1 - Math.Pow(1 - x, 3));
         }
 
-    private void OnWorkerProgressChanged(object? sender, ProgressChangedEventArgs e)
+        private void OnWorkerProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
             RaiseEvent(RollingChanged);
         }

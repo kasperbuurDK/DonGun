@@ -61,6 +61,9 @@
 	  <MauiXaml Update="DicePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="DiceSelectView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -71,5 +74,8 @@
     <MauiImage Include="Resources\Images\dsix\*" />
     <MauiImage Include="Resources\Images\dtwelve\*" />
     <MauiImage Include="Resources\Images\dtwenty\*" />
+    <MauiImage Include="Resources\Images\table\*" />
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlayerSideHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 </Project>
