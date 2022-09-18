@@ -8,13 +8,13 @@
     <TabBar>
         <Tab 
             Title="Main"
-            Icon="rolling_dice_cup">
+            Icon="order_icon">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
         <Tab 
             Title="Demo"
-            Icon="rolling_dice_cup">
-            <ShellContent ContentTemplate="{DataTemplate local:DemoPage}" />
+            Icon="char_icon">
+            <ShellContent ContentTemplate="{DataTemplate local:CharPage}" />
         </Tab>
         <Tab 
             Title="Dice"

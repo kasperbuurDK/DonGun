@@ -1,11 +1,9 @@
-using SharedClassLibrary;
-
 namespace PlayerSide;
 
-public partial class DemoPage : ContentPage
+public partial class CharPage : ContentPage
 {
-	public DemoPage()
-	{
+    public CharPage()
+    {
         InitializeComponent();
 
     }

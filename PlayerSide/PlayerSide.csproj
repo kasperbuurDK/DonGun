@@ -55,7 +55,7 @@
 	  <MauiXaml Update="CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DemoPage.xaml">
+	  <MauiXaml Update="CharPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="DicePage.xaml">
@@ -75,6 +75,16 @@
     <MauiImage Include="Resources\Images\dtwelve\*" />
     <MauiImage Include="Resources\Images\dtwenty\*" />
     <MauiImage Include="Resources\Images\table\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Images\table\order_icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="CharPage.xaml.cs">
+	    <DependentUpon>CharPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlayerSideHideInfoBar="True" /></VisualStudio></ProjectExtensions>
