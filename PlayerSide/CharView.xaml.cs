@@ -1,4 +1,3 @@
-using System;
 using SharedClassLibrary;
 
 namespace PlayerSide;
@@ -9,10 +8,10 @@ public partial class CharView : ContentView
     public static readonly BindableProperty CharResProperty = BindableProperty.Create(nameof(CharRes), typeof(float), typeof(CharView), 0F);
 
     private Character_abstract _character;
-    public Character_abstract Character 
+    public Character_abstract Character
     {
         get => _character;
-        set 
+        set
         {
             _character = value;
             HpBarText.Text = String.Format($"{_character.HealthCurrent} / {_character.Health}");
@@ -34,7 +33,7 @@ public partial class CharView : ContentView
         set => SetValue(CharResProperty, value);
     }
 
-    public async void UpdateBars(float hpVal, float resVal) 
+    public async void UpdateBars(float hpVal, float resVal)
     {
         float preHpVal = (float)progressBarHp.Progress;
         float preResVal = (float)progressBarRes.Progress;
@@ -49,7 +48,7 @@ public partial class CharView : ContentView
     }
 
     public CharView()
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
 }

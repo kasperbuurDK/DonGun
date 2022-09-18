@@ -6,9 +6,10 @@
     <ContentView.Content>
         <Frame
             CornerRadius="10"
-            WidthRequest="400"
             HeightRequest="100"
-            Padding="0">
+            Padding="5"
+            BackgroundColor="Transparent"
+            BorderColor="Transparent">
             <Grid
                 Padding="2"
                 RowSpacing="2"

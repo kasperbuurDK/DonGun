@@ -1,4 +1,3 @@
-using DevExpress.DirectX.Common.Direct2D;
 using SharedClassLibrary;
 
 namespace PlayerSide;
@@ -7,7 +6,6 @@ public partial class DicePage : ContentPage
 {
     private readonly Cup _cup;
 
-    private readonly Image _topHideScr = new Image() {Aspect = Aspect.Fill, Source = String.Format($"gray_wood")};
     public DicePage()
     {
         InitializeComponent();
@@ -22,13 +20,13 @@ public partial class DicePage : ContentPage
     void OnDiceRolled(object sender, EventArgs e)
     {
         // UI/Main Thread must handle all roles redraws...
-        ((MauiDice)sender).SetImage(); 
+        ((MauiDice)sender).SetImage();
     }
 
     private void InitialiseDice(string prefix, int from, int to)
     {
         Image image = new()
-        {  
+        {
             BackgroundColor = Colors.Transparent,
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center
@@ -36,7 +34,7 @@ public partial class DicePage : ContentPage
         MauiDice dice = new(prefix, from, to, image);
         dice.RollingChanged += OnDiceRolled;
         _cup.Add(dice);
-        int row = (int)Math.Floor((float)(_cup.DiceList.Count-1) / 2F);
+        int row = (int)Math.Floor((float)(_cup.DiceList.Count - 1) / 2F);
         int col = (_cup.DiceList.Count % 2);
         DiceView.MainGrid.Add(image, col, row);
     }
@@ -73,7 +71,7 @@ public partial class DicePage : ContentPage
     }
     private void OnClearDiceBtnClicked(object sender, EventArgs e)
     {
-        while(_cup.DiceList.Count > 0)
+        while (_cup.DiceList.Count > 0)
         {
             RemoveDiceFromPage();
         }
@@ -94,14 +92,14 @@ public partial class DicePage : ContentPage
     private void ToggleIs…nable(bool e)
     {
         RollBtn.IsEnabled = e;
-        Add00Btn.IsEnabled=e;
-        Add10Btn.IsEnabled=e;
+        Add00Btn.IsEnabled = e;
+        Add10Btn.IsEnabled = e;
         Add12Btn.IsEnabled = e;
         Add20Btn.IsEnabled = e;
         Add4Btn.IsEnabled = e;
         Add6Btn.IsEnabled = e;
         Add8Btn.IsEnabled = e;
         ClearDiceBtn.IsEnabled = e;
-        RemoveDiceBtn.IsEnabled=e;
+        RemoveDiceBtn.IsEnabled = e;
     }
 }

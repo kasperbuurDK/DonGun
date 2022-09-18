@@ -3,9 +3,9 @@ namespace PlayerSide;
 public partial class DiceSelectView : ContentView
 {
 	public readonly Grid MainGrid;
-    public DiceSelectView()
+	public DiceSelectView()
 	{
 		InitializeComponent();
 		MainGrid = mainGrid;
-    }
+	}
 }
