@@ -1,5 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using SharedClassLibrary;
+﻿using SharedClassLibrary;
 
 namespace PlayerSide
 {
@@ -10,7 +9,7 @@ namespace PlayerSide
 
         public Image DiceImage { get; set; }
         public MauiDice(string prefix, int from, int to, Image img, int timeSpan = 2000)
-            : base(to, from) 
+            : base(to, from)
         {
             RollingDuration = new TimeSpan(0, 0, 0, 0, timeSpan);
             Prefix = prefix;
@@ -19,7 +18,7 @@ namespace PlayerSide
         }
         public override void Roll()
         {
-            DiceImage.RelRotateTo( _rand.Next(0,2) == 0 ? 360 : -360, ((uint)RollingDuration.TotalMilliseconds)-50+(uint)_rand.Next(0, 15));
+            DiceImage.RelRotateTo(_rand.Next(0, 2) == 0 ? 360 * 2 : -360 * 2, ((uint)RollingDuration.TotalMilliseconds) - 50 + (uint)_rand.Next(0, 25), Easing.CubicOut);
             base.Roll();
         }
 
