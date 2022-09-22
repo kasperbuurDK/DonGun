@@ -1,4 +1,7 @@
-﻿namespace PlayerSide;
+﻿using System;
+using System.Linq;
+
+namespace PlayerSide;
 
 public partial class MainPage : ContentPage
 {
@@ -14,6 +17,35 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        RestClient = new RestService<string>();
+    }
+
+    private RestService<string> _restClient;
+
+    public RestService<string> RestClient
+    {
+        set
+        {
+            _restClient = value;
+            _restClient.ResponseResived += RestClient_ResponseResived;
+        }
+        get { return _restClient; }
+    }
+
+    private void RestClient_ResponseResived(object sender, EventArgs e)
+    {
+        respLabel.Text = RestClient.Response.ToString() + RestClient.Items.ToArray().ToString(); ;
+    }
+
+    private void OnCounterPosClicked(object sender, EventArgs e)
+    {
+        _ = RestClient.RefreshDataAsync("/api/values");
+    }
+
+    private void OnCounterNegClicked(object sender, EventArgs e)
+    {
+        string outPrint = RestClient.Response?.ToString() + RestClient.Items?.ToArray().ToString();
+        respLabel.Text = outPrint;
     }
 }
 
