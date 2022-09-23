@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonWeb", "DonWeb\DonWeb.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedClassLibrary", "SharedClassLibrary\SharedClassLibrary.csproj", "{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationSLL3", "..\..\..\..\dev\net.core\WebApplicationSLL3\WebApplicationSLL3\WebApplicationSLL3.csproj", "{E51F5E79-88ED-4A45-BD7D-44EE3D85433E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E51F5E79-88ED-4A45-BD7D-44EE3D85433E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E51F5E79-88ED-4A45-BD7D-44EE3D85433E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E51F5E79-88ED-4A45-BD7D-44EE3D85433E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E51F5E79-88ED-4A45-BD7D-44EE3D85433E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

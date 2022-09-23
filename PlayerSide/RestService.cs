@@ -1,5 +1,4 @@
-﻿using Android.Telephony.Data;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text;
