@@ -4,15 +4,14 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
 
-namespace WebApiSslCore
+namespace ServerSideApiSsl
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IWeatherForecastRepository _userRepository;
         public BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
+            ILoggerFactory logger, UrlEncoder encoder,
             ISystemClock clock, IWeatherForecastRepository userRepository) :
            base(options, logger, encoder, clock)
         {
@@ -21,25 +20,25 @@ namespace WebApiSslCore
 
         protected async override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var authorizationHeader = Request.Headers["Authorization"].ToString();
-            if (authorizationHeader != null && authorizationHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
+            string authHeader = Request.Headers["Authorization"].ToString();
+            if (authHeader is not null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
             {
-                var token = authorizationHeader.Substring("Basic ".Length).Trim();
-                var credentialsAsEncodedString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
-                var credentials = credentialsAsEncodedString.Split(':');
+                string token = authHeader["Basic ".Length..].Trim();
+                string credentialsEncodedString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+                string[] credentials = credentialsEncodedString.Split(':');
                 if (await _userRepository.Authenticate(credentials[0], credentials[1]))
                 {
-                    var claims = new[] { new Claim("name", credentials[0]), new Claim(ClaimTypes.Role, "Admin") };
-                    var identity = new ClaimsIdentity(claims, "Basic");
-                    var claimsPrincipal = new ClaimsPrincipal(identity);
+                    Claim[] claims = new[] { new Claim("name", credentials[0]), new Claim(ClaimTypes.Role, "user") };
+                    ClaimsIdentity identity = new(claims, "Basic");
+                    ClaimsPrincipal claimsPrincipal = new(identity);
                     return await Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name)));
                 }
                 Response.StatusCode = 401;
-                Response.Headers.Add("WWW-Authenticate", "Basic realm=\"dotnetthoughts.net\"");
+                Response.Headers.Add("WWW-Authenticate", "Basic realm=\"DunGunCharaService.net\"");
                 return await Task.FromResult(AuthenticateResult.Fail("Invalid Authorization Header"));
             }
             Response.StatusCode = 401;
-            Response.Headers.Add("WWW-Authenticate", "Basic realm=\"joydipkanjilal.com\"");
+            Response.Headers.Add("WWW-Authenticate", "Basic realm=\"DunGunCharaService.net\"");
             return await Task.FromResult(AuthenticateResult.Fail("Invalid Authorization Header"));
         }
     }

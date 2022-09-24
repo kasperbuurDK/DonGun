@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
-using WebApiSslCore;
+﻿using SharedClassLibrary;
+using System.Drawing.Imaging;
+using System.Numerics;
 
-public class WeatherForecasetRepository : IWeatherForecastRepository 
+namespace ServerSideApiSsl
 {
-    private static readonly string[] Summaries = new[]
+    public class WeatherForecasetRepository : IWeatherForecastRepository
     {
+        private static readonly string[] Summaries = new[]
+        {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private List<WeatherForecast> _users = new ()
+        private List<WeatherForecast> _users = new()
         {
             new WeatherForecast
             {
@@ -22,7 +25,7 @@ public class WeatherForecasetRepository : IWeatherForecastRepository
                 Date = DateTime.Now.AddDays(2),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-                Id = 2, Username = "joydip", Password = "joydip123"
+                Id = 2, Username = "user", Password = "password"
 
             },
             new WeatherForecast
@@ -33,21 +36,27 @@ public class WeatherForecasetRepository : IWeatherForecastRepository
                 Id = 3, Username = "james", Password = "james123"
             }
         };
-    public async Task<bool> Authenticate(string username, string password)
-    {
-        if (await Task.FromResult(_users.SingleOrDefault(x => x.Username == username && x.Password == password)) != null)
+        public async Task<bool> Authenticate(string username, string password)
         {
-            return true;
+            // Make auth reqv. to database here.
+            // If database contains 
+            if (await Task.FromResult(_users.SingleOrDefault(x => x.Username == username && x.Password == password)) != null)
+            {
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
-    public async Task<List<string>> GetUserNames()
-    {
-        List<string> users = new();
-        foreach (var user in _users)
+        public async Task<Character_abstract> GetUserNames(string username)
         {
-            users.Add(user.Username);
+            // Pull chara sheet from database given username.
+            Character_abstract chara = new Player();
+            foreach (var user in _users)
+            {
+                if (user.Username.Equals(username))
+                    chara = new Npc() {Charisma = user.Id, Constitution = user.GetHashCode(), Dexterity = user.TemperatureC, Health = user.Id+10, Resource = user.Id+20 };
+            }
+
+            return await Task.FromResult(chara);
         }
-        return await Task.FromResult(users);
     }
 }
