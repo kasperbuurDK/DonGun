@@ -61,7 +61,11 @@ namespace SharedClassLibrary
         }
         public int Health
         {
-            set { _hp = value; }
+            set 
+            { 
+                _hp = value;
+                HealthCurrent = _hp;
+            }
             get { return _hp; }
         }
         public int HealthCurrent
@@ -93,7 +97,11 @@ namespace SharedClassLibrary
 
         public int Resource
         {
-            set { _resource = value; }
+            set 
+            { 
+                _resource = value;
+                ResourceCurrent = _resource;
+            }
             get { return _resource; }
         }
 

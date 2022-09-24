@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿
+using SharedClassLibrary;
 
-namespace WebApiSslCore
+namespace ServerSideApiSsl
 {
     public interface IWeatherForecastRepository
     {
         Task<bool> Authenticate(string username, string password);
-        Task<List<string>> GetUserNames();
+        Task<Character_abstract> GetUserNames(string username);
     }
 }

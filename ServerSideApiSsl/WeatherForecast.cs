@@ -1,4 +1,4 @@
-namespace WebApiSslCore
+namespace ServerSideApiSsl
 {
     public class WeatherForecast
     {

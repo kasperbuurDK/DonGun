@@ -1,53 +1,28 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApiSslCore;
+using ServerSideApiSsl;
+using SharedClassLibrary;
 
 namespace ServerSideApiSsl.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
         private readonly IWeatherForecastRepository _userRepository;
-        public WeatherForecastController(IWeatherForecastRepository userRepository)
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(IWeatherForecastRepository userRepository, ILogger<WeatherForecastController> logger)
         {
+            _logger = logger;
             _userRepository = userRepository;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
         [Authorize]
-        public async Task<List<string>> Get()
+        [HttpGet("{id}")]
+        public async Task<Character_abstract> Get(string id)
         {
-            return await _userRepository.GetUserNames();
+            return await _userRepository.GetUserNames(id);
         }
     }
-
-    /*[ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
-    {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
-    }*/
 }

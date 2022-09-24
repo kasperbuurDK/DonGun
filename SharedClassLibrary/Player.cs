@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary
 {
-    internal class Player : Character_abstract
+    public class Player : Character_abstract
     {
         
     }
