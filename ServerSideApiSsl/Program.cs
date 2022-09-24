@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using System.Text.Json;
 
 namespace ServerSideApiSsl
 {
@@ -10,6 +11,11 @@ namespace ServerSideApiSsl
 
             // Add services to the container.
 
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

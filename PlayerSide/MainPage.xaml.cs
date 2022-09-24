@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace PlayerSide;
+﻿namespace PlayerSide;
 
 public partial class MainPage : ContentPage
 {
@@ -17,34 +14,22 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
-        RestClient = new RestService<string>();
-    }
-
-    private RestService<string> _restClient;
-
-    public RestService<string> RestClient
-    {
-        set
-        {
-            _restClient = value;
-            _restClient.ResponseResived += RestClient_ResponseResived;
-        }
-        get { return _restClient; }
+        Globals.RService.ResponseResived += RestClient_ResponseResived;
     }
 
     private void RestClient_ResponseResived(object sender, EventArgs e)
     {
-        respLabel.Text = RestClient.Response.ToString() + RestClient.Items.ToArray().ToString(); ;
+        respLabel.Text = Globals.RService.Response.ToString() + Globals.RService.Items.ToArray().ToString();
     }
 
     private void OnCounterPosClicked(object sender, EventArgs e)
     {
-        _ = RestClient.RefreshDataAsync("/api/values");
+        _ = Globals.RService.RefreshDataAsync("/api/weatherforecast/Get/user");
     }
 
     private void OnCounterNegClicked(object sender, EventArgs e)
     {
-        string outPrint = RestClient.Response?.ToString() + RestClient.Items?.ToArray().ToString();
+        string outPrint = Globals.RService.Response?.ToString() + Globals.RService.Items?.ToArray().ToString();
         respLabel.Text = outPrint;
     }
 }

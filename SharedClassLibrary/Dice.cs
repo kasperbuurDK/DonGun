@@ -1,13 +1,4 @@
-﻿using DevExpress.Data.Utils;
-using DevExpress.Utils;
-using DevExpress.Xpo.Logger;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace SharedClassLibrary
 {
@@ -15,7 +6,7 @@ namespace SharedClassLibrary
     {
         private int _max;
         private int _min;
-        private const int _maxSleep = 500; 
+        private const int _maxSleep = 500;
         private TimeSpan _timeSpan;
 
         public event EventHandler Rolled;
@@ -25,12 +16,13 @@ namespace SharedClassLibrary
         private BackgroundWorker Worker { get; set; }
         public int Maximum
         {
-            set {  
-                    if (value >= _min)
-                        _max = value;
-                    else
-                        _max = _min+1;
-                }
+            set
+            {
+                if (value >= _min)
+                    _max = value;
+                else
+                    _max = _min + 1;
+            }
             get { return _max; }
         }
         public int Minimum
@@ -38,7 +30,7 @@ namespace SharedClassLibrary
             set
             {
                 if (value > _max)
-                    _min = _max-1;
+                    _min = _max - 1;
                 else
                     _min = value;
                 Result = _min;
@@ -54,7 +46,7 @@ namespace SharedClassLibrary
                 if (value > TimeSpan.Zero)
                     _timeSpan = value;
                 else
-                    _timeSpan = new TimeSpan(0,0,0,0,300);
+                    _timeSpan = new TimeSpan(0, 0, 0, 0, 300);
             }
             get { return _timeSpan; }
         }
@@ -89,14 +81,14 @@ namespace SharedClassLibrary
             {
                 Result = Rand.Next(Minimum, Maximum + 1);
                 time = (float)(finishTime - DateTime.UtcNow).TotalMilliseconds;
-                sleepDuration = (int)((duration - time) * OutQuad(time.Remap(0, duration, 1, 0))+50);
+                sleepDuration = (int)((duration - time) * OutQuad(time.Remap(0, duration, 1, 0)) + 50);
                 Worker.ReportProgress(0);
                 Thread.Sleep(sleepDuration > _maxSleep ? _maxSleep : sleepDuration);
             }
         }
         public static float OutQuad(float x)
         {
-            return (float) (1 - Math.Pow(1 - x, 3));
+            return (float)(1 - Math.Pow(1 - x, 3));
         }
 
         private void OnWorkerProgressChanged(object? sender, ProgressChangedEventArgs e)

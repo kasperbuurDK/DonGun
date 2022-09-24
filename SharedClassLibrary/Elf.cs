@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary
+﻿namespace SharedClassLibrary
 {
     public class Elf : Race_abstract
     {
 
-        public Elf() 
+        public Elf()
         {
             Type = RaceType.Elf;
         }
