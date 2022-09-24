@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary
+﻿namespace SharedClassLibrary
 {
     public class Cup
     {
@@ -28,9 +21,10 @@ namespace SharedClassLibrary
 
         public void Add(Dice e)
         {
-            if (e != null) {
+            if (e != null)
+            {
                 if (DiceList.Count >= MaxDice)
-                    DiceList.RemoveAt(DiceList.Count-1);
+                    DiceList.RemoveAt(DiceList.Count - 1);
                 e.Rolled += OnRolledEventHandler;
                 DiceList.Add(e);
             }
@@ -51,7 +45,7 @@ namespace SharedClassLibrary
         }
         public int RollCup()
         {
-            _rolledCount=0;
+            _rolledCount = 0;
             foreach (Dice p in DiceList)
             {
                 p.Roll();

@@ -18,13 +18,13 @@ namespace PlayerSide
         }
         public override void Roll()
         {
-            DiceImage.RelRotateTo(_rand.Next(0, 2) == 0 ? 360 * 2 : -360 * 2, ((uint)RollingDuration.TotalMilliseconds) - 50 + (uint)_rand.Next(0, 25), Easing.CubicOut);
+            DiceImage.RelRotateTo(_rand.Next(0, 2) == 0 ? 360 * 4 : -360 * 4, ((uint)RollingDuration.TotalMilliseconds) - 50 + (uint)_rand.Next(0, 25), Easing.CubicOut);
             base.Roll();
         }
 
         public void SetImage()
         {
-            DiceImage.Source = String.Format($"{Prefix}_d{(ExtensionMethods.NumAsAlpha)Result}roll.png");
+            DiceImage.Source = String.Format($"{Prefix}_d{(Globals.NumAsAlpha)Result}roll.png");
         }
     }
 }

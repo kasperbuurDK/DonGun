@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
+﻿
 using System.Net.Http.Headers;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
@@ -11,7 +10,7 @@ namespace PlayerSide
         readonly HttpClient _client;
         readonly JsonSerializerOptions _serializerOptions;
         public string UserName { get; set; } = "user";
-        public string UserPassword { get; set; } = "password1";
+        public string UserPassword { get; set; } = "password";
         public HttpResponseMessage Response { get; set; }
         public string Logger { get; set; }
         public List<T> Items { get; private set; }
@@ -21,7 +20,7 @@ namespace PlayerSide
         public RestService()
         {
             _client = new HttpClient();
-            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + UserPassword));  
+            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + UserPassword));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
             _serializerOptions = new JsonSerializerOptions
             {
@@ -50,10 +49,13 @@ namespace PlayerSide
             {
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri}");
             }
-            RaiseEvent(ResponseResived);
+            finally
+            {
+                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+            }
         }
 
-        public async Task SaveDataAsync(T item, string uriResourcePath, bool create=false)
+        public async Task SaveDataAsync(T item, string uriResourcePath, bool create = false)
         {
             Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
             Response = null;
@@ -65,13 +67,16 @@ namespace PlayerSide
                 if (create)
                     Response = await _client.PostAsync(uri, content);
                 else
-                    Response = await _client.PutAsync(uri, content);                
+                    Response = await _client.PutAsync(uri, content);
             }
             catch (Exception ex)
             {
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri} - {item}");
             }
-            RaiseEvent(ResponseResived);
+            finally
+            {
+                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+            }
         }
 
         public async Task DeleteDataAsync(string uriResourcePath)
@@ -87,12 +92,15 @@ namespace PlayerSide
             {
                 Logger = string.Format($"ERROR {ex.Message} - {uri}");
             }
-            RaiseEvent(ResponseResived);
+            finally
+            {
+                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+            }
         }
 
-        private void RaiseEvent(EventHandler handler)
+        private void MainThreadCode()
         {
-            handler?.Invoke(this, EventArgs.Empty);
+            ResponseResived?.Invoke(this, EventArgs.Empty);
         }
     }
 }

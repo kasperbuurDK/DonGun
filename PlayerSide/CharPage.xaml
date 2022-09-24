@@ -15,36 +15,10 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Image x:Name="backgroundImage" Aspect="Fill" Source="gray_wood" Grid.RowSpan="3"/>
-            <custom:CharView 
+        <custom:CharView 
                 x:Name="CharPc"
                 CharHp="0.5"
                 CharRes="0.5"/>
-        <Grid
-                Padding="2"
-                RowSpacing="2"
-                ColumnSpacing="2"
-            Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button
-                x:Name="CounterBtnPos"
-                Text="Demo_btn_pos"
-                Clicked="OnCounterPosClicked"
-                HorizontalOptions="Center" 
-                Grid.Column="0"/>
-
-            <Button
-                x:Name="CounterBtnNeg"
-                Text="Demo_btn_neg"
-                Clicked="OnCounterNegClicked"
-                HorizontalOptions="Center"
-                Grid.Column="1"/>
-        </Grid>
         <Border
             Grid.Row="2"
             Stroke="Black"
@@ -57,39 +31,9 @@
             <ScrollView
                 Padding="0"
                 Margin="0,0,0,0">
-            <StackLayout
+                <StackLayout
                 Padding="2">
-                <custom:CharView 
-                x:Name="CharPc1"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-                <custom:CharView 
-                x:Name="CharPc2"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-                <custom:CharView 
-                x:Name="CharPc3"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-                <custom:CharView 
-                x:Name="CharPc4"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-                <custom:CharView 
-                x:Name="CharPc5"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-                <custom:CharView 
-                x:Name="CharPc6"
-                CharHp="0.5"
-                CharRes="0.5"/>
-
-            </StackLayout>
+                </StackLayout>
             </ScrollView>
         </Border>
     </Grid>
