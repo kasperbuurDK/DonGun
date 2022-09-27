@@ -1,10 +1,7 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace SharedClassLibrary
 {
-	public abstract class Character_abstract
-	{
+    public abstract class Character_abstract
+    {
         /* TODO:
          *      Add Character profile image.
          *      
@@ -61,12 +58,16 @@ namespace SharedClassLibrary
         }
         public int Health
         {
-            set { _hp = value; }
+            set
+            {
+                _hp = value;
+                HealthCurrent = _hp;
+            }
             get { return _hp; }
         }
         public int HealthCurrent
         {
-            set 
+            set
             {
                 if (_hpCur > _hp)
                     _hpCur = _hp;
@@ -79,7 +80,7 @@ namespace SharedClassLibrary
         }
         public int ResourceCurrent
         {
-            set 
+            set
             {
                 if (_resourceCur > _resource)
                     _resourceCur = _resource;
@@ -93,7 +94,11 @@ namespace SharedClassLibrary
 
         public int Resource
         {
-            set { _resource = value; }
+            set
+            {
+                _resource = value;
+                ResourceCurrent = _resource;
+            }
             get { return _resource; }
         }
 
@@ -104,7 +109,7 @@ namespace SharedClassLibrary
         }
 
         // Constructors
-        public Character_abstract() {}
+        public Character_abstract() { }
 
         // Methods
     }

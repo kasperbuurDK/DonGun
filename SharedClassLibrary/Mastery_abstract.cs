@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace SharedClassLibrary
+﻿namespace SharedClassLibrary
 {
-	public abstract class Mastery_abstract
-	{
+    public abstract class Mastery_abstract
+    {
 
-		public Mastery_abstract()
-		{
-		}
-	}
+        public Mastery_abstract()
+        {
+        }
+    }
 }

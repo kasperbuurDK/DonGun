@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.LoginPage"
+             Title="LoginPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="Welcome to DunGun!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Entry
+            x:Name="userEntry"
+            Text="user"
+            ClearButtonVisibility="WhileEditing"
+            Placeholder="Username"
+            />
+        <Entry
+            x:Name="passEntry"
+            Text="password"
+            ClearButtonVisibility="WhileEditing"
+            Placeholder="Password"
+            IsPassword="True"
+            />
+        <Button
+            x:Name="loginBtn"
+            Text="Login"
+            Clicked="LoginBtnClicked"
+            />
+        <Label 
+            x:Name="errorLabel"
+            Text=""
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

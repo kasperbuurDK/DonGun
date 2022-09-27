@@ -91,6 +91,7 @@ public partial class DicePage : ContentPage
 
     private void ToggleIs…nable(bool e)
     {
+        // No dice softlocks!
         RollBtn.IsEnabled = e;
         Add00Btn.IsEnabled = e;
         Add10Btn.IsEnabled = e;

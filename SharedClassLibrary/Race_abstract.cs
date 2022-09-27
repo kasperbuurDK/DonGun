@@ -1,5 +1,3 @@
-using System;
-
 namespace SharedClassLibrary
 {
     public abstract class Race_abstract
