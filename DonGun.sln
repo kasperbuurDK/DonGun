@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonWeb", "DonWeb\DonWeb.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedClassLibrary", "SharedClassLibrary\SharedClassLibrary.csproj", "{4B5A8BCC-1F71-415A-BBD3-C52C7CB880FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerSideApiSsl", "ServerSideApiSsl\ServerSideApiSsl.csproj", "{CCD06A0A-9413-4B3E-8EEB-AC89C5D5F909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerSideApiSsl", "ServerSideApiSsl\ServerSideApiSsl.csproj", "{CCD06A0A-9413-4B3E-8EEB-AC89C5D5F909}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonBlazor", "DonBlazor\DonBlazor.csproj", "{222723E1-543F-4D3F-B399-0FF7AF35C63D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{CCD06A0A-9413-4B3E-8EEB-AC89C5D5F909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCD06A0A-9413-4B3E-8EEB-AC89C5D5F909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCD06A0A-9413-4B3E-8EEB-AC89C5D5F909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{222723E1-543F-4D3F-B399-0FF7AF35C63D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222723E1-543F-4D3F-B399-0FF7AF35C63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222723E1-543F-4D3F-B399-0FF7AF35C63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222723E1-543F-4D3F-B399-0FF7AF35C63D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
