@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SharedClassLibrary": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:52603;http://localhost:52604"
+    }
+  }
+}
