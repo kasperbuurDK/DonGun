@@ -42,8 +42,6 @@ namespace PlayerSide
                     string content = await Response.Content.ReadAsStringAsync();
                     Items = JsonSerializer.Deserialize<List<T>>(content, _serializerOptions);
                 }
-                if (Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                    Items = null;
             }
             catch (Exception ex)
             {

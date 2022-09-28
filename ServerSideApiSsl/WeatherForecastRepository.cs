@@ -46,10 +46,10 @@ namespace ServerSideApiSsl
             }
             return false;
         }
-        public async Task<Character_abstract> GetUserNames(string username)
+        public async Task<Npc> GetUserNames(string username)
         {
             // Pull chara sheet from database given username.
-            Character_abstract chara = new Player();
+            Npc chara = new Npc();
             foreach (var user in _users)
             {
                 if (user.Username.Equals(username))

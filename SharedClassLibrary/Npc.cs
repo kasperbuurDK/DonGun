@@ -4,7 +4,7 @@
     {
         public Npc()
         {
-            Race = new Elf();
+            
         }
 
     }
