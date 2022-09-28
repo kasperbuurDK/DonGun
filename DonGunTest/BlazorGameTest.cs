@@ -2,24 +2,27 @@ using DonBlazor;
 using System;
 using NUnit.Framework;
 using DonBlazor.Models;
+using DonBlazor.Containers;
 
 namespace DonGunTest
 {
-    public class Tests
+    public class BlazorGameTest
     {
+        /*
         [SetUp]
         public void Setup()
         {
-           
-           
+
         }
+        */
 
         [Test]
         public void Is_Game_Created_Correctly()
         {
             // Arrange
-            Game game = new Game();
-            
+            ActiveGameContainer game = ActiveGameContainer.GetGameInstance;
+
+
             // Act
 
             //Assert
@@ -30,12 +33,13 @@ namespace DonGunTest
         public void NextTurn_Adds_1_Turn()
         {
             // Arrange
-            DonBlazor.Containers.ActiveGameContainer.CurrentTurn = 0;
+            ActiveGameContainer game = ActiveGameContainer.GetGameInstance;
+            game.CurrentTurn = 0;
             // Act
-            DonBlazor.Containers.ActiveGameContainer.NextTurn();
+            game.NextTurn();
 
             //Assert
-            Assert.That(DonBlazor.Containers.ActiveGameContainer.CurrentTurn, Is.EqualTo(1));
+            Assert.That(game.CurrentTurn, Is.EqualTo(1));
         }
 
 

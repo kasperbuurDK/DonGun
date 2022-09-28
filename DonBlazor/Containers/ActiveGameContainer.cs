@@ -1,32 +1,53 @@
 ﻿using SharedClassLibrary;
 using System.ComponentModel.DataAnnotations;
 
+
+/// Summary
+/// 
+/// Summary
+
 namespace DonBlazor.Containers
 {
-    public static class ActiveGameContainer
+    public sealed class ActiveGameContainer
     {
 
+        private static ActiveGameContainer GameInstance = null;
+
+        public static ActiveGameContainer GetGameInstance   // Singleton Pattern
+        {
+            get
+            {
+                GameInstance ??= new ActiveGameContainer();  // ?? is null-coalescing operator. ??= returns lhs if its not null else assigns rhs
+                return GameInstance;
+            }
+        }
+
+        private ActiveGameContainer() // Singleton Pattern
+        {
+
+        }
+
         // Properties      
-        public static string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
+        public string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
 
-        public static string Name { get; set; } = "A Default DonGun Game";
+        public string Name { get; set; } = "A Default DonGun Game";
 
-        public static List<Player> HumanPlayers { get; set; } = new List<Player>() { };
+        public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
 
-        public static List<Character_abstract> AllCharacters { get; set; } = new List<Character_abstract> { };
+        public List<Character_abstract> AllCharacters { get; set; } = new List<Character_abstract> { };
 
-        public static int CurrentTurn { get; set; } = 0;
+        public int CurrentTurn { get; set; } = 0;
 
-        public static int CurrentCharacter{ get; set; } = 0;
+        public int CurrentCharacter{ get; set; } = 0;
 
         // Methods
 
-        public static void NextTurn()
+        public void NextTurn()
         {
             CurrentTurn++;
         }
 
-        public static void SetCurrentPlayer()
+        public void SetCurrentPlayer()
         {
             CurrentCharacter = CurrentTurn % AllCharacters.Count;
         }
