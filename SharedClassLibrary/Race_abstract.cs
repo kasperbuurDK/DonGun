@@ -1,15 +1,20 @@
+using System.Text.Json.Serialization;
+
 namespace SharedClassLibrary
 {
-    public abstract class Race_abstract
+    public class Race_abstract
     {
-        private RaceType _type;
         // Main stat amplifiers
         // Main meter amplifiers
 
-        public RaceType Type { set; get; }
+        public RaceType Type { set; get; } = RaceType.Elf;
 
         public Race_abstract()
+        { }
+
+        public Race_abstract(int type) 
         {
+            Type = (RaceType)type;
         }
 
         public enum RaceType

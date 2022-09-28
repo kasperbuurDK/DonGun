@@ -109,7 +109,7 @@ namespace SharedClassLibrary
         }
 
         // Constructors
-        public Character_abstract() { }
+        public Character_abstract() { _race = new Race_abstract(0); } 
 
         // Methods
     }
