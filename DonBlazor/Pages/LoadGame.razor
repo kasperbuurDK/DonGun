@@ -1,0 +1,23 @@
+﻿@using Containers;
+
+@page "/loadgame"
+
+<PageTitle>Load Game</PageTitle>
+
+<h1>Welcome Don</h1>
+
+Here you can load a previous game. 
+
+
+
+
+
+@code {
+        
+  private ActiveGameContainer thisGame = Containers.ActiveGameContainer.GetGameInstance;
+  
+  private void LoadSelectedGame() {
+     // thisGame = a load method;
+  }
+
+}

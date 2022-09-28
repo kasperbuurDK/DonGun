@@ -1,19 +1,19 @@
-﻿using SharedClassLibrary;
+﻿using DonBlazor.Models;
+using SharedClassLibrary;
 using System.ComponentModel.DataAnnotations;
 
 
-/// Summary
-/// 
-/// Summary
-
 namespace DonBlazor.Containers
 {
+  
     public sealed class ActiveGameContainer
     {
-
         private static ActiveGameContainer GameInstance = null;
 
-        public static ActiveGameContainer GetGameInstance   // Singleton Pattern
+        /// <summary>
+        /// Singleton creater of ActiveGameContainer
+        /// </summary>
+        public static ActiveGameContainer GetGameInstance   
         {
             get
             {
@@ -22,7 +22,7 @@ namespace DonBlazor.Containers
             }
         }
 
-        private ActiveGameContainer() // Singleton Pattern
+        private ActiveGameContainer() 
         {
 
         }
@@ -47,9 +47,14 @@ namespace DonBlazor.Containers
             CurrentTurn++;
         }
 
-        public void SetCurrentPlayer()
+        public void SetCurrentCharacter()
         {
             CurrentCharacter = CurrentTurn % AllCharacters.Count;
+        }
+
+        public void AddPlayerToGame(Player newPlayer)
+        {
+            HumanPlayers.Add(newPlayer);
         }
 
 

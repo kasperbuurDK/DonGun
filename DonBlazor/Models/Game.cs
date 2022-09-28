@@ -19,6 +19,11 @@ namespace DonBlazor.Models
 
         public int CurrentPlayer { get; set; } = 0;
 
+        public Game()
+        {
+
+        }
+
 
     }
 }

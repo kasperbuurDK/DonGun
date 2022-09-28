@@ -1,12 +1,23 @@
-﻿<PageTitle>Active Game</PageTitle>
+﻿@using Containers;
+
+@page "/activegame"
+
+<PageTitle>Active Game</PageTitle>
 
 <h1>Welcome Don</h1>
 
-Welcome to your game.
+Welcome to your game. 
+<br />
+@activeGame.Name
+<br />
+
+
 
 
 
 @code {
-   
+        
+  private ActiveGameContainer activeGame = Containers.ActiveGameContainer.GetGameInstance;
+  
 
 }

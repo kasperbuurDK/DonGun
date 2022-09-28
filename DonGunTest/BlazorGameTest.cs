@@ -8,14 +8,6 @@ namespace DonGunTest
 {
     public class BlazorGameTest
     {
-        /*
-        [SetUp]
-        public void Setup()
-        {
-
-        }
-        */
-
         [Test]
         public void Is_Game_Created_Correctly()
         {

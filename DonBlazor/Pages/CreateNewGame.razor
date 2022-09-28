@@ -1,0 +1,67 @@
+﻿@page "/createnewgame"
+@using Models;
+@using SharedClassLibrary;
+
+<PageTitle>Create New Game</PageTitle>
+
+<h1>Welcome Don!</h1>
+
+@Containers.ActiveGameContainer.GetGameInstance.Name;
+
+@if (playersInGame.Count == 0)
+{
+    <p><em>Add At leat one player befopre creating game</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Race</th>
+                <th>Mastery</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in playersInGame)
+            {
+                <tr>
+                    <td>@player.Name</td>
+                    <td>@player.RaceString</td>
+                    <td>@player.MasteryString</td>
+                    <td>@player.StatusString</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<input placeholder="Something todo" @bind="playerName" />
+<button @onclick="AddPlayer">Add todo</button>
+
+
+@code{
+    Game newGame = new();
+    private string? playerName;
+
+    private List<Player> playersInGame = new List<Player>() {};
+
+    private void AddPlayer() {
+        if (playerName != null) {
+            Player newPlayer = new Player(playerName);
+            // Shoul be made possicble to choose
+            newPlayer.RaceString = "Human";
+            newPlayer.MasteryString = "Bard";
+            newPlayer.StatusString = "Alive";
+        } else {
+            WarnOfSomethingWrong("Player must have a name");
+        }
+
+    }
+
+    private void WarnOfSomethingWrong(string message) {
+        
+    }
+
+}
