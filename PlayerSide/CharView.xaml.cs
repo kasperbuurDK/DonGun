@@ -14,8 +14,8 @@ public partial class CharView : ContentView
         set
         {
             _character = value;
-            HpBarText.Text = String.Format($"{_character.HealthCurrent} / {_character.Health}");
-            ResBarText.Text = String.Format($"{_character.ResourceCurrent} / {_character.Resource}");
+            CharHp = _character.HealthCurrent;
+            CharRes = _character.ResourceCurrent;
 
             // TODO: Add Character profile image
         }
@@ -24,27 +24,33 @@ public partial class CharView : ContentView
     public float CharHp
     {
         get => (float)GetValue(CharHpProperty);
-        set => SetValue(CharHpProperty, value);
+        set
+        {
+            HpBarText.Text = string.Format($"{value} / {_character.Health}");
+            SetValue(CharHpProperty, value);
+            float preHpVal = (float)progressBarHp.Progress;
+            float hpVal = value.Remap(0, _character.Health, 0F, 1.0F);
+            if (hpVal > preHpVal)
+                progressBarHp.ProgressTo(hpVal, 250, Easing.Linear);
+            else
+                progressBarHp.ProgressTo(hpVal, 250, Easing.CubicInOut);
+        }
     }
 
     public float CharRes
     {
         get => (float)GetValue(CharResProperty);
-        set => SetValue(CharResProperty, value);
-    }
-
-    public async void UpdateBars(float hpVal, float resVal)
-    {
-        float preHpVal = (float)progressBarHp.Progress;
-        float preResVal = (float)progressBarRes.Progress;
-        if (hpVal > preHpVal)
-            await progressBarHp.ProgressTo(hpVal, 250, Easing.Linear);
-        else
-            await progressBarHp.ProgressTo(hpVal, 250, Easing.CubicInOut);
-        if (resVal > preResVal)
-            await progressBarRes.ProgressTo(resVal, 250, Easing.Linear);
-        else
-            await progressBarRes.ProgressTo(resVal, 250, Easing.CubicInOut);
+        set
+        {
+            ResBarText.Text = string.Format($"{value} / {_character.Resource}");
+            SetValue(CharResProperty, value);
+            float preResVal = (float)progressBarRes.Progress;
+            float resVal = value.Remap(0, _character.Resource, 0F, 1.0F);
+            if (resVal > preResVal)
+                progressBarRes.ProgressTo(resVal, 250, Easing.Linear);
+            else
+                progressBarRes.ProgressTo(resVal, 250, Easing.CubicInOut);
+        }
     }
 
     public CharView()

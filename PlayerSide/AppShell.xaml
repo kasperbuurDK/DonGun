@@ -7,12 +7,12 @@
     Shell.FlyoutBehavior="Disabled">
     <TabBar>
         <Tab 
-            Title="Main"
+            Title="Sheet"
             Icon="order_icon">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
         <Tab 
-            Title="Demo"
+            Title="Order"
             Icon="char_icon">
             <ShellContent ContentTemplate="{DataTemplate local:CharPage}" />
         </Tab>
