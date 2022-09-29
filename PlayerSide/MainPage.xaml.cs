@@ -10,7 +10,7 @@ public partial class MainPage : ContentPage
 
     private void RestClient_ResponseResived(object sender, EventArgs e)
     {
-        respLabel.Text = Globals.RService.Response.ToString() + Globals.RService.Items.ToString();
+        //respLabel.Text = Globals.RService.Response.ToString() + Globals.RService.Items.ToString();
     }
 
     private void OnCounterPosClicked(object sender, EventArgs e)
@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
     private void OnCounterNegClicked(object sender, EventArgs e)
     {
         string outPrint = Globals.RService.Response?.ToString() + Globals.RService.Items?.ToArray().ToString();
-        respLabel.Text = outPrint;
+        //respLabel.Text = outPrint;
     }
 }
 

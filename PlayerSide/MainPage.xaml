@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:PlayerSide"
              x:Class="PlayerSide.MainPage">
     <Grid
                 Padding="2"
@@ -33,11 +34,10 @@
                 Margin="0,0,0,0"
             Grid.Row="1"
             Grid.ColumnSpan="2">
-            <Label 
-                x:Name="respLabel"
-                Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center"/>
+            <custom:BlobStatView 
+                x:Name="blob"
+                Border="icon_border_dex"
+                CharHp="0.7"/>
         </ScrollView>
     </Grid>
 </ContentPage>
