@@ -78,8 +78,11 @@ public partial class DicePage : ContentPage
     }
     private void OnRollClicked(object sender, EventArgs e)
     {
-        ToggleIs…nable(false);
-        _cup.RollCup();
+        if (_cup.DiceList.Count > 0)
+        {
+            ToggleIs…nable(false);
+            _cup.RollCup();
+        }
     }
 
     private void RemoveDiceFromPage()
