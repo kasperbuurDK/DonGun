@@ -6,7 +6,6 @@ namespace PlayerSide
     public static class Globals
     {
         public static Character_abstract Connectivity;
-        public static event EventHandler ConnectivityChanged;
         public static RestService<Npc> RService;
 
         public enum NumAsAlpha

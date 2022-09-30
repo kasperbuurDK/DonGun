@@ -1,4 +1,5 @@
 ﻿
+using Android.Runtime;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -16,6 +17,7 @@ namespace PlayerSide
         public List<T> Items { get; private set; }
 
         public event EventHandler ResponseResived;
+        public event EventHandler ConnectivityChanged;
 
         public RestService()
         {
@@ -27,6 +29,7 @@ namespace PlayerSide
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
+            StartRefTimer();
         }
 
         public async Task RefreshDataAsync(string uriResourcePath)
@@ -99,6 +102,21 @@ namespace PlayerSide
         private void MainThreadCode()
         {
             ResponseResived?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void StartRefTimer()
+        {
+            System.Timers.Timer RefTimer = new()
+            {
+                Interval = 2000,
+                AutoReset = true,
+            };
+            RefTimer.Elapsed += OnRefTimedEvent;
+            RefTimer.Enabled = true;
+        }
+        private void OnRefTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            MainThread.BeginInvokeOnMainThread(() => ConnectivityChanged?.Invoke(this, EventArgs.Empty));
         }
     }
 }
