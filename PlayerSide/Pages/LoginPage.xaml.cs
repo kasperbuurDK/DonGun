@@ -21,9 +21,7 @@ public partial class LoginPage : ContentPage
 			{
 				ActivityIndicator.IsRunning = true;
 				loginBtn.IsEnabled = false;
-				Globals.RService = new RestService<Player>();
-				Globals.RService.UserName = userEntry.Text;
-				Globals.RService.UserPassword = passEntry.Text;
+				Globals.RService = new RestService<Player>(userEntry.Text, passEntry.Text);
 				await Globals.RService.RefreshDataAsync("/api/weatherforecast/Get/" + Globals.RService.UserName);
 				if (Globals.RService.Response.IsSuccessStatusCode)
 				{
