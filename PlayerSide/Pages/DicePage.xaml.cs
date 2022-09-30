@@ -1,6 +1,6 @@
 using SharedClassLibrary;
 
-namespace PlayerSide;
+namespace PlayerSide.Pages;
 
 public partial class DicePage : ContentPage
 {

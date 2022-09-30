@@ -1,7 +1,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:custom="clr-namespace:PlayerSide"
-             x:Class="PlayerSide.CharPage">
+             xmlns:custom="clr-namespace:PlayerSide.Views"
+             x:Class="PlayerSide.Pages.CharPage">
     <Grid
                 Padding="2"
                 RowSpacing="2"
