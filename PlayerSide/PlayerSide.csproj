@@ -52,22 +52,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="BlobStatView.xaml">
+	  <MauiXaml Update="Views\BlobStatView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="CharView.xaml">
+	  <MauiXaml Update="Views\CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="CharPage.xaml">
+	  <MauiXaml Update="Pages\CharPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DicePage.xaml">
+	  <MauiXaml Update="Pages\DicePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DiceSelectView.xaml">
+	  <MauiXaml Update="Views\DiceSelectView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="LoginPage.xaml">
+	  <MauiXaml Update="Pages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -101,20 +101,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="blobStatView.xaml.cs">
+	  <Compile Update="Views\BlobStatView.xaml.cs">
 	    <DependentUpon>BlobStatView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="CharPage.xaml.cs">
+	  <Compile Update="Pages\CharPage.xaml.cs">
 	    <DependentUpon>CharPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Resources\Images\sheet\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlayerSideHideInfoBar="True" /></VisualStudio></ProjectExtensions>
