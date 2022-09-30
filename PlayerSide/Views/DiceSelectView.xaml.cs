@@ -1,4 +1,4 @@
-namespace PlayerSide;
+namespace PlayerSide.Views;
 
 public partial class DiceSelectView : ContentView
 {

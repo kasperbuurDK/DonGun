@@ -1,9 +1,7 @@
-
-using Android.Net;
 using SharedClassLibrary;
 using System;
 
-namespace PlayerSide;
+namespace PlayerSide.Views;
 
 public partial class BlobStatView : ContentView
 {

@@ -41,7 +41,8 @@ namespace PlayerSide
                 {
                     string content = await Response.Content.ReadAsStringAsync();
                     Items = JsonSerializer.Deserialize<List<T>>(content, _serializerOptions);
-                }
+                } else
+                    Logger = string.Format($"Response Code: {Response.StatusCode} - {typeof(T)} - {uri}");
             }
             catch (Exception ex)
             {

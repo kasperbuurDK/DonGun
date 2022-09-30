@@ -1,4 +1,4 @@
-namespace PlayerSide;
+namespace PlayerSide.Pages;
 
 public partial class CharPage : ContentPage
 {

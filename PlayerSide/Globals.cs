@@ -7,7 +7,7 @@ namespace PlayerSide
     {
         public static Character_abstract Connectivity;
         public static event EventHandler ConnectivityChanged;
-        public static RestService<Npc> RService;
+        public static RestService<Player> RService;
 
         public enum NumAsAlpha
         {
