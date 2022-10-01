@@ -1,7 +1,4 @@
 ﻿
-using Android.Runtime;
-using Android.Views.Accessibility;
-using Java.Security;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,11 +12,12 @@ namespace PlayerSide
         readonly JsonSerializerOptions _serializerOptions;
         public string UserName { get; set; } = "user";
         public HttpResponseMessage Response { get; set; }
-        public DateTime ModifiedOn { get; set; } = new DateTime();
+        public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
         public string Logger { get; set; }
         public List<T> Items { get; private set; }
 
-        public delegate HttpResponseMessage RefreshFunc(string foo);
+        public RefreshFunc CallBackRefreshFunc { get; set; }
+        public delegate Task<bool> RefreshFunc();
 
         public event EventHandler ResponseResived;
         public event EventHandler ResourceChanged;
@@ -31,7 +29,7 @@ namespace PlayerSide
             UserName = user;
             string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
-            _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
+            _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -133,21 +131,24 @@ namespace PlayerSide
             System.Timers.Timer RefTimer = new()
             {
                 Interval = 2000,
-                AutoReset = true,
+                AutoReset = false,
             };
             RefTimer.Elapsed += OnRefTimedEventWrapper;
             RefTimer.Enabled = true;
+            RefTimer.Start();
         }
 
-        private async void OnRefTimedEventWrapper(Object source, System.Timers.ElapsedEventArgs e)
+        private async void OnRefTimedEventWrapper(object sender, System.Timers.ElapsedEventArgs e)
         {
             Uri uri = new(string.Format($"{Constants.RestUrl}{Constants.RestUriMod}{UserName}"));
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
             HttpResponseMessage _response = await _client.PostAsync(uri, null);
             if (_response.StatusCode != System.Net.HttpStatusCode.NotModified)
             {
-                MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
+                if (CallBackRefreshFunc is not null && await CallBackRefreshFunc())
+                    MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
             }
+            ((System.Timers.Timer)sender).Start();
         }
     }
 }
