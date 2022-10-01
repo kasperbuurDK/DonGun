@@ -8,30 +8,43 @@ namespace DonGunTest
 {
     public class BlazorGameTest
     {
+        private ActiveGameContainer activeGame;
+
+        [SetUp]
+        public void SetUp()
+        {
+            activeGame = ActiveGameContainer.GetGameInstance; 
+        }
+
+
         [Test]
         public void Is_Game_Created_Correctly()
         {
-            // Arrange
-            ActiveGameContainer game = ActiveGameContainer.GetGameInstance;
-
-
-            // Act
-
+          
             //Assert
-            Assert.That(game != null, Is.True);
+            Assert.That(activeGame != null, Is.True);
         }
 
         [Test]
         public void NextTurn_Adds_1_Turn()
         {
             // Arrange
-            ActiveGameContainer game = ActiveGameContainer.GetGameInstance;
-            game.CurrentTurn = 0;
+            activeGame.CurrentTurn = 0;
             // Act
-            game.NextTurn();
+            activeGame.NextTurn();
 
             //Assert
-            Assert.That(game.CurrentTurn, Is.EqualTo(1));
+            Assert.That(activeGame.CurrentTurn, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Destroy_Activegame_Results_in_an_empty_game()
+        {
+            // Arrange
+            ActiveGameContainer.DestroyGameInstance();
+            
+
+            Assert.That(activeGame.Name, Is.EqualTo("Empty Game"));
         }
 
 

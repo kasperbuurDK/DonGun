@@ -33,7 +33,7 @@ namespace DonBlazor.Containers
         // Properties      
         public string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
 
-        public string Name { get; set; } = "A Default DonGun Game";
+        public string Name { get; set; } = "Empty Game";
 
         public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
 
