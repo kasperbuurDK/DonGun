@@ -52,19 +52,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="CharView.xaml">
+	  <MauiXaml Update="Pages\OptionsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="CharPage.xaml">
+	  <MauiXaml Update="Views\BlobStatView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DicePage.xaml">
+	  <MauiXaml Update="Views\CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DiceSelectView.xaml">
+	  <MauiXaml Update="Pages\CharPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="LoginPage.xaml">
+	  <MauiXaml Update="Pages\DicePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DiceSelectView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -77,15 +83,31 @@
     <MauiImage Include="Resources\Images\dsix\*" />
     <MauiImage Include="Resources\Images\dtwelve\*" />
     <MauiImage Include="Resources\Images\dtwenty\*" />
+    <MauiImage Include="Resources\Images\sheet\*" />
     <MauiImage Include="Resources\Images\table\*" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\DalelandsUncial-BOpn.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialBold-82zA.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialBoldItalic-YKgL.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensed-rWYK.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedBold-MEyv.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedBoldItalic-Kpye.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedItalic-2BrX.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialItalic-vG2L.ttf" />
+	  <None Remove="Resources\Fonts\Iokharic-dqvK.ttf" />
+	  <None Remove="Resources\Fonts\IokharicBold-Plor.ttf" />
+	  <None Remove="Resources\Fonts\IokharicBoldItalic-LGmZ.ttf" />
+	  <None Remove="Resources\Fonts\IokharicItalic-XMdd.ttf" />
 	  <None Remove="Resources\Images\table\order_icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="CharPage.xaml.cs">
+	  <Compile Update="Views\BlobStatView.xaml.cs">
+	    <DependentUpon>BlobStatView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\CharPage.xaml.cs">
 	    <DependentUpon>CharPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>

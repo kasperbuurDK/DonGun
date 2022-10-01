@@ -1,4 +1,4 @@
-﻿using Android.Net;
+﻿
 using SharedClassLibrary;
 
 namespace PlayerSide
@@ -6,7 +6,8 @@ namespace PlayerSide
     public static class Globals
     {
         public static Character_abstract Connectivity;
-        public static RestService<Character_abstract> RService;
+        public static event EventHandler ConnectivityChanged;
+        public static RestService<Player> RService;
 
         public enum NumAsAlpha
         {

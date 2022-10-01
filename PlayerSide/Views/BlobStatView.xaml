@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Views.BlobStatView">
+    <Frame
+        BackgroundColor="Transparent"
+        BorderColor="Transparent"                    
+        Padding="0"
+        Margin="0">
+        <Grid
+            BackgroundColor="Transparent">
+            <Image
+                x:Name="ImageBorder"
+                BackgroundColor="Transparent"
+                Aspect="Fill"
+                HorizontalOptions="Fill"/>
+            <Grid
+                    Padding="10"
+                    RowSpacing="0"
+            BackgroundColor="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="0.3*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Label 
+                x:Name="ValueText"
+                Margin="27,0,0,0"
+                FontSize="Large" 
+                FontFamily="Dalelandsbold"
+                TextColor="Black" 
+                BackgroundColor="Transparent" 
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                    Grid.Row="1"/>
+                <Label 
+                x:Name="ValueTextSub"
+                Margin="17,0,0,0"
+                FontSize="Small" 
+                FontFamily="Dalelandsbold"
+                TextColor="Black" 
+                BackgroundColor="Transparent" 
+                    HorizontalOptions="Center"
+                    Grid.Row="3"/>
+            </Grid>
+        </Grid>
+    </Frame>
+</ContentView>
