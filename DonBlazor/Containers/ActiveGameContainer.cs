@@ -5,10 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DonBlazor.Containers
 {
-  
     public sealed class ActiveGameContainer
     {
-        private static ActiveGameContainer GameInstance = null;
+        private static ActiveGameContainer? GameInstance = null;
 
         /// <summary>
         /// Singleton creater of ActiveGameContainer
@@ -24,7 +23,11 @@ namespace DonBlazor.Containers
 
         private ActiveGameContainer() 
         {
+        }
 
+        public static void DestroyGameInstance()
+        {
+            GameInstance = null;
         }
 
         // Properties      
@@ -41,6 +44,17 @@ namespace DonBlazor.Containers
         public int CurrentCharacter{ get; set; } = 0;
 
         // Methods
+        public void UpdateToNewGame(Game newGame)
+        {
+            Name = newGame.Name;
+            HumanPlayers = newGame.HumanPlayers;
+            AllCharacters.Clear();
+            AllCharacters.AddRange(newGame.HumanPlayers); // At start of game, there are only Humanplayers  
+            CurrentTurn = 0;
+            SetCurrentCharacter();
+
+            Console.WriteLine(this.Name);
+        }
 
         public void NextTurn()
         {
@@ -56,8 +70,5 @@ namespace DonBlazor.Containers
         {
             HumanPlayers.Add(newPlayer);
         }
-
-
-
     }
 }

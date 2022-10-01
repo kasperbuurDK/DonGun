@@ -11,12 +11,31 @@ Welcome to your game.
 @activeGame.Name
 <br />
 
-
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Race</th>
+            <th>Mastery</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in activeGame.HumanPlayers)
+        {
+            <tr>
+                <td>@player.Name</td>
+                <td>@player.RaceString</td>
+                <td>@player.MasteryString</td>
+                <td>@player.StatusString</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 
 
 @code {
-        
   private ActiveGameContainer activeGame = Containers.ActiveGameContainer.GetGameInstance;
   
 

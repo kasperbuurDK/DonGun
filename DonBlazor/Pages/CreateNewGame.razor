@@ -1,6 +1,7 @@
 ﻿@page "/createnewgame"
 @using Models;
 @using SharedClassLibrary;
+@using Containers;
 
 <PageTitle>Create New Game</PageTitle>
 
@@ -10,7 +11,7 @@
 
 @if (playersInGame.Count == 0)
 {
-    <p><em>Add At leat one player befopre creating game</em></p>
+    <p><em>Add At least one player befopre creating game</em></p>
 }
 else
 {
@@ -37,30 +38,45 @@ else
     </table>
 }
 
-<input placeholder="Something todo" @bind="playerName" />
-<button @onclick="AddPlayer">Add todo</button>
+<input placeholder="Add a player name" @bind="playerName" />
+<button @onclick="AddPlayer">Add PLayer</button>
+<button @onclick="CreateGame" >Create Game</button>
+
 
 
 @code{
     Game newGame = new();
     private string? playerName;
-
     private List<Player> playersInGame = new List<Player>() {};
+    private bool readyToCreate = false;
 
-    private void AddPlayer() {
+    ActiveGameContainer activeGame = ActiveGameContainer.GetGameInstance;
+
+    private void AddPlayer() 
+    {
         if (playerName != null) {
             Player newPlayer = new Player(playerName);
-            // Shoul be made possicble to choose
+            // Should be made possisble to choose
             newPlayer.RaceString = "Human";
             newPlayer.MasteryString = "Bard";
             newPlayer.StatusString = "Alive";
+            playersInGame.Add(newPlayer);
+
         } else {
             WarnOfSomethingWrong("Player must have a name");
         }
-
     }
 
-    private void WarnOfSomethingWrong(string message) {
+    private void CreateGame()
+    {
+        Game newGame = new();
+        newGame.HumanPlayers = playersInGame;
+        
+        activeGame.UpdateToNewGame(newGame);
+    }
+
+    private void WarnOfSomethingWrong(string message) 
+    {
         
     }
 
