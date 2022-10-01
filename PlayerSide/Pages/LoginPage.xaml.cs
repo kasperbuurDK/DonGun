@@ -15,7 +15,7 @@ public partial class LoginPage : ContentPage
 		{
             Globals.RService.UserName = userEntry.Text;
 			Globals.RService.UserPassword = passEntry.Text;
-			await Globals.RService.RefreshDataAsync("/api/weatherforecast/Get/" + Globals.RService.UserName);
+			await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
 			if (Globals.RService.Response.IsSuccessStatusCode)
 			{
 				Globals.Connectivity = Globals.RService.Items[0];

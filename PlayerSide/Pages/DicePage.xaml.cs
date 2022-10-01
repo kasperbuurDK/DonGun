@@ -14,7 +14,7 @@ public partial class DicePage : ContentPage
     }
     void OnCupRolled(object sender, EventArgs e)
     {
-        ToggleIs…nable(true);
+        ToggleIsEnable(true);
     }
 
     void OnDiceRolled(object sender, EventArgs e)
@@ -80,7 +80,7 @@ public partial class DicePage : ContentPage
     {
         if (_cup.DiceList.Count > 0)
         {
-            ToggleIs…nable(false);
+            ToggleIsEnable(false);
             _cup.RollCup();
         }
     }
@@ -92,7 +92,7 @@ public partial class DicePage : ContentPage
             DiceView.MainGrid.Remove(temp.DiceImage);
     }
 
-    private void ToggleIs…nable(bool e)
+    private void ToggleIsEnable(bool e)
     {
         // No dice softlocks!
         RollBtn.IsEnabled = e;
