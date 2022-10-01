@@ -3,7 +3,7 @@
     x:Class="PlayerSide.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:PlayerSide"
+    xmlns:local="clr-namespace:PlayerSide.Pages"
     Shell.FlyoutBehavior="Disabled">
     <TabBar>
         <Tab 
@@ -20,6 +20,11 @@
             Title="Dice"
             Icon="rolling_dice_cup">
             <ShellContent ContentTemplate="{DataTemplate local:DicePage}" />
+        </Tab>
+        <Tab 
+            Title="Options"
+            Icon="options_icon">
+            <ShellContent ContentTemplate="{DataTemplate local:OptionsPage}" />
         </Tab>
     </TabBar>
 </Shell>

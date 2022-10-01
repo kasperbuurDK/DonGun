@@ -14,7 +14,6 @@ namespace PlayerSide
         readonly HttpClient _client;
         readonly JsonSerializerOptions _serializerOptions;
         public string UserName { get; set; } = "user";
-        public string UserPassword { get; set; } = "password";
         public HttpResponseMessage Response { get; set; }
         public DateTime ModifiedOn { get; set; } = new DateTime();
         public string Logger { get; set; }
@@ -25,10 +24,12 @@ namespace PlayerSide
         public event EventHandler ResponseResived;
         public event EventHandler ResourceChanged;
 
-        public RestService()
+        public RestService(string user, string password)
         {
             _client = new HttpClient();
-            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + UserPassword));
+            // dXNlcjpwYXNzd29yZA== -- Peter
+            UserName = user;
+            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
             _serializerOptions = new JsonSerializerOptions

@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace PlayerSide;
+namespace PlayerSide.Pages;
 
 public partial class MainPage : ContentPage
 {
