@@ -20,6 +20,8 @@ namespace PlayerSide
         public string Logger { get; set; }
         public List<T> Items { get; private set; }
 
+        public delegate HttpResponseMessage RefreshFunc(string foo);
+
         public event EventHandler ResponseResived;
         public event EventHandler ResourceChanged;
 
@@ -143,7 +145,7 @@ namespace PlayerSide
             HttpResponseMessage _response = await _client.PostAsync(uri, null);
             if (_response.StatusCode != System.Net.HttpStatusCode.NotModified)
             {
-                MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));
+                MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
             }
         }
     }

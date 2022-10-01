@@ -11,9 +11,11 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         DataInnit();
-        Globals.ConnectivityChanged += OnMainCharaUpdateEvent;
+
+        Globals.RService.ResourceChanged += OnMainCharaUpdateEvent;
     }
 
+    // Test to see if this is even needed...
     public void OnMainCharaUpdateEvent(object sender, EventArgs e)
     { 
         DataInnit();
