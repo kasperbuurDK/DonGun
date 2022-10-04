@@ -12,7 +12,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         DataInnit();
 
-        Globals.RService.ResourceChanged += OnMainCharaUpdateEvent;
+        Globals.RSPlayerInfo.ResourceChanged += OnMainCharaUpdateEvent;
     }
 
     // Test to see if this is even needed...

@@ -21,32 +21,31 @@ public partial class LoginPage : ContentPage
 			{
 				ActivityIndicator.IsRunning = true;
 				loginBtn.IsEnabled = false;
-				Globals.RService = new RestService<Player>(userEntry.Text, passEntry.Text);
-				if (await GetCharaFromServer())
+				Globals.RSPlayerInfo = new RestService<Player>(userEntry.Text, passEntry.Text);
+                if (await GetCharaFromServer())
 				{
-					Globals.RService.CallBackRefreshFunc = GetCharaFromServer;
+					Globals.RSPlayerInfo.CallBackRefreshFunc = GetCharaFromServer;
 					Application.Current.MainPage = new AppShell();
 				}
 				else
 				{
 					ActivityIndicator.IsRunning = false;
 					loginBtn.IsEnabled = true;
-                    Globals.RService = null;
+                    Globals.RSPlayerInfo = null;
                     errorLabel.Text = "Invalid Username or Password!";
 				}
 			}
         } 
 		else 
 			errorLabel.Text = "Please input a Username and Password!";
-
     }
 
 	private static async Task<bool> GetCharaFromServer()
 	{
-        await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
-        if (Globals.RService.Response.IsSuccessStatusCode)
+        await Globals.RSPlayerInfo.RefreshDataAsync(Constants.RestUriGet + Globals.RSPlayerInfo.UserName);
+        if (Globals.RSPlayerInfo.Response.IsSuccessStatusCode)
         {
-            Globals.Connectivity = Globals.RService.Items[0];
+            Globals.Connectivity = Globals.RSPlayerInfo.Items[0];
 			return true;
         }
 		return false;

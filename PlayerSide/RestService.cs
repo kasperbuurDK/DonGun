@@ -1,4 +1,5 @@
 ﻿
+using DevExpress.Data.TreeList;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,25 +17,31 @@ namespace PlayerSide
         public string Logger { get; set; }
         public List<T> Items { get; private set; }
 
+        public bool TimerEnable { get; set; } = true;
+
+        public string AuthHeader { get; set; } = "";
+
         public RefreshFunc CallBackRefreshFunc { get; set; }
         public delegate Task<bool> RefreshFunc();
 
         public event EventHandler ResponseResived;
         public event EventHandler ResourceChanged;
 
-        public RestService(string user, string password)
+        public RestService(string user, string password) : this(Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
+        {
+            UserName = user;           
+        }
+        public RestService(string authHeader)
         {
             _client = new HttpClient();
-            // dXNlcjpwYXNzd29yZA== -- Peter
-            UserName = user;
-            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
+            AuthHeader = authHeader;
             StartRefTimer();
         }
 
@@ -140,13 +147,16 @@ namespace PlayerSide
 
         private async void OnRefTimedEventWrapper(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Uri uri = new(string.Format($"{Constants.RestUrl}{Constants.RestUriMod}{UserName}"));
-            _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
-            HttpResponseMessage _response = await _client.PostAsync(uri, null);
-            if (_response.StatusCode != System.Net.HttpStatusCode.NotModified)
+            if (TimerEnable)
             {
-                if (CallBackRefreshFunc is not null && await CallBackRefreshFunc())
-                    MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
+                Uri uri = new(string.Format($"{Constants.RestUrl}{Constants.RestUriMod}{UserName}"));
+                _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
+                HttpResponseMessage _response = await _client.PostAsync(uri, null);
+                if (_response.StatusCode != System.Net.HttpStatusCode.NotModified)
+                {
+                    if (CallBackRefreshFunc is not null && await CallBackRefreshFunc())
+                        MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));
+                }
             }
             ((System.Timers.Timer)sender).Start();
         }
