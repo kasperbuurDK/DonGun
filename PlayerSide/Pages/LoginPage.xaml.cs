@@ -22,10 +22,9 @@ public partial class LoginPage : ContentPage
 				ActivityIndicator.IsRunning = true;
 				loginBtn.IsEnabled = false;
 				Globals.RService = new RestService<Player>(userEntry.Text, passEntry.Text);
-				await Globals.RService.RefreshDataAsync("/api/weatherforecast/Get/" + Globals.RService.UserName);
-				if (Globals.RService.Response.IsSuccessStatusCode)
+				if (await GetCharaFromServer())
 				{
-					Globals.Connectivity = Globals.RService.Items[0];
+					Globals.RService.CallBackRefreshFunc = GetCharaFromServer;
 					Application.Current.MainPage = new AppShell();
 				}
 				else
@@ -40,5 +39,16 @@ public partial class LoginPage : ContentPage
 		else 
 			errorLabel.Text = "Please input a Username and Password!";
 
+    }
+
+	private static async Task<bool> GetCharaFromServer()
+	{
+        await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
+        if (Globals.RService.Response.IsSuccessStatusCode)
+        {
+            Globals.Connectivity = Globals.RService.Items[0];
+			return true;
+        }
+		return false;
     }
 }
