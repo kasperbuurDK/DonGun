@@ -1,6 +1,7 @@
 ﻿using DevExpress.Data.Async.Helpers;
 using DonBlazor.Models;
 using SharedClassLibrary;
+using SharedClassLibrary.Exceptions;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -41,14 +42,10 @@ namespace DonBlazor.Containers
             {
                 if (AllCharacters.Count == 0)
                 {
-                    throw new Exception(); // TODO make the real exception 
+                    throw new NoPLayersInGameException();  
                 }
                 
-                
-
-                
-                   return CurrentTurn % AllCharacters.Count;
-                
+                return CurrentTurn % AllCharacters.Count;
             } 
         }
 

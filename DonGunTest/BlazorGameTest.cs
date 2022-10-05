@@ -5,6 +5,7 @@ using DonBlazor.Models;
 using DonBlazor.Containers;
 using SharedClassLibrary;
 using System.Numerics;
+using SharedClassLibrary.Exceptions;
 
 namespace DonGunTest
 {
@@ -18,7 +19,7 @@ namespace DonGunTest
             activeGame = ActiveGameContainer.GetGameInstance;
             activeGame.Name = "Active test";
             activeGame.HumanPlayers = new List<Player> { };
-            activeGame.AllCharacters = new List<Character_abstract> { };
+            activeGame.NonHumanPlayers = new List<Npc> { };
             activeGame.Created = DateTime.Now;
             activeGame.LastSaved = activeGame.Created;
             activeGame.CurrentTurn = 999;
@@ -87,7 +88,7 @@ namespace DonGunTest
         {
 
             activeGame.HumanPlayers = new List<Player>() { };
-            activeGame.AllCharacters = new List<Character_abstract> { };
+            activeGame.NonHumanPlayers = new List<Npc>() { };
 
             Assert.Throws<NoPLayersInGameException>(() => { int testValue = activeGame.CurrentCharacter; });
         }

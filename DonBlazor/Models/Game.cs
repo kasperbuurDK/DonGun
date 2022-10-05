@@ -17,8 +17,20 @@ namespace DonBlazor.Models
 
         public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
 
-        public List<Character_abstract> AllCharacters { get; set; } = new List<Character_abstract> { };
+        public List<Npc> NonHumanPlayers { get; set; } = new List<Npc>() { };
 
+
+        public List<Character_abstract> AllCharacters
+        {
+            get
+            {
+                List<Character_abstract> listOfAll = new List<Character_abstract>();
+                listOfAll.AddRange(HumanPlayers);
+                listOfAll.AddRange(NonHumanPlayers);
+                return listOfAll;
+            } 
+
+        }
         public int CurrentTurn { get; set; } = 0;
 
         public int CurrentPlayer { get; set; } = 0;
