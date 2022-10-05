@@ -9,7 +9,11 @@ namespace DonBlazor.Models
         public string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
 
         [Required]
-        public string Name { get; set; } = "A Default DonGun Game";
+        public string Name { get; set; } = "Empty Game";
+
+        public DateTime? LastSaved { get; set; }
+
+        public DateTime Created { get; set; } = DateTime.Now;
 
         public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
 
@@ -19,9 +23,12 @@ namespace DonBlazor.Models
 
         public int CurrentPlayer { get; set; } = 0;
 
+        private Map? _map;
+
         public Game()
         {
-
+            
+ 
         }
 
 

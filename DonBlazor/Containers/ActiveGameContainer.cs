@@ -1,17 +1,20 @@
-﻿using DonBlazor.Models;
+﻿using DevExpress.Data.Async.Helpers;
+using DonBlazor.Models;
 using SharedClassLibrary;
 using System.ComponentModel.DataAnnotations;
 
 
 namespace DonBlazor.Containers
 {
-    public sealed class ActiveGameContainer
+
+    /// <summary>
+    /// Singleton creater of a Game instance
+    /// </summary>
+
+    public sealed class ActiveGameContainer: Game
     {
         private static ActiveGameContainer? GameInstance = null;
 
-        /// <summary>
-        /// Singleton creater of ActiveGameContainer
-        /// </summary>
         public static ActiveGameContainer GetGameInstance   
         {
             get
@@ -21,27 +24,33 @@ namespace DonBlazor.Containers
             }
         }
 
-        private ActiveGameContainer() 
+        private ActiveGameContainer()
         {
+     
         }
 
-        public static void DestroyGameInstance()
+        public void DestroyGameInstance()
         {
             GameInstance = null;
         }
 
         // Properties      
-        public string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
+        
+        public int CurrentCharacter{ 
+            get 
+            {
+                if (AllCharacters.Count == 0)
+                {
+                    throw new Exception(); // TODO make the real exception 
+                }
+                
+                
 
-        public string Name { get; set; } = "Empty Game";
-
-        public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
-
-        public List<Character_abstract> AllCharacters { get; set; } = new List<Character_abstract> { };
-
-        public int CurrentTurn { get; set; } = 0;
-
-        public int CurrentCharacter{ get; set; } = 0;
+                
+                   return CurrentTurn % AllCharacters.Count;
+                
+            } 
+        }
 
         // Methods
         public void UpdateToNewGame(Game newGame)
@@ -51,9 +60,6 @@ namespace DonBlazor.Containers
             AllCharacters.Clear();
             AllCharacters.AddRange(newGame.HumanPlayers); // At start of game, there are only Humanplayers  
             CurrentTurn = 0;
-            SetCurrentCharacter();
-
-            Console.WriteLine(this.Name);
         }
 
         public void NextTurn()
@@ -61,11 +67,7 @@ namespace DonBlazor.Containers
             CurrentTurn++;
         }
 
-        public void SetCurrentCharacter()
-        {
-            CurrentCharacter = CurrentTurn % AllCharacters.Count;
-        }
-
+       
         public void AddPlayerToGame(Player newPlayer)
         {
             HumanPlayers.Add(newPlayer);
