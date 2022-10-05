@@ -4,16 +4,14 @@
              x:Name="myDiceSel"
              x:Class="PlayerSide.Views.DiceSelectView">
     <ContentView.Content>
-        <Frame
-            CornerRadius="0"
-            Padding="0"
-            BorderColor="Black">
-            <Grid
-        x:Name="mainGrid"
-        RowSpacing="5"
-        ColumnSpacing="5"
-        HorizontalOptions="Fill"
-        VerticalOptions="Fill">
+        <Frame CornerRadius="0"
+               Padding="0"
+               BorderColor="Black">
+            <Grid x:Name="mainGrid"
+                  RowSpacing="5"
+                  ColumnSpacing="5"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -24,7 +22,11 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Image x:Name="backgroundImage" Aspect="Fill" Source="gray_wood"  Grid.ColumnSpan="2" Grid.RowSpan="4"/>
+                <Image x:Name="backgroundImage"
+                       Aspect="Fill"
+                       Source="gray_wood"
+                       Grid.ColumnSpan="2"
+                       Grid.RowSpan="4" />
             </Grid>
         </Frame>
     </ContentView.Content>
