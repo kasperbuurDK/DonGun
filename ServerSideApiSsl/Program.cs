@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using ServerSideApiSsl.Hubs;
 using System.Text.Json;
 
 namespace ServerSideApiSsl
@@ -17,6 +18,7 @@ namespace ServerSideApiSsl
                 options.JsonSerializerOptions.WriteIndented = true;
             });
             builder.Services.AddControllers();
+            builder.Services.AddSignalR();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecasetRepository>();
@@ -34,10 +36,13 @@ namespace ServerSideApiSsl
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHub<FileHub>("/filehub");
 
             app.Run();
         }
