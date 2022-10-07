@@ -1,4 +1,5 @@
 using SharedClassLibrary;
+using System.Reflection.Metadata;
 
 namespace PlayerSide.Pages;
 
@@ -32,7 +33,6 @@ public partial class LoginPage : ContentPage
 					ActivityIndicator.IsRunning = false;
 					loginBtn.IsEnabled = true;
                     Globals.RService = null;
-                    errorLabel.Text = "Invalid Username or Password!";
 				}
 			}
         } 
@@ -41,14 +41,22 @@ public partial class LoginPage : ContentPage
 
     }
 
-	private static async Task<bool> GetCharaFromServer()
+	private async Task<bool> GetCharaFromServer()
 	{
-        await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
-        if (Globals.RService.Response.IsSuccessStatusCode)
-        {
-            Globals.Connectivity = Globals.RService.Items[0];
-			return true;
+		try
+		{
+			await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
+			if (Globals.RService.Response.IsSuccessStatusCode)
+			{
+				Globals.Connectivity = Globals.RService.Items[0];
+				return true;
+			}
+		} catch (Exception ex)
+		{
+            errorLabel.Text = $"An error accured - \"{ex.Message}\"";
         }
-		return false;
+        if (Globals.RService.Response is not null && Globals.RService.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            errorLabel.Text = "Invalid Username or Password!";
+        return false;
     }
 }

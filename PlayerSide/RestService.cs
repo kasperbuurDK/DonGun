@@ -14,6 +14,7 @@ namespace PlayerSide
         public HttpResponseMessage Response { get; set; }
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
         public string Logger { get; set; }
+        public string AuthHeader { get; private set; }
         public List<T> Items { get; private set; }
 
         public RefreshFunc CallBackRefreshFunc { get; set; }
@@ -27,8 +28,8 @@ namespace PlayerSide
             _client = new HttpClient();
             // dXNlcjpwYXNzd29yZA== -- Peter
             UserName = user;
-            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
+            AuthHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
             {
@@ -45,6 +46,7 @@ namespace PlayerSide
             Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
             try
             {
+                // Localhosting return exception...
                 Response = await _client.GetAsync(uri);
                 if (Response.IsSuccessStatusCode)
                 {
@@ -70,6 +72,7 @@ namespace PlayerSide
             }
             catch (Exception ex)
             {
+                // TODO: Handel exseptions better!
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri}");
             }
             finally
@@ -135,7 +138,7 @@ namespace PlayerSide
             };
             RefTimer.Elapsed += OnRefTimedEventWrapper;
             RefTimer.Enabled = true;
-            RefTimer.Start();
+            //RefTimer.Start();
         }
 
         private async void OnRefTimedEventWrapper(object sender, System.Timers.ElapsedEventArgs e)
@@ -148,7 +151,7 @@ namespace PlayerSide
                 if (CallBackRefreshFunc is not null && await CallBackRefreshFunc())
                     MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
             }
-            ((System.Timers.Timer)sender).Start();
+            //((System.Timers.Timer)sender).Start();
         }
     }
 }
