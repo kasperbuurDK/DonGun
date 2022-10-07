@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Internals;
 using SharedClassLibrary;
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace PlayerSide.Models
@@ -41,7 +37,7 @@ namespace PlayerSide.Models
         public async Task Initialise()
         {
             hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7055/filehub")
+                .WithUrl($"{Constants.RestUrl}/filehub", options => options.Headers.Add("Authorization", $"Basic {Globals.RService.AuthHeader}"))
                 .Build();
 
             hubConnection.On<FileUpdateMessage>("ReceiveMessage", msg =>
