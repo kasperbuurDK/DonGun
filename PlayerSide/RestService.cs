@@ -45,6 +45,7 @@ namespace PlayerSide
             Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
             try
             {
+                // Localhosting return exception...
                 Response = await _client.GetAsync(uri);
                 if (Response.IsSuccessStatusCode)
                 {
@@ -70,6 +71,7 @@ namespace PlayerSide
             }
             catch (Exception ex)
             {
+                // TODO: Handel exseptions better!
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri}");
             }
             finally

@@ -1,4 +1,5 @@
-﻿using SharedClassLibrary;
+﻿using PlayerSide.Models;
+using SharedClassLibrary;
 using System;
 using System.ComponentModel;
 using static System.Net.Mime.MediaTypeNames;
@@ -7,12 +8,21 @@ namespace PlayerSide.Pages;
 
 public partial class MainPage : ContentPage
 {
+    public TestViewModel ViewModel { get; set; }
     public MainPage()
     {
         InitializeComponent();
         DataInnit();
 
         Globals.RService.ResourceChanged += OnMainCharaUpdateEvent;
+        ViewModel = new TestViewModel();
+        BindingContext = ViewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await ViewModel.Initialise();
     }
 
     // Test to see if this is even needed...

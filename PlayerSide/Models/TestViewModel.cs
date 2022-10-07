@@ -36,7 +36,6 @@ namespace PlayerSide.Models
 
         public TestViewModel()
         {
-            SendMessageCommand = new Command(async () => await Send());
         }
 
         public async Task Initialise()
@@ -49,9 +48,12 @@ namespace PlayerSide.Models
             {
                 try
                 {
-                    Console.WriteLine($"Received message {msg.Message}");
+                    Console.WriteLine($"Received message {msg.LastModified}");
                     Console.WriteLine($"From {msg.UserName}");
-                    UpdateProperties(msg);
+                    foreach (string m in MessagePropertyList)
+                    {
+                        OnPropertyChanged(m);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -61,19 +63,20 @@ namespace PlayerSide.Models
             });
 
             await hubConnection.StartAsync();
+            await Send();
         }
 
         public async Task Send()
         {
-            var msg = new FileUpdateMessage
+            FileUpdateMessage msg = new()
             {
                 UserName = UserName,
-                Message = Message,
-                UserId = userId,
-                AvatarId = avatarId
+                SheetId = SheetId,
+                SessionKey = SessionKey,
+                LastModified = LastModified
             };
 
-            Console.WriteLine($"Sending message for user {userId}");
+            Console.WriteLine($"Sending message for user {UserName}");
 
             await hubConnection.SendAsync("SendMessage", msg);
         }
@@ -82,25 +85,7 @@ namespace PlayerSide.Models
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void UpdateProperties(FileUpdateMessage message)
-        {
-            Message4Text = message.Message;
-            Message4Username = message.UserName;
-            Message4Avatar = $"avatar{message.AvatarId}.png";
-            Message4IsMe = message.UserId == userId;
-            Message4IsNotMe = message.UserId != userId;
-
-            MessagePropertyList.ForEach(m => OnPropertyChanged(m));
-
-            Console.WriteLine("Added message:");
-            Console.WriteLine($"From: {Message4Username}");
-            Console.WriteLine($"Message: {Message4Text}");
-            Console.WriteLine($"Is me: {Message4IsMe}");
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
