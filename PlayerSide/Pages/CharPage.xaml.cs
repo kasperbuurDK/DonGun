@@ -1,3 +1,5 @@
+using SharedClassLibrary;
+
 namespace PlayerSide.Pages;
 
 public partial class CharPage : ContentPage
@@ -6,7 +8,17 @@ public partial class CharPage : ContentPage
     {
         InitializeComponent();
         CharPc.Character = Globals.Connectivity;
-        Globals.RService.ResourceChanged += OnConnectivityChanged;
+        Globals.RSNonPlayerInfo = new RestService<Npc>(Globals.RSPlayerInfo.AuthHeader)
+        {
+            UserName = Globals.RSPlayerInfo.UserName
+        };
+        Globals.RSPlayerInfo.ResourceChanged += OnConnectivityChanged;
+        Globals.RSNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
+    }
+
+    private void OnGameOrderChanged(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     // Test to see if this is even needed...

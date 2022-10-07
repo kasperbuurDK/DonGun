@@ -1,5 +1,4 @@
 ﻿
-using Java.Lang;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http.Headers;
@@ -24,18 +23,21 @@ namespace PlayerSide
 
         public string Logger { get; set; }
 
-        public RestService(string user, string password)
+        public RestService(string user, string password) : this(Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
+        {
+            UserName = user;           
+        }
+        public RestService(string authHeader)
         {
             _client = new HttpClient();
-            UserName = user;
-            AuthHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
+            AuthHeader = authHeader;
             StartRefTimer();
         }
 

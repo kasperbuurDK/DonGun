@@ -22,10 +22,10 @@ public partial class LoginPage : ContentPage
 			{
 				ActivityIndicator.IsRunning = true;
 				loginBtn.IsEnabled = false;
-				Globals.RService = new RestService<Player>(userEntry.Text, passEntry.Text);
-				if (await GetCharaFromServer())
+				Globals.RSPlayerInfo = new RestService<Player>(userEntry.Text, passEntry.Text);
+                if (await GetCharaFromServer())
 				{
-					Globals.RService.CallBackRefreshFunc = GetCharaFromServer;
+					Globals.RSPlayerInfo.CallBackRefreshFunc = GetCharaFromServer;
 					Application.Current.MainPage = new AppShell();
 				}
 				else
@@ -38,7 +38,6 @@ public partial class LoginPage : ContentPage
         } 
 		else 
 			errorLabel.Text = "Please input a Username and Password!";
-
     }
 
 	private async Task<bool> GetCharaFromServer()

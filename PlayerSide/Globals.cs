@@ -6,7 +6,9 @@ namespace PlayerSide
     public static class Globals
     {
         public static Character_abstract Connectivity { get; set;}
-        public static RestService<Player> RService { get; set; }
+        public static List<Character_abstract> GameOrder { get; set; }
+        public static RestService<Player> RSPlayerInfo { get; set; }
+        public static RestService<Npc> RSNonPlayerInfo { get; set; }
         public enum NumAsAlpha
         {
             a = 1,
