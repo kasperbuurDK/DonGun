@@ -1,4 +1,6 @@
 ﻿
+using Java.Lang;
+using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,25 +10,23 @@ namespace PlayerSide
 {
     public class RestService<T>
     {
-        readonly HttpClient _client;
-        readonly JsonSerializerOptions _serializerOptions;
-        public string UserName { get; set; } = "user";
+        private readonly HttpClient _client;
+        private readonly JsonSerializerOptions _serializerOptions;
+
         public HttpResponseMessage Response { get; set; }
+        public string UserName { get; set; }
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
-        public string Logger { get; set; }
         public string AuthHeader { get; private set; }
         public List<T> Items { get; private set; }
 
-        public RefreshFunc CallBackRefreshFunc { get; set; }
-        public delegate Task<bool> RefreshFunc();
+        public Action CallBackRefreshFunc { get; set; }
+        private BackgroundWorker Worker { get; set; }
 
-        public event EventHandler ResponseResived;
-        public event EventHandler ResourceChanged;
+        public string Logger { get; set; }
 
         public RestService(string user, string password)
         {
             _client = new HttpClient();
-            // dXNlcjpwYXNzd29yZA== -- Peter
             UserName = user;
             AuthHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
