@@ -9,8 +9,8 @@ namespace SharedClassLibrary
         private const int _maxSleep = 500;
         private TimeSpan _timeSpan;
 
-        public event EventHandler Rolled;
-        public event EventHandler RollingChanged;
+        public event EventHandler? Rolled;
+        public event EventHandler? RollingChanged;
 
         private Random Rand { get; init; }
         private BackgroundWorker Worker { get; set; }
@@ -101,7 +101,7 @@ namespace SharedClassLibrary
             RaiseEvent(Rolled);
         }
 
-        private void RaiseEvent(EventHandler handler)
+        private void RaiseEvent(EventHandler? handler)
         {
             handler?.Invoke(this, EventArgs.Empty);
         }

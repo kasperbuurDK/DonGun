@@ -8,9 +8,14 @@ namespace SharedClassLibrary
 {
     public class FileUpdateMessage
     {
-        public string UserName { get; set; }
-        public string SheetId { get; set; }
-        public string SessionKey { get; set; }
-        public string LastModified { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string UUID { get; set; } = string.Empty;
+        public string SheetId { get; set; } = string.Empty;
+        public string LastModified { get; set; } = string.Empty;
+
+        public override string ToString()
+        {
+            return string.Format($"{UserName} - {UUID} - {SheetId} - {LastModified}");
+        }
     }
 }

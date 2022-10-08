@@ -5,7 +5,7 @@
         public readonly List<Dice> DiceList;
         private int _rolledCount = 0;
 
-        public event EventHandler Rolled;
+        public event EventHandler? Rolled;
 
         public int MaxDice { get; set; } = 8;
 
@@ -58,7 +58,7 @@
             _rolledCount++;
             if (_rolledCount >= DiceList.Count)
             {
-                Rolled.Invoke(this, EventArgs.Empty);
+                Rolled?.Invoke(this, EventArgs.Empty);
             }
         }
     }

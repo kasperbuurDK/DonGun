@@ -8,9 +8,9 @@ namespace ServerSideApiSsl.Hubs
     [Authorize]
     public class FileHub : Hub
     {
-        public async Task SendMessage(FileUpdateMessage msg)
+        public async Task SendUpdateEvent(FileUpdateMessage msg)
         {
-            await Clients.All.SendAsync("ReceiveMessage", msg);
+            await Clients.All.SendAsync("ReceiveUpdateEvent", msg);
         }
     }
     
