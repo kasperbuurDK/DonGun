@@ -8,12 +8,13 @@ public partial class CharPage : ContentPage
     {
         InitializeComponent();
         CharPc.Character = Globals.Connectivity;
-        Globals.RSNonPlayerInfo = new RestService<Npc>(Globals.RSPlayerInfo.AuthHeader)
+        Globals.RestNonPlayerInfo = new RestService<Npc>(Globals.RestPlayerInfo.AuthHeader)
         {
-            UserName = Globals.RSPlayerInfo.UserName
+            UserName = Globals.RestPlayerInfo.UserName
         };
-        Globals.RSPlayerInfo.ResourceChanged += OnConnectivityChanged;
-        Globals.RSNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
+        // REST:
+        //Globals.RestPlayerInfo.ResourceChanged += OnConnectivityChanged;
+        //Globals.RestNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
     }
 
     private void OnGameOrderChanged(object sender, EventArgs e)

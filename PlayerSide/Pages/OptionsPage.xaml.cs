@@ -11,8 +11,8 @@ public partial class OptionsPage : ContentPage
     {
         // Sent dirty data back to server.
         Globals.Connectivity = null;
-        Globals.RSPlayerInfo = null;
-        Globals.RSNonPlayerInfo = null;
+        Globals.RestPlayerInfo = null;
+        Globals.RestNonPlayerInfo = null;
         Application.Current.MainPage = new LoginPage();
     }
 }
