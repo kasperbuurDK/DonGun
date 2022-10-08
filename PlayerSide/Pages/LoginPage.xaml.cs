@@ -1,5 +1,4 @@
 using SharedClassLibrary;
-using System.Reflection.Metadata;
 
 namespace PlayerSide.Pages;
 
@@ -28,6 +27,8 @@ public partial class LoginPage : ContentPage
                     if (Globals.RestPlayerInfo.Response.IsSuccessStatusCode)
                     {
                         Globals.Connectivity = Globals.RestPlayerInfo.Items[0];
+                        Globals.FileUpdateHub = new(Globals.RestPlayerInfo.AuthHeader);
+                        await Globals.FileUpdateHub.Initialise();
                         Application.Current.MainPage = new AppShell();
                     }
                 }

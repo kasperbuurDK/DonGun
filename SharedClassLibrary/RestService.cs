@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace PlayerSide
+namespace SharedClassLibrary
 {
     public class RestService<T>
     {
@@ -14,19 +14,18 @@ namespace PlayerSide
         private readonly JsonSerializerOptions _serializerOptions;
 
         // HTTP related properties
-        public HttpResponseMessage Response { get; set; }
-        public string UserName { get; set; }
+        public HttpResponseMessage? Response { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string AuthHeader { get; private set; } = string.Empty;
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
-        public string AuthHeader { get; private set; }
-        public List<T> Items { get; private set; }
+        public List<T>? Items { get; private set; }
 
         // Class related properties
-        public Action CallBackRefreshFunc { get; set; }
-        public string Logger { get; set; }
-        public Exception CatchedException { get; private set; }
+        public string Logger { get; set; } = string.Empty;
+        public Exception? CatchedException { get; private set; }
 
         // Event
-        public event EventHandler ResponseResived;
+        public event EventHandler? ResponseResived;
 
         // Constructors
         public RestService(string user, string password) : this(Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
@@ -53,7 +52,7 @@ namespace PlayerSide
         public async Task RefreshDataAsync(string uriPath)
         {
             Items = new();
-            Uri uri = new(string.Format($"{Constants.RestBaseUrl}{uriPath}"));
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriPath}"));
 
             try
             {
@@ -63,7 +62,7 @@ namespace PlayerSide
                     string content = await Response.Content.ReadAsStringAsync();
                     Items = JsonSerializer.Deserialize<List<T>>(content, _serializerOptions);
                     HttpHeaders headers = Response.Headers;
-                    if (headers.TryGetValues("Last-Modified", out IEnumerable<string> values))
+                    if (headers.TryGetValues("Last-Modified", out var values))
                     {
                         try
                         {
@@ -96,7 +95,7 @@ namespace PlayerSide
         /// <returns></returns>
         public async Task SaveDataAsync(T item, string uriResourcePath, bool create = false)
         {
-            Uri uri = new(string.Format($"{Constants.RestBaseUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
@@ -122,7 +121,7 @@ namespace PlayerSide
         /// <param name="uriResourcePath"></param>
         public async Task DeleteDataAsync(string uriResourcePath)
         {
-            Uri uri = new(string.Format($"{Constants.RestBaseUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
@@ -137,7 +136,7 @@ namespace PlayerSide
             }
         }
 
-        private void RaiseEvent(EventHandler handler)
+        private void RaiseEvent(EventHandler? handler)
         {
             handler?.Invoke(this, EventArgs.Empty);
         }
