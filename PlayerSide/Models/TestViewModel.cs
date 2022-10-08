@@ -37,7 +37,7 @@ namespace PlayerSide.Models
         public async Task Initialise()
         {
             hubConnection = new HubConnectionBuilder()
-                .WithUrl($"{Constants.RestUrl}/filehub", options => options.Headers.Add("Authorization", $"Basic {Globals.RService.AuthHeader}"))
+                .WithUrl($"{Constants.RestBaseUrl}/filehub", options => options.Headers.Add("Authorization", $"Basic {Globals.RestPlayerInfo.AuthHeader}"))
                 .Build();
 
             hubConnection.On<FileUpdateMessage>("ReceiveMessage", msg =>

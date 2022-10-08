@@ -4,13 +4,11 @@
              x:Class="PlayerSide.Pages.OptionsPage"
              Title="OptionsPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Button
-            x:Name="logoutBtn"
-            Text="Logout"
-            Clicked="LogoutBtnClicked"/>
+        <Label Text="Welcome to .NET MAUI!"
+               VerticalOptions="Center"
+               HorizontalOptions="Center" />
+        <Button x:Name="logoutBtn"
+                Text="Logout"
+                Clicked="LogoutBtnClicked" />
     </VerticalStackLayout>
 </ContentPage>

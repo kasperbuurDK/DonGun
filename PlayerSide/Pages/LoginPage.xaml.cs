@@ -20,43 +20,33 @@ public partial class LoginPage : ContentPage
 			}
 			else
 			{
-				ActivityIndicator.IsRunning = true;
-				loginBtn.IsEnabled = false;
-				Globals.RService = new RestService<Player>(userEntry.Text, passEntry.Text);
-				if (await GetCharaFromServer())
-				{
-					Globals.RService.CallBackRefreshFunc = GetCharaFromServer;
-					Application.Current.MainPage = new AppShell();
-				}
-				else
-				{
-					ActivityIndicator.IsRunning = false;
-					loginBtn.IsEnabled = true;
-                    Globals.RService = null;
-				}
+                PageLock(true);
+                Globals.RestPlayerInfo = new RestService<Player>(userEntry.Text, passEntry.Text);
+                try
+                {
+                    await Globals.RestPlayerInfo.RefreshDataAsync(Constants.RestUriGet + Globals.RestPlayerInfo.UserName);
+                    if (Globals.RestPlayerInfo.Response.IsSuccessStatusCode)
+                    {
+                        Globals.Connectivity = Globals.RestPlayerInfo.Items[0];
+                        Application.Current.MainPage = new AppShell();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorLabel.Text = $"An error accured - \"{ex.Message}\"";
+                }
+                if (Globals.RestPlayerInfo.Response is not null && Globals.RestPlayerInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    errorLabel.Text = "Invalid Username or Password!";
+                PageLock(false);
 			}
         } 
 		else 
 			errorLabel.Text = "Please input a Username and Password!";
-
     }
 
-	private async Task<bool> GetCharaFromServer()
-	{
-		try
-		{
-			await Globals.RService.RefreshDataAsync(Constants.RestUriGet + Globals.RService.UserName);
-			if (Globals.RService.Response.IsSuccessStatusCode)
-			{
-				Globals.Connectivity = Globals.RService.Items[0];
-				return true;
-			}
-		} catch (Exception ex)
-		{
-            errorLabel.Text = $"An error accured - \"{ex.Message}\"";
-        }
-        if (Globals.RService.Response is not null && Globals.RService.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            errorLabel.Text = "Invalid Username or Password!";
-        return false;
+    private void PageLock(bool l)
+    {
+        ActivityIndicator.IsRunning = l;
+        loginBtn.IsEnabled = !l;
     }
 }

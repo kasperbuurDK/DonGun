@@ -1,8 +1,4 @@
 ﻿using PlayerSide.Models;
-using SharedClassLibrary;
-using System;
-using System.ComponentModel;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PlayerSide.Pages;
 
@@ -14,7 +10,8 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         DataInnit();
 
-        Globals.RService.ResourceChanged += OnMainCharaUpdateEvent;
+        // HUB:
+        //Globals.RestPlayerInfo.ResourceChanged += OnMainCharaUpdateEvent;
         ViewModel = new TestViewModel();
         BindingContext = ViewModel;
     }
