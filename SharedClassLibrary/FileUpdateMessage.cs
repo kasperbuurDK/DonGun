@@ -12,10 +12,11 @@ namespace SharedClassLibrary
         public string UUID { get; set; } = string.Empty;
         public string SheetId { get; set; } = string.Empty;
         public string LastModified { get; set; } = string.Empty;
+        public string SessionKey { get; set; } = string.Empty;
 
         public override string ToString()
         {
-            return string.Format($"{UserName} - {UUID} - {SheetId} - {LastModified}");
+            return string.Format($"{UserName} - {UUID} - {SheetId} - {LastModified} - {SessionKey}");
         }
     }
 }

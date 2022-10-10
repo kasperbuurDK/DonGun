@@ -8,6 +8,8 @@ namespace SharedClassLibrary
         // Fields
         private readonly HubConnection hubConnection;
 
+        public GameSessionOptions GameOptions { get; set; } = new();
+
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
         public string AuthHeader { get; set; }
@@ -22,6 +24,7 @@ namespace SharedClassLibrary
             hubConnection = new HubConnectionBuilder()
                     .WithUrl($"{Constants.BaseUrl}{Constants.HubUriFile}", options => options.Headers.Add("Authorization", $"Basic {AuthHeader}"))
                     .Build();
+
 
             hubConnection.On<T>("ReceiveUpdateEvent", msg =>
             {
@@ -40,6 +43,17 @@ namespace SharedClassLibrary
         }
 
         /// <summary>
+        /// Join game room with sesstion key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task JoinRoom(string key)
+        {
+            GameOptions = new GameSessionOptions() { SessionKey = key };
+            await hubConnection.SendAsync("JoinGameRoom", GameOptions);
+        }
+
+        /// <summary>
         /// Send event to hub.
         /// </summary>
         /// <returns></returns>
@@ -55,5 +69,13 @@ namespace SharedClassLibrary
     public class HubEventArgs<T> : EventArgs
     {
         public T? Messege { get; set; }
+    }
+
+    /// <summary>
+    /// Exception contenxt resived from hub on errors.
+    /// </summary>
+    public class HubServiceException
+    {
+        public string Messege { get; set; } = string.Empty;
     }
 }
