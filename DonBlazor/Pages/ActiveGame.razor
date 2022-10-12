@@ -1,4 +1,5 @@
 ﻿@using Containers;
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 @page "/activegame"
 
@@ -7,32 +8,24 @@
 <h1>Welcome Don</h1>
 
 Welcome to your game. 
-<br />
-@activeGame.Name
-<br />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Race</th>
-            <th>Mastery</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var player in activeGame.HumanPlayers)
-        {
-            <tr>
-                <td>@player.Name</td>
-                <td>@player.RaceString</td>
-                <td>@player.MasteryString</td>
-                <td>@player.StatusString</td>
-            </tr>
-        }
-    </tbody>
-</table>
 
+
+@if (activeGame.HumanPlayers.Count != 0)
+{
+    <br />
+    @activeGame.Name
+    <br />
+
+    <QuickGrid Items="@activeGame.HumanPlayers.AsQueryable()">
+        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.RaceString)" Title="Race" Sortable="true" />
+        <PropertyColumn Property="@(p => p.MasteryString)" Title="Mastery"  Sortable="true" />
+        <PropertyColumn Property="@(p => p.StatusString)" Title="Status"  Sortable="true" />
+    </QuickGrid>
+} else {
+    <p>No game loaded create a new or load an existing game</p>
+}
 
 
 @code {

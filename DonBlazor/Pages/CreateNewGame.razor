@@ -2,12 +2,16 @@
 @using Models;
 @using SharedClassLibrary;
 @using Containers;
+@using System.Text
+@inject NavigationManager Navigation
 
 <PageTitle>Create New Game</PageTitle>
 
 <h1>Welcome Don!</h1>
 
-@Containers.ActiveGameContainer.GetGameInstance.Name;
+<p> Game Name </p>
+<input placeholder="Give the game a name" @bind="gameName" />
+
 
 @if (playersInGame.Count == 0)
 {
@@ -35,11 +39,15 @@ else
                 </tr>
             }
         </tbody>
+        
     </table>
+    
 }
-
 <input placeholder="Add a player name" @bind="playerName" />
 <button @onclick="AddPlayer">Add PLayer</button>
+
+<br />
+
 <button @onclick="CreateGame" >Create Game</button>
 
 
@@ -47,8 +55,11 @@ else
 @code{
     Game newGame = new();
     private string? playerName;
+    private string? gameName;
     private List<Player> playersInGame = new List<Player>() {};
     private bool readyToCreate = false;
+    private string? createGameStatus = "";
+    private StringBuilder creationStatus = new StringBuilder(""); 
 
     ActiveGameContainer activeGame = ActiveGameContainer.GetGameInstance;
 
@@ -69,15 +80,47 @@ else
 
     private void CreateGame()
     {
+        bool allGood = true;
         Game newGame = new();
-        newGame.HumanPlayers = playersInGame;
-        
-        activeGame.UpdateToNewGame(newGame);
+
+        if (!String.IsNullOrEmpty(gameName)) {
+            newGame.Name = gameName;
+        }
+        else {
+            creationStatus.Append("Game must have a name");
+            allGood = false;
+        }
+
+        if (playersInGame.Count != 0)
+        {
+            newGame.HumanPlayers = playersInGame;
+        }
+        else {
+            if (creationStatus.Length != 0) {
+                creationStatus.Append(" and at least one player");
+            } else {
+                createGameStatus = "Game must have at least One player";
+
+            }
+            
+            allGood = false;
+        }
+
+        if (allGood)
+        {
+            activeGame.UpdateToNewGame(newGame);
+            createGameStatus = "Greated game succesfully";
+            Navigation.NavigateTo("/activegame");
+        }
+        else {
+
+            WarnOfSomethingWrong(creationStatus.ToString());
+        }
     }
 
     private void WarnOfSomethingWrong(string message) 
     {
-        
+        // MAKE SOME KIND OF ALERT
     }
 
 }
