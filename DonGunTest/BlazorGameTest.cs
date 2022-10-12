@@ -79,20 +79,40 @@ namespace DonGunTest
             }
             activeGame.CurrentTurn = numberOfPlayers;
 
-
             Assert.That(activeGame.CurrentCharacter, Is.EqualTo(0));
         }
 
         [Test]
-        public void Determine_Character_Without_Players_Trows_Exceotion() 
+        public void Determine_Character_Without_Players_Throws_Exception() 
         {
-
             activeGame.HumanPlayers = new List<Player>() { };
             activeGame.NonHumanPlayers = new List<Npc>() { };
 
             Assert.Throws<NoPLayersInGameException>(() => { int testValue = activeGame.CurrentCharacter; });
         }
 
-       
+        [Test]
+        public void AllCharacters_Are_The_Sum_Of_Human_And_NPCs()
+        {
+            int noOfHumans = 2;
+            int noOfNPCs = 6;
+
+            activeGame.HumanPlayers = new List<Player>() { };
+            activeGame.NonHumanPlayers = new List<Npc>() { };
+
+            for (int i = 0; i < noOfHumans; i++)
+            {
+                Player player = new($"player{i}");
+                activeGame.HumanPlayers.Add(player);
+            }
+
+            for (int i = 0; i < noOfNPCs; i++)
+            {
+                Npc npc = new();
+                activeGame.NonHumanPlayers.Add(npc);
+            }
+
+            Assert.That(activeGame.AllCharacters, Has.Count.EqualTo(noOfHumans + noOfNPCs));
+        }
     }
 }
