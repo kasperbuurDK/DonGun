@@ -3,50 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.LoginPage"
              Title="LoginPage">
-    
-    <Grid
-        Padding="10">
+    <ContentPage.Resources>
+        <!-- Light colors -->
+        <Color x:Key="LightPrimaryColor">WhiteSmoke</Color>
+        <Color x:Key="LightSecondaryColor">Black</Color>
+        <!-- Dark colors -->
+        <Color x:Key="DarkPrimaryColor">DarkGray</Color>
+        <Color x:Key="DarkSecondaryColor">White</Color>
+    </ContentPage.Resources>
+    <Grid Padding="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <VerticalStackLayout
-            Grid.Row="1"
-            Padding="0"
-            Spacing="10">
-            <Label 
-            Text="Welcome to DunGun!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"/>
-            <Entry
-            x:Name="userEntry"
-            BackgroundColor="LightGray"
-            Text="user"
-            ClearButtonVisibility="WhileEditing"
-            Placeholder="Username"/>
-            <Entry
-            x:Name="passEntry"
-            BackgroundColor="LightGray"
-            Text="password"
-            ClearButtonVisibility="WhileEditing"
-            Placeholder="Password"
-            IsPassword="True"/>
-            <Button
-            x:Name="loginBtn"
-            Text="Login"
-            Clicked="LoginBtnClicked"/>
-            <Label 
-            x:Name="errorLabel"
-            TextColor="Red"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="0"
+                             Spacing="10">
+            <Label Text="Welcome to DunGun!"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
+            <Entry x:Name="userEntry"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                   Text="user"
+                   ClearButtonVisibility="WhileEditing"
+                   Placeholder="Username" />
+            <Entry x:Name="passEntry"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                   Text="password"
+                   ClearButtonVisibility="WhileEditing"
+                   Placeholder="Password"
+                   IsPassword="True" />
+            <Button x:Name="loginBtn"
+                    Text="Login"
+                    Clicked="LoginBtnClicked" />
+            <Label x:Name="errorLabel"
+                   TextColor="Red"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
         </VerticalStackLayout>
-        <ActivityIndicator 
-            x:Name="ActivityIndicator"
-            BackgroundColor="White"
-            IsRunning="False"
-            Color="Blue" 
-            Grid.RowSpan="3"/>
+        <ActivityIndicator x:Name="ActivityIndicator"
+                           BackgroundColor="White"
+                           IsRunning="False"
+                           Color="Blue"
+                           Grid.RowSpan="3" />
     </Grid>
 </ContentPage>

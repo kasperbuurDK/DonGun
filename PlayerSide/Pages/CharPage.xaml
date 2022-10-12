@@ -2,35 +2,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:custom="clr-namespace:PlayerSide.Views"
              x:Class="PlayerSide.Pages.CharPage">
-    <Grid
-                Padding="2"
-                RowSpacing="2"
-                ColumnSpacing="2">
-            <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
+    <Grid Padding="2"
+          RowSpacing="2"
+          ColumnSpacing="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*" />
             <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Image x:Name="backgroundImage" Aspect="Fill" Source="gray_wood" Grid.RowSpan="2"/>
-        <custom:CharView 
-                x:Name="CharPc"/>
-        <Border
-            Grid.Row="1"
-            Stroke="Black"
-            StrokeThickness="3"
-            BackgroundColor="Transparent"
-            Padding="5">
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="backgroundImage"
+               Aspect="Fill"
+               Source="gray_wood"
+               Grid.RowSpan="2" />
+        <custom:CharView x:Name="CharPc" />
+        <Border Grid.Row="1"
+                Stroke="Black"
+                StrokeThickness="3"
+                BackgroundColor="Transparent"
+                Padding="5">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="10,10,10,10" />
             </Border.StrokeShape>
-            <ScrollView
-                Padding="0"
-                Margin="0,0,0,0">
-                <StackLayout
-                Padding="2">
-                </StackLayout>
+            <ScrollView Padding="0"
+                        Margin="0,0,0,0">
+                <StackLayout Padding="2"></StackLayout>
             </ScrollView>
         </Border>
     </Grid>

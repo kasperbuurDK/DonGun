@@ -1,48 +1,59 @@
 ﻿
+using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace PlayerSide
+namespace SharedClassLibrary
 {
     public class RestService<T>
     {
-        readonly HttpClient _client;
-        readonly JsonSerializerOptions _serializerOptions;
-        public string UserName { get; set; } = "user";
-        public HttpResponseMessage Response { get; set; }
+        // Fields
+        private readonly HttpClient _client;
+        private readonly JsonSerializerOptions _serializerOptions;
+
+        // HTTP related properties
+        public HttpResponseMessage? Response { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string AuthHeader { get; private set; } = string.Empty;
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
-        public string Logger { get; set; }
-        public List<T> Items { get; private set; }
+        public List<T>? Items { get; private set; }
 
-        public RefreshFunc CallBackRefreshFunc { get; set; }
-        public delegate Task<bool> RefreshFunc();
+        // Class related properties
+        public string Logger { get; set; } = string.Empty;
+        public Exception? CatchedException { get; private set; }
 
-        public event EventHandler ResponseResived;
-        public event EventHandler ResourceChanged;
+        // Event
+        public event EventHandler? ResponseResived;
 
-        public RestService(string user, string password)
+        // Constructors
+        public RestService(string user, string password) : this(Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
+        {
+            UserName = user;           
+        }
+        public RestService(string authHeader)
         {
             _client = new HttpClient();
-            // dXNlcjpwYXNzd29yZA== -- Peter
-            UserName = user;
-            string authHeaer = Convert.ToBase64String(Encoding.ASCII.GetBytes(UserName + ":" + password));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaer);
+            AuthHeader = authHeader;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
-            StartRefTimer();
         }
 
-        public async Task RefreshDataAsync(string uriResourcePath)
+        /// <summary>
+        /// Quarry server to get new data object.
+        /// </summary>
+        /// <param name="uriPath"></param>
+        public async Task RefreshDataAsync(string uriPath)
         {
             Items = new();
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriPath}"));
 
-            Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
             try
             {
                 Response = await _client.GetAsync(uri);
@@ -51,7 +62,7 @@ namespace PlayerSide
                     string content = await Response.Content.ReadAsStringAsync();
                     Items = JsonSerializer.Deserialize<List<T>>(content, _serializerOptions);
                     HttpHeaders headers = Response.Headers;
-                    if (headers.TryGetValues("Last-Modified", out IEnumerable<string> values))
+                    if (headers.TryGetValues("Last-Modified", out var values))
                     {
                         try
                         {
@@ -71,16 +82,20 @@ namespace PlayerSide
             catch (Exception ex)
             {
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri}");
-            }
-            finally
-            {
-                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+                CatchedException = ex;
             }
         }
 
+        /// <summary>
+        /// Quarry server to post/save item object. If crate is true item is put onto the server.
+        /// </summary>
+        /// <param name="item">Item of type /<T/></param>
+        /// <param name="uriResourcePath"></param>
+        /// <param name="create">True = Perform put request</param>
+        /// <returns></returns>
         public async Task SaveDataAsync(T item, string uriResourcePath, bool create = false)
         {
-            Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
@@ -91,64 +106,39 @@ namespace PlayerSide
                     Response = await _client.PostAsync(uri, content);
                 else
                     Response = await _client.PutAsync(uri, content);
+                RaiseEvent(ResponseResived);
             }
             catch (Exception ex)
             {
                 Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri} - {item}");
-            }
-            finally
-            {
-                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+                CatchedException = ex;
             }
         }
 
+        /// <summary>
+        /// Quarry server to delete item object.
+        /// </summary>
+        /// <param name="uriResourcePath"></param>
         public async Task DeleteDataAsync(string uriResourcePath)
         {
-            Uri uri = new(string.Format($"{Constants.RestUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
             {
                 Response = await _client.DeleteAsync(uri);
+                RaiseEvent(ResponseResived);
             }
             catch (Exception ex)
             {
                 Logger = string.Format($"ERROR {ex.Message} - {uri}");
-            }
-            finally
-            {
-                MainThread.BeginInvokeOnMainThread(MainThreadCode);
+                CatchedException = ex;
             }
         }
 
-        private void MainThreadCode()
+        private void RaiseEvent(EventHandler? handler)
         {
-            ResponseResived?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void StartRefTimer()
-        {
-            System.Timers.Timer RefTimer = new()
-            {
-                Interval = 2000,
-                AutoReset = false,
-            };
-            RefTimer.Elapsed += OnRefTimedEventWrapper;
-            RefTimer.Enabled = true;
-            RefTimer.Start();
-        }
-
-        private async void OnRefTimedEventWrapper(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            Uri uri = new(string.Format($"{Constants.RestUrl}{Constants.RestUriMod}{UserName}"));
-            _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn);
-            HttpResponseMessage _response = await _client.PostAsync(uri, null);
-            if (_response.StatusCode != System.Net.HttpStatusCode.NotModified)
-            {
-                if (CallBackRefreshFunc is not null && await CallBackRefreshFunc())
-                    MainThread.BeginInvokeOnMainThread(() => ResourceChanged?.Invoke(this, EventArgs.Empty));    
-            }
-            ((System.Timers.Timer)sender).Start();
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="PlayerSide.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:PlayerSide.Pages"
-    Shell.FlyoutBehavior="Disabled">
+<Shell x:Class="PlayerSide.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:PlayerSide.Pages"
+       Shell.FlyoutBehavior="Disabled">
     <TabBar>
-        <Tab 
-            Title="Sheet"
-            Icon="order_icon">
+        <Tab Title="Sheet"
+             Icon="order_icon">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
-        <Tab 
-            Title="Order"
-            Icon="char_icon">
+        <Tab Title="Order"
+             Icon="char_icon">
             <ShellContent ContentTemplate="{DataTemplate local:CharPage}" />
         </Tab>
-        <Tab 
-            Title="Dice"
-            Icon="rolling_dice_cup">
+        <Tab Title="Dice"
+             Icon="rolling_dice_cup">
             <ShellContent ContentTemplate="{DataTemplate local:DicePage}" />
         </Tab>
-        <Tab 
-            Title="Options"
-            Icon="options_icon">
+        <Tab Title="Options"
+             Icon="options_icon">
             <ShellContent ContentTemplate="{DataTemplate local:OptionsPage}" />
         </Tab>
     </TabBar>

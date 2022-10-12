@@ -4,55 +4,71 @@
              x:Name="myChar"
              x:Class="PlayerSide.Views.CharView">
     <ContentView.Content>
-        <Frame
-            CornerRadius="10"
-            HeightRequest="100"
-            Padding="5"
-            BackgroundColor="Transparent"
-            BorderColor="Transparent">
-            <Grid
-                Padding="2"
-                RowSpacing="2"
-                ColumnSpacing="2">
+        <Frame CornerRadius="10"
+               HeightRequest="100"
+               Padding="5"
+               BackgroundColor="Transparent"
+               BorderColor="Transparent">
+            <Grid Padding="2"
+                  RowSpacing="2"
+                  ColumnSpacing="2">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
-                <Frame
-                    BackgroundColor="Grey"
-                    Grid.Column="1"
-                    Padding="0"
-                    Margin="0">
+                <Frame BackgroundColor="Grey"
+                       Grid.Column="1"
+                       Padding="0"
+                       Margin="0">
                     <Grid>
-                        <ProgressBar x:Name="progressBarHp" Progress="{Binding CharHpProperty, Source={x:Reference myChar}}" HorizontalOptions="Fill" ScaleY="15" ProgressColor="Red"/>
-                        <Label x:Name="HpBarText" Text="Health bar" FontSize="Large" FontFamily="OpenSans-Semibold" TextColor="Black" BackgroundColor="Transparent" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <ProgressBar x:Name="progressBarHp"
+                                     Progress="{Binding CharHpProperty, Source={x:Reference myChar}}"
+                                     HorizontalOptions="Fill"
+                                     ScaleY="15"
+                                     ProgressColor="Red" />
+                        <Label x:Name="HpBarText"
+                               Text="Health bar"
+                               FontSize="Large"
+                               FontFamily="OpenSans-Semibold"
+                               TextColor="Black"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
                     </Grid>
                 </Frame>
-                <Frame
-                    BackgroundColor="Gray"
-                    Grid.Column="1"
-                    Grid.Row="1"
-                    Padding="0"
-                    Margin="0">
+                <Frame BackgroundColor="Gray"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       Padding="0"
+                       Margin="0">
                     <Grid>
-                        <ProgressBar x:Name="progressBarRes" Progress="{Binding CharResProperty, Source={x:Reference myChar}}" HorizontalOptions="Fill" ScaleY="15" ProgressColor="Blue"/>
-                        <Label x:Name="ResBarText" Text="Health bar" FontSize="Large" FontFamily="OpenSans-Semibold" TextColor="Black" BackgroundColor="Transparent" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <ProgressBar x:Name="progressBarRes"
+                                     Progress="{Binding CharResProperty, Source={x:Reference myChar}}"
+                                     HorizontalOptions="Fill"
+                                     ScaleY="15"
+                                     ProgressColor="Blue" />
+                        <Label x:Name="ResBarText"
+                               Text="Health bar"
+                               FontSize="Large"
+                               FontFamily="OpenSans-Semibold"
+                               TextColor="Black"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
                     </Grid>
                 </Frame>
-                <Frame
-                    BackgroundColor="Grey"
-                    Grid.RowSpan="2"
-                    Padding="0"
-                    Margin="0">
-                    <Image
-                    Source="male_dark.png"
-                    Aspect="Fill"
-                    HorizontalOptions="Fill" 
-                    Grid.RowSpan="2"/>
+                <Frame BackgroundColor="Grey"
+                       Grid.RowSpan="2"
+                       Padding="0"
+                       Margin="0">
+                    <Image Source="male_dark.png"
+                           Aspect="Fill"
+                           HorizontalOptions="Fill"
+                           Grid.RowSpan="2" />
                 </Frame>
             </Grid>
         </Frame>
