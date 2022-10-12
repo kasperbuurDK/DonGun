@@ -22,6 +22,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
+        //[RequireHttps]
         [HttpGet("{id}")]
         public async Task<List<Npc>> Get(string id)
         {
@@ -33,5 +34,7 @@ namespace ServerSideApiSsl.Controllers
                 Response.StatusCode = 401;
             return ret;
         }
+
+        
     }
 }
