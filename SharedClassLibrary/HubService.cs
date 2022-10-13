@@ -7,15 +7,16 @@ namespace SharedClassLibrary
     {
         // Fields
         private readonly HubConnection hubConnection;
-
-        public GameSessionOptions GameOptions { get; set; } = new();
+        public string Logger { get; set; } = string.Empty;
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
         public string AuthHeader { get; set; }
+        public GameSessionOptions GameOptions { get; set; } = new();
 
         // Events
         public event EventHandler<HubEventArgs<T>>? PropertyChangedEvent;
+        public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
         public HubService(string authHeader) 
@@ -29,6 +30,11 @@ namespace SharedClassLibrary
             hubConnection.On<T>("ReceiveUpdateEvent", msg =>
             {
                 PropertyChangedEvent?.Invoke(this, new HubEventArgs<T>() { Messege = msg });
+            });
+
+            hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
+            {
+                ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });
             });
         }
 

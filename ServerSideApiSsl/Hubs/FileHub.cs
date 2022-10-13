@@ -19,7 +19,18 @@ namespace ServerSideApiSsl.Hubs
             {
                 await Clients.User(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = "Incompatible sesstion key" });
             }
-            
+        }
+        public async Task LeaveGameRoom(GameSessionOptions options)
+        {
+            if (options is not null && !string.IsNullOrEmpty(options.SessionKey))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, options.SessionKey);
+                await Clients.OthersInGroup(options.SessionKey).SendAsync("UserLeftFileHub");
+            }
+            else
+            {
+                await Clients.User(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = "Incompatible sesstion key" });
+            }
         }
 
         public async Task SendUpdateEvent(FileUpdateMessage msg)
