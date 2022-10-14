@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using ServerSideApiSsl.Hubs;
+using SharedClassLibrary;
+using System.Configuration;
 using System.Text.Json;
 
 namespace ServerSideApiSsl
@@ -24,6 +27,7 @@ namespace ServerSideApiSsl
             builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecasetRepository>();
             builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
             builder.Services.AddAuthorization();
+            builder.Services.AddSingleton<ICosmosDbService<Character_abstract>>(CosmosDbService<Character_abstract>.InitializeCosmosClientInstance(builder.Configuration.GetSection(CosmosDbOptions.CosmosDb)));
 
             var app = builder.Build();
 
@@ -43,6 +47,7 @@ namespace ServerSideApiSsl
 
             app.MapControllers();
             app.MapHub<FileHub>("/filehub");
+            app.MapControllerRoute ( name: "default", pattern: "{controller=Sheet}/{action=Index}/{id?}");
 
             app.Run();
         }
