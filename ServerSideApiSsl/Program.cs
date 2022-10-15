@@ -24,10 +24,11 @@ namespace ServerSideApiSsl
             builder.Services.AddSignalR();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecasetRepository>();
-            builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            builder.Services.AddScoped<ISqlDbService<Player>, SqlDbService<Player>>();
+            builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler<Player>>("BasicAuthentication", null);
             builder.Services.AddAuthorization();
-            builder.Services.AddSingleton<ICosmosDbService<Character_abstract>>(CosmosDbService<Character_abstract>.InitializeCosmosClientInstance(builder.Configuration.GetSection(CosmosDbOptions.CosmosDb)));
+            builder.Services.Configure<SqlSettings>(builder.Configuration.GetSection("SqlSettings"));
+
 
             var app = builder.Build();
 

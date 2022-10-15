@@ -12,10 +12,10 @@ namespace ServerSideApiSsl.Controllers
     [Route("api/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IWeatherForecastRepository _userRepository;
+        private readonly ISqlDbService<Npc> _userRepository;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(IWeatherForecastRepository userRepository, ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ISqlDbService<Npc> userRepository, ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -28,7 +28,7 @@ namespace ServerSideApiSsl.Controllers
             List<Npc> ret = new();
             var hasAccess = Request.HttpContext.User.Claims.Any(c => c.Type == "name" && c.Value == id);
             if (hasAccess)
-                ret.Add(await _userRepository.GetUserNames(id));
+                ret.Add(await _userRepository.GetItemAsync(id));
             else
                 Response.StatusCode = 401;
             return ret;
