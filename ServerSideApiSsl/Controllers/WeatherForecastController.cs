@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServerSideApiSsl;
 using SharedClassLibrary;
+using System.Net;
 
 namespace ServerSideApiSsl.Controllers
 {
@@ -12,10 +13,10 @@ namespace ServerSideApiSsl.Controllers
     [Route("api/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly ISqlDbService<Npc> _userRepository;
+        private readonly ISqlDbService<Player> _userRepository;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ISqlDbService<Npc> userRepository, ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ISqlDbService<Player> userRepository, ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -23,14 +24,20 @@ namespace ServerSideApiSsl.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<List<Npc>> Get(string id)
+        public List<User> Get(string id)
         {
-            List<Npc> ret = new();
+            List<User> ret = new();
             var hasAccess = Request.HttpContext.User.Claims.Any(c => c.Type == "name" && c.Value == id);
             if (hasAccess)
-                ret.Add(await _userRepository.GetItemAsync(id));
-            else
-                Response.StatusCode = 401;
+            {
+                User? user = _userRepository.GetUser(id);
+                if (user is not null)
+                {
+                    ret.Add(user);
+                } else
+                    Response.StatusCode = (int)HttpStatusCode.NotFound;  
+            } else
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             return ret;
         }
     }

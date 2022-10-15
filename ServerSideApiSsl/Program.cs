@@ -48,7 +48,6 @@ namespace ServerSideApiSsl
 
             app.MapControllers();
             app.MapHub<FileHub>("/filehub");
-            app.MapControllerRoute ( name: "default", pattern: "{controller=Sheet}/{action=Index}/{id?}");
 
             app.Run();
         }

@@ -6,6 +6,9 @@ using SharedClassLibrary;
 using User = SharedClassLibrary.User;
 using System.Data.Common;
 using Microsoft.Extensions.Options;
+using System.Data;
+using System.Reflection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ServerSideApiSsl
 {
@@ -17,26 +20,35 @@ namespace ServerSideApiSsl
         {
             string connectionString = options.Value.ConnectionString;
             _connection = new SqlConnection(connectionString);
-            _connection.Open();
         }
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT * FROM Users WHERE Name = '{username}' AND Password = '{password}'";
-
-            SqlCommand command = new(sql, _connection);
-            SqlDataReader reader = command.ExecuteReader();
-
-            if (reader.Read())
+            string sql = $"SELECT Id FROM Users WHERE Name = '{username}' AND Password = '{password}'";
+            try
             {
-                // Need to save Id...
-                // If more then one user exist
+                _connection.Open();
+                SqlCommand command = new(sql, _connection);
+                SqlDataReader reader = command.ExecuteReader();
+
                 if (reader.Read())
                 {
-                    return false;
+                    // Need to save Id...
+                    // If more then one user exist
+                    if (reader.Read())
+                    {
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
-            } 
+            } catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.Close();
+            }
             return false;
         }
 
@@ -50,16 +62,27 @@ namespace ServerSideApiSsl
             throw new NotImplementedException();
         }
 
-        public async Task<T?> GetItemAsync(string id)
+        public User? GetUser(string id)
         {
-            throw new NotImplementedException();
+            string sql = $"SELECT * FROM Users WHERE Name = '{id}'";
             try
             {
-                //...
+                List<User>? users;
+                DataTable tabelUsers = GetDataTable(sql);
+                users = tabelUsers.ToList<User>();
+                if (users?.Any() ?? false)
+                {
+                    return users.First();
+                }
+                return null;
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                //...
+                throw;
+            }
+            finally
+            {
+                _connection.Close();
             }
         }
 
@@ -67,5 +90,27 @@ namespace ServerSideApiSsl
         {
             throw new NotImplementedException();
         }
+
+        private DataTable GetDataTable(string Query)
+        {
+            try
+            {
+                DataTable data = new();
+                _connection.Open();
+                SqlCommand command = new(Query, _connection);
+                SqlDataReader reader = command.ExecuteReader();
+                data.Load(reader);
+                return data;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
     }
 }
