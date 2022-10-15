@@ -1,7 +1,9 @@
-﻿using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using SharedClassLibrary;
+using User = SharedClassLibrary.User;
 
 namespace ServerSideApiSsl
 {
@@ -25,6 +27,18 @@ namespace ServerSideApiSsl
         private CosmosDbService( CosmosClient dbClient, string databaseName, string containerName)
         {
             _container = dbClient.GetContainer(databaseName, containerName);
+        }
+
+        public bool Authenticate(string username, string password)
+        {
+            var user = _container.GetItemLinqQueryable<User>()
+                      .SingleOrDefault(b => b.Name == username && b.Password == password);
+           
+            if (user is not null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task AddItemAsync(T item, string Id)

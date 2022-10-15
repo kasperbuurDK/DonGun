@@ -5,6 +5,7 @@
 
     public interface ICosmosDbService<T>
     {
+        bool Authenticate(string username, string password);
         Task<IEnumerable<T>> GetItemsAsync(string query);
         Task<T?> GetItemAsync(string id);
         Task AddItemAsync(T item, string id);
