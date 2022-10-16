@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using ServerSideApiSsl.Database;
 using ServerSideApiSsl.Hubs;
 using SharedClassLibrary;
 using System.Configuration;

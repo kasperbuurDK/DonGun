@@ -1,5 +1,9 @@
 ﻿using System.Data;
 using System.Reflection;
+using System.Security.Principal;
+using System.Text.Json;
+using DevExpress.DirectX.Common;
+using Newtonsoft.Json;
 
 namespace SharedClassLibrary
 {
@@ -38,6 +42,29 @@ namespace SharedClassLibrary
             {
                 return default;
             }
+        }
+
+        public static T JsonToType<T>(this string data) where T : class, new()
+        {
+            T? type = JsonConvert.DeserializeObject<T>(data);
+            if (type is not null)
+                return type;
+            else
+                return new();
+        }
+
+        public static string TypeToJson<T>(this T obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        public static bool PopulateObjectWithJson<T>(this T obj, string j)
+        {
+            if (obj is not null)
+            {
+                JsonConvert.PopulateObject(j, obj);
+            }
+            return true;
         }
     }
 
