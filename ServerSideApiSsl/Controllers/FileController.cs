@@ -8,7 +8,7 @@ using System.Net;
 namespace ServerSideApiSsl.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class FileController : ControllerBase
     {
         private readonly ISqlDbService<Player> _userRepository;
@@ -26,7 +26,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpGet("{name}")]
+        [HttpGet("user/{name}")]
         public List<User> GetUser(string name)
         {
             List<User> ret = new();
@@ -44,7 +44,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpGet("{name}/{id}")]
+        [HttpGet("sheet/{name}/{id}")]
         public Player GetSheet(string name, int id)
         {
             Player ret = new();
@@ -62,7 +62,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpGet("{name}")]
+        [HttpGet("sheet/{name}")]
         public Dictionary<int, Player> GetSheet(string name)
         {
             Dictionary<int, Player> ret = new();
@@ -86,7 +86,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpPut("{name}")]
+        [HttpPut("sheet/{name}")]
         public IActionResult SetPlayerSheet([FromBody]Player p, string name)
         {
             if (HasAccess(name))
@@ -106,7 +106,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpPost("{name}/{id}")]
+        [HttpPost("sheet/{name}/{id}")]
         public IActionResult SetPlayerSheet([FromBody] Player p, string name, int id)
         {
             if (HasAccess(name))
@@ -122,7 +122,7 @@ namespace ServerSideApiSsl.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{name}/{id}")]
+        [HttpDelete("sheet/{name}/{id}")]
         public IActionResult SetPlayerSheet(string name, int id)
         {
             if (HasAccess(name))

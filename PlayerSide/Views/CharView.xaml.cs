@@ -6,6 +6,8 @@ public partial class CharView : ContentView
 {
     public static readonly BindableProperty CharHpProperty = BindableProperty.Create(nameof(CharHp), typeof(float), typeof(CharView), 0F);
     public static readonly BindableProperty CharResProperty = BindableProperty.Create(nameof(CharRes), typeof(float), typeof(CharView), 0F);
+    public static readonly BindableProperty CharNameProperty = BindableProperty.Create(nameof(CharName), typeof(string), typeof(CharView), "");
+
 
     private Character_abstract _character;
     public Character_abstract Character
@@ -16,7 +18,6 @@ public partial class CharView : ContentView
             _character = value;
             CharHp = _character.HealthCurrent;
             CharRes = _character.ResourceCurrent;
-
             // TODO: Add Character profile image
         }
     }
@@ -51,6 +52,12 @@ public partial class CharView : ContentView
             else
                 progressBarRes.ProgressTo(resVal, 250, Easing.CubicInOut);
         }
+    }
+
+    public string CharName
+    {
+        get => (string)GetValue(CharNameProperty);
+        set => SetValue(CharNameProperty, value);
     }
 
     public CharView()

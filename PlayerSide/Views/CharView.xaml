@@ -15,6 +15,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -69,6 +70,13 @@
                            Aspect="Fill"
                            HorizontalOptions="Fill"
                            Grid.RowSpan="2" />
+                </Frame>
+                <Frame BackgroundColor="Grey"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Padding="0"
+                       Margin="0">
+                    <Label Text="{Binding CharNameProperty, Source={x:Reference myChar}}"/>
                 </Frame>
             </Grid>
         </Frame>
