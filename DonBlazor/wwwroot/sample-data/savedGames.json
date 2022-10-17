@@ -1,0 +1,53 @@
+[
+  {
+    "created": "2016-04-10",
+    "LastSaved": "2018-05-06",
+    "Name": "Fellowship of The Ring",
+    "usersInGAme": [
+      {
+        "character": "Gimli",
+        "owner": "John Rhyes Davies",
+        "hp": "30",
+        "hpCur": "20",
+        "ressource": "100",
+        "curRessource": "50"
+
+      },
+      {
+        "character": "Legolas",
+        "owner": "Orlando Bloom",
+        "hp": "30",
+        "hpCur": "20",
+        "ressource": "100",
+        "curRessource": "50"
+      }
+    ]
+  },
+  {
+    "created": "2020-04-10",
+    "LastSaved": "2021-05-06",
+    "Name": "Once Upon a Time",
+    "usersInGAme": [
+      {
+        "character": "Blondie",
+        "owner": "Clint Eastwood",
+        "hp": "30",
+        "hpCur": "20",
+        "ressource": "100",
+        "curRessource": "50"
+
+      },
+      {
+        "character": "The Rat",
+        "owner": "Eli Wallach",
+        "hp": "30",
+        "hpCur": "20",
+        "ressource": "100",
+        "curRessource": "50"
+      }
+    ]
+  }
+
+
+]
+  
