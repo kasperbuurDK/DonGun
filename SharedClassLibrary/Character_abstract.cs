@@ -1,6 +1,6 @@
 namespace SharedClassLibrary
 {
-    public abstract class Character_abstract
+    public class Character_abstract
     {
         /* TODO:
          *      Add Character profile image.
