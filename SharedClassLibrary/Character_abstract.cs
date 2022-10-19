@@ -1,3 +1,6 @@
+using Newtonsoft.Json.Linq;
+using System.ComponentModel;
+
 namespace SharedClassLibrary
 {
     public class Character_abstract
@@ -25,42 +28,50 @@ namespace SharedClassLibrary
 
         private Race_abstract _race;
 
+        protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
+        { 
+            if (!EqualityComparer<T>.Default.Equals(field, newValue)) 
+            { 
+                field = newValue; 
+            } 
+        }
+
         // Properties 
         public int Strength
         {
-            set { _str = value; }
+            set { SetPropertyField(nameof(Strength), ref _str, value); }
             get { return _str; }
         }
         public int Dexterity
         {
-            set { _dex = value; }
+            set { SetPropertyField(nameof(Dexterity), ref _dex, value); }
             get { return _dex; }
         }
         public int Constitution
         {
-            set { _con = value; }
+            set { SetPropertyField(nameof(Constitution), ref _con, value); }
             get { return _con; }
         }
         public int Intelligence
         {
-            set { _int = value; }
+            set { SetPropertyField(nameof(Strength), ref _str, value); }
             get { return _int; }
         }
         public int Wisdome
         {
-            set { _wis = value; }
+            set { SetPropertyField(nameof(Wisdome), ref _wis, value); }
             get { return _wis; }
         }
         public int Charisma
         {
-            set { _cha = value; }
+            set { SetPropertyField(nameof(Charisma), ref _cha, value); }
             get { return _cha; }
         }
         public int Health
         {
             set
             {
-                _hp = value;
+                SetPropertyField(nameof(Health), ref _hp, value);
                 HealthCurrent = _hp;
             }
             get { return _hp; }
@@ -70,11 +81,11 @@ namespace SharedClassLibrary
             set
             {
                 if (_hpCur > _hp)
-                    _hpCur = _hp;
+                    SetPropertyField(nameof(HealthCurrent), ref _hpCur, _hp);
                 else if (_hpCur < 0)
-                    _hpCur = 0;
+                    SetPropertyField(nameof(HealthCurrent), ref _hpCur, 0);
                 else
-                    _hpCur = value;
+                    SetPropertyField(nameof(HealthCurrent), ref _hpCur, value);
             }
             get { return _hpCur; }
         }
@@ -83,11 +94,11 @@ namespace SharedClassLibrary
             set
             {
                 if (_resourceCur > _resource)
-                    _resourceCur = _resource;
+                    SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, _resource);
                 else if (_resourceCur < 0)
-                    _resourceCur = 0;
+                    SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, 0);
                 else
-                    _resourceCur = value;
+                    SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, value);
             }
             get { return _resourceCur; }
         }
@@ -96,21 +107,24 @@ namespace SharedClassLibrary
         {
             set
             {
-                _resource = value;
-                ResourceCurrent = _resource;
+                SetPropertyField(nameof(Resource), ref _resource, value);
             }
             get { return _resource; }
         }
 
         public Race_abstract Race
         {
-            set { _race = value; }
+            set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
         }
 
         // Constructors
-        public Character_abstract() { _race = new Race_abstract(0); } 
+        public Character_abstract() { _race = new Race_abstract(0); }
 
         // Methods
+        public override string ToString()
+        {
+            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {Health}, {Resource}, {Race}]");
+        }
     }
 }
