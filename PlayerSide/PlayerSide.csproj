@@ -112,7 +112,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Pages\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\OptionsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\UserPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\BlobStatView.xaml">
@@ -121,16 +127,25 @@
 	  <MauiXaml Update="Views\CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\CharPage.xaml">
+	  <MauiXaml Update="Pages\OrderPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\DicePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CreateSheet.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CreateUser.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\DiceSelectView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SheetView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -145,6 +160,15 @@
     <MauiImage Include="Resources\Images\dtwenty\*" />
     <MauiImage Include="Resources\Images\sheet\*" />
     <MauiImage Include="Resources\Images\table\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Remove="Models\**" />
+	  <Compile Remove="Models\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <MauiCss Remove="Models\**" />
+	  <MauiXaml Remove="Models\**" />
+	  <None Remove="Models\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -164,22 +188,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Pages\MainPage.xaml.cs">
+	    <DependentUpon>MainPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\SheetPage.xaml.cs">
+	    <DependentUpon>SheetPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\BlobStatView.xaml.cs">
 	    <DependentUpon>BlobStatView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\CharPage.xaml.cs">
-	    <DependentUpon>CharPage.xaml</DependentUpon>
+	  <Compile Update="Pages\OrderPage.xaml.cs">
+	    <DependentUpon>OrderPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.10" />
 	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Models\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlayerSideHideInfoBar="True" /></VisualStudio></ProjectExtensions>

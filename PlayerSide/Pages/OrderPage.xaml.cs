@@ -2,16 +2,15 @@ using SharedClassLibrary;
 
 namespace PlayerSide.Pages;
 
-public partial class CharPage : ContentPage
+public partial class OrderPage : ContentPage
 {
-    public CharPage()
+    public OrderPage()
     {
         InitializeComponent();
-        CharPc.Character = Globals.Connectivity;
-        Globals.RestNonPlayerInfo = new RestService<Npc>(Globals.RestPlayerInfo.AuthHeader)
+        /*Globals.RestNonPlayerInfo = new RestService<Npc>(Globals.RestPlayerInfo.AuthHeader)
         {
             UserName = Globals.RestPlayerInfo.UserName
-        };
+        };*/
         // REST:
         //Globals.RestPlayerInfo.ResourceChanged += OnConnectivityChanged;
         //Globals.RestNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
@@ -23,8 +22,8 @@ public partial class CharPage : ContentPage
     }
 
     // Test to see if this is even needed...
-    public void OnConnectivityChanged(object sender, EventArgs e)
+    /*public void OnConnectivityChanged(object sender, EventArgs e)
     {
         CharPc.Character = Globals.Connectivity;
-    }
+    }*/
 }

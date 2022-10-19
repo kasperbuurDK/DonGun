@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Pages.SheetPage">
+    <Grid BackgroundColor="WhiteSmoke">
+        <Image x:Name="backgroundImage"
+               Aspect="Fill"
+               Source="simple_border.png" />
+        <Border Stroke="Black"
+                StrokeThickness="3"
+                BackgroundColor="Transparent"
+                Padding="5">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10" />
+            </Border.StrokeShape>
+            <ScrollView Padding="0"
+                        Margin="0,0,0,0">
+                <StackLayout x:Name="SheetStackLayout"
+                    Padding="2">
+
+                </StackLayout>
+            </ScrollView>
+        </Border>
+        <ActivityIndicator x:Name="ActivityIndicator"
+                           BackgroundColor="White"
+                           IsRunning="False"
+                           Color="Blue"/>
+    </Grid>
+</ContentPage>

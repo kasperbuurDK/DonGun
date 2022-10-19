@@ -13,30 +13,27 @@ public partial class LoginPage : ContentPage
 	{
 		if (userEntry.Text is not null && passEntry.Text is not null)
 		{
-			if (userEntry.Text == String.Empty || passEntry.Text == String.Empty)
+			if (userEntry.Text == string.Empty || passEntry.Text == string.Empty)
 			{
 				errorLabel.Text = "Please input a Username and Password!";
 			}
 			else
 			{
                 PageLock(true);
-                Globals.RestPlayerInfo = new RestService<Player>(userEntry.Text, passEntry.Text);
+                Globals.RestUserInfo = new RestService<List<User>, User>(userEntry.Text, passEntry.Text);
                 try
                 {
-                    await Globals.RestPlayerInfo.RefreshDataAsync(Constants.RestUriGet + Globals.RestPlayerInfo.UserName);
-                    if (Globals.RestPlayerInfo.Response.IsSuccessStatusCode)
+                    await Globals.RestUserInfo.RefreshDataAsync(Constants.RestUriUser + Globals.RestUserInfo.UserName);
+                    if (Globals.RestUserInfo.Response.IsSuccessStatusCode)
                     {
-                        Globals.Connectivity = Globals.RestPlayerInfo.Items[0];
-                        Globals.FileUpdateHub = new(Globals.RestPlayerInfo.AuthHeader);
-                        await Globals.FileUpdateHub.Initialise();
-                        Application.Current.MainPage = new AppShell();
+                        Application.Current.MainPage = new MainPage();
                     }
                 }
                 catch (Exception ex)
                 {
                     errorLabel.Text = $"An error accured - \"{ex.Message}\"";
                 }
-                if (Globals.RestPlayerInfo.Response is not null && Globals.RestPlayerInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (Globals.RestUserInfo.Response is not null && Globals.RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";
                 PageLock(false);
 			}
