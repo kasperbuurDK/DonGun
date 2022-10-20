@@ -94,8 +94,8 @@ namespace ServerSideApiSsl.Controllers
                 User? user = _userRepository.GetUser(name);
                 if (user is not null) {
                     int statusCode = _userRepository.PutSheet(user.Id, p);
-                    if (statusCode == (int)HttpStatusCode.Accepted)
-                        return Accepted(name);
+                    if (statusCode == (int)HttpStatusCode.OK)
+                        return Ok(name);
                     else
                         return BadRequest(name);
                 } else

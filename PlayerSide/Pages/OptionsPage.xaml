@@ -12,10 +12,13 @@
                     Clicked="LogoutBtnClicked" />
             <Button x:Name="SendFileUpEvent"
                     Text="DG_SendFileUpdateEvent"
-                    Clicked="SendFileUpdateEventBtnClicked" />
+                    Clicked="SendFileUpdateBtnClicked" />
             <Button x:Name="UserOptions"
                     Text="User options"
-                    Clicked="UserOptionsEventBtnClicked" />
+                    Clicked="UserOptionsBtnClicked" />
+            <Button x:Name="Debug1"
+                    Text="DebugModSheetPage"
+                    Clicked="Debug1BtnClicked" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

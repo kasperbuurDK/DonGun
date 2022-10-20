@@ -7,14 +7,8 @@
             x:Class="PlayerSide.Pages.MainPage"
             BarBackgroundColor="WhiteSmoke"
             UnselectedTabColor="Black"
-            SelectedTabColor="DarkViolet">
-    <NavigationPage     Title="Sheet"
-                        IconImageSource="order_icon"
-                        BarBackgroundColor="WhiteSmoke">
-        <x:Arguments>
-            <local:SheetPage />
-        </x:Arguments>
-    </NavigationPage>
+            SelectedTabColor="{StaticResource Primary}">
+    <local:SheetPage />
     <local:OrderPage />
     <local:DicePage />
     <NavigationPage     Title="Options"

@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Principal;
 using System.Text.Json;
 using DevExpress.DirectX.Common;
@@ -65,6 +66,12 @@ namespace SharedClassLibrary
                 JsonConvert.PopulateObject(j, obj);
             }
             return true;
+        }
+
+        public static T CopyObject<T>(this T obj) where T : class, new()
+        {
+            string clone = obj.TypeToJson();
+            return clone.JsonToType<T>(); 
         }
     }
 

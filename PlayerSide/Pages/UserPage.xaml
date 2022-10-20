@@ -13,15 +13,20 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Button x:Name="AddSheet"
                 Text="Add new sheet"
                 Clicked="AddSheetBtnClicked" />
+        <Button x:Name="ModSheet"
+                Text="Modify selected sheet"
+                Clicked="ModSheetBtnClicked"
+                Grid.Column="1" />
         <Button x:Name="RefreshSheet"
                 Text="Refresh"
                 Clicked="RefreshBtnClicked" 
-                Grid.Column="1"/>
-        <Grid Grid.ColumnSpan="2"
+                Grid.Column="2"/>
+        <Grid Grid.ColumnSpan="3"
               Grid.Row="1">
             <Border Stroke="Black"
                     StrokeThickness="3"
@@ -40,8 +45,7 @@
         <ActivityIndicator x:Name="ActivityIndicator"
                            BackgroundColor="Transparent"
                            IsRunning="False"
-                           Color="DarkViolet"
                            Grid.Row="1"
-                           Grid.ColumnSpan="2"/>
+                           Grid.ColumnSpan="3"/>
     </Grid>
 </ContentPage>
