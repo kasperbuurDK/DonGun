@@ -26,8 +26,8 @@ public partial class OptionsPage : ContentPage
         await Navigation.PushAsync(new UserPage());
     }
 
-    private async void Debug1BtnClicked(object sender, EventArgs e)
+    private void Debug1BtnClicked(object sender, EventArgs e)
     {
-        Application.Current.MainPage = new ModSheetPage();
+        throw new NotImplementedException();
     }
 }

@@ -6,7 +6,7 @@ public partial class CharView : ContentView
 {
     public static readonly BindableProperty CharHpProperty = BindableProperty.Create(nameof(CharHp), typeof(float), typeof(CharView), 0F);
     public static readonly BindableProperty CharResProperty = BindableProperty.Create(nameof(CharRes), typeof(float), typeof(CharView), 0F);
-    public static readonly BindableProperty CharNameProperty = BindableProperty.Create(nameof(CharName), typeof(string), typeof(CharView), "");
+    public static readonly BindableProperty CharNameProperty = BindableProperty.Create(nameof(CharName), typeof(string), typeof(CharView), "Dude");
 
 
     private Character_abstract _character;
@@ -63,5 +63,6 @@ public partial class CharView : ContentView
     public CharView()
     {
         InitializeComponent();
+        BindingContext = this;
     }
 }

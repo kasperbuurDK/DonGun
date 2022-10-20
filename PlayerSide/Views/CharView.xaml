@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Name="myChar"
              x:Class="PlayerSide.Views.CharView">
     <ContentView.Content>
         <Frame CornerRadius="10"
@@ -27,7 +26,7 @@
                        Margin="0">
                     <Grid>
                         <ProgressBar x:Name="progressBarHp"
-                                     Progress="{Binding CharHpProperty, Source={x:Reference myChar}}"
+                                     Progress="{Binding Path=CharHpProperty}"
                                      HorizontalOptions="Fill"
                                      ScaleY="15"
                                      ProgressColor="Red" />
@@ -48,7 +47,7 @@
                        Margin="0">
                     <Grid>
                         <ProgressBar x:Name="progressBarRes"
-                                     Progress="{Binding CharResProperty, Source={x:Reference myChar}}"
+                                     Progress="{Binding Path=CharResProperty}"
                                      HorizontalOptions="Fill"
                                      ScaleY="15"
                                      ProgressColor="Blue" />
@@ -76,7 +75,7 @@
                        Grid.ColumnSpan="2"
                        Padding="0"
                        Margin="0">
-                    <Label Text="{Binding CharNameProperty, Source={x:Reference myChar}}"/>
+                    <Label Text="{Binding Path=CharNameProperty}"/>
                 </Frame>
             </Grid>
         </Frame>

@@ -54,7 +54,7 @@ namespace SharedClassLibrary
         }
         public int Intelligence
         {
-            set { SetPropertyField(nameof(Strength), ref _str, value); }
+            set { SetPropertyField(nameof(Intelligence), ref _int, value); }
             get { return _int; }
         }
         public int Wisdome

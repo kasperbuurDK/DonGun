@@ -102,7 +102,7 @@ namespace SharedClassLibrary
             {
                 string json = JsonSerializer.Serialize(item, _serializerOptions);
                 StringContent content = new(json, Encoding.UTF8, "application/json");
-                if (create)
+                if (!create)
                     Response = await _client.PostAsync(uri, content);
                 else
                     Response = await _client.PutAsync(uri, content);

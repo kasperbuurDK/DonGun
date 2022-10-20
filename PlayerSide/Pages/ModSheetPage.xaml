@@ -2,59 +2,86 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.ModSheetPage"
-             Title="ModSheetPage">
-    <Grid x:Name="DetailsGrid">
+             Title="Sheet viewer">
+    <Grid x:Name="DetailsGrid"
+          ColumnSpacing="10"
+          RowSpacing="5"
+          Padding="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Label Grid.Column="0"
-               Grid.Row="0"
-               Text="Id" />
+               Text="Name" />
         <Entry Grid.Column="1"
-               Grid.Row="0"
-               Text="{Binding Path=Dexterity}" />
+               Text="{Binding Path=Name}" />
         <Label Grid.Column="0"
                Grid.Row="1"
-               Text="Make" />
+               Text="Dexterity" />
         <Entry Grid.Column="1"
                Grid.Row="1"
                Text="{Binding Path=Dexterity}" />
         <Label Grid.Column="0"
                Grid.Row="2"
-               Text="Color" />
+               Text="Constitution" />
         <Entry Grid.Column="1"
                Grid.Row="2"
-               Text="{Binding Path=Dexterity}" />
+               Text="{Binding Path=Constitution}" />
         <Label Grid.Column="0"
                Grid.Row="3"
-               Text="Pet Name" />
+               Text="Intelligence" />
         <Entry Grid.Column="1"
                Grid.Row="3"
-               Text="{Binding Path=Dexterity}" />
-        <StackLayout Grid.Column="0"
-                     Grid.ColumnSpan="2"
-                     Grid.Row="4"
+               Text="{Binding Path=Intelligence}" />
+        <Label Grid.Column="0"
+               Grid.Row="4"
+               Text="Wisdome" />
+        <Entry Grid.Column="1"
+               Grid.Row="4"
+               Text="{Binding Path=Wisdome}" />
+        <Label Grid.Column="0"
+               Grid.Row="5"
+               Text="Charisma" />
+        <Entry Grid.Column="1"
+               Grid.Row="5"
+               Text="{Binding Path=Charisma}" />
+        <Label Grid.Column="0"
+               Grid.Row="6"
+               Text="Strength" />
+        <Entry Grid.Column="1"
+               Grid.Row="6"
+               Text="{Binding Path=Strength}" />
+        <Label Grid.Column="0"
+               Grid.Row="7"
+               Text="Race" />
+        <Picker x:Name="RacePicker"
+                Grid.Column="1"
+                Grid.Row="7"
+                Title="Select a Race"
+                SelectedIndexChanged="SelectedIndexChanged"/>
+        <StackLayout Grid.ColumnSpan="2"
+                     Grid.Row="8"
                      Orientation="Horizontal"
-                     Margin="0,5,0,5">
-            <Button x:Name="btnAddCar"
-                    Text="Add Car"
-                    Margin="5,0,5,0"
-                    Padding="4, 2"
-                    Clicked="BtnAddCar_OnClick" />
-            <Button x:Name="btnChangeColor"
-                    Text="Change Color"
-                    Margin="5,0,5,0"
-                    Clicked="BtnChangeColor_OnClick"
-                    Padding="4, 2" />
+                     Padding="5"
+                     Spacing="5">
+            <Button x:Name="ChageSheetBtn"
+                    Padding="4"
+                    Clicked="ChageSheetBtnClicked" />
+            <Button x:Name="RemoveSheetBtn"
+                    Text="Remove"
+                    Padding="4"
+                    Clicked="RemoveBtnClicked"/>
         </StackLayout>
     </Grid>
 </ContentPage>
