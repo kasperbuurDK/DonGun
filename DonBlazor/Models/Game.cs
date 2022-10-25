@@ -20,11 +20,11 @@ namespace DonBlazor.Models
         public List<Npc> NonHumanPlayers { get; set; } = new List<Npc>() { };
 
 
-        public List<Character_abstract> AllCharacters
+        public List<Character> AllCharacters
         {
             get
             {
-                List<Character_abstract> listOfAll = new List<Character_abstract>();
+                List<Character> listOfAll = new List<Character>();
                 listOfAll.AddRange(HumanPlayers);
                 listOfAll.AddRange(NonHumanPlayers);
                 return listOfAll;
