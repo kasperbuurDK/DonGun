@@ -20,8 +20,8 @@ namespace DonGunTest
             activeGame.Name = "Active test";
             activeGame.HumanPlayers = new List<Player> { };
             activeGame.NonHumanPlayers = new List<Npc> { };
-            activeGame.Created = DateTime.Now;
-            activeGame.LastSaved = activeGame.Created;
+            activeGame.Created = DateTime.Now; 
+            activeGame.LastSaved = DateTime.Now;
             activeGame.CurrentTurn = 999;
         }
 

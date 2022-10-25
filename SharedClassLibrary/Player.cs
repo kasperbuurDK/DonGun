@@ -1,6 +1,6 @@
 ﻿namespace SharedClassLibrary
 {
-    public class Player : Character_abstract
+    public class Player : Character
     {
         private string _name = "DJON DOE";
 
