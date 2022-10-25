@@ -1,7 +1,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:custom="clr-namespace:PlayerSide.Views"
-             x:Class="PlayerSide.Pages.CharPage">
+             x:Class="PlayerSide.Pages.OrderPage"
+             Title="Order"
+             IconImageSource="char_icon">
     <Grid Padding="2"
           RowSpacing="2"
           ColumnSpacing="2">
@@ -16,7 +18,8 @@
                Aspect="Fill"
                Source="gray_wood"
                Grid.RowSpan="2" />
-        <custom:CharView x:Name="CharPc" />
+        <custom:CharView x:Name="CharPc"
+                         CharName="hello?awd"/>
         <Border Grid.Row="1"
                 Stroke="Black"
                 StrokeThickness="3"

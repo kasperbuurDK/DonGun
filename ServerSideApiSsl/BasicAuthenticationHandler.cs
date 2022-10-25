@@ -3,16 +3,17 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
+using ServerSideApiSsl.Database;
 
 namespace ServerSideApiSsl
 {
-    public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class BasicAuthenticationHandler<T> : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly IWeatherForecastRepository _userRepository;
+        private readonly ISqlDbService<T> _userRepository;
         public BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger, UrlEncoder encoder,
-            ISystemClock clock, IWeatherForecastRepository userRepository) :
+            ISystemClock clock, ISqlDbService<T> userRepository) :
            base(options, logger, encoder, clock)
         {
             _userRepository = userRepository;
@@ -26,7 +27,7 @@ namespace ServerSideApiSsl
                 string token = authHeader["Basic ".Length..].Trim();
                 string credentialsEncodedString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
                 string[] credentials = credentialsEncodedString.Split(':');
-                if (await _userRepository.Authenticate(credentials[0], credentials[1]))
+                if (_userRepository.Authenticate(credentials[0], credentials[1]))
                 {
                     Claim[] claims = new[] { new Claim("name", credentials[0]), new Claim(ClaimTypes.Role, "user") };
                     ClaimsIdentity identity = new(claims, "Basic");

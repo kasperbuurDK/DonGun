@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace SharedClassLibrary
 {
-    public class RestService<T>
+    public class RestService<TStruct, TValue> where TStruct : class, new()
     {
         // Fields
         private readonly HttpClient _client;
@@ -18,7 +18,7 @@ namespace SharedClassLibrary
         public string UserName { get; set; } = string.Empty;
         public string AuthHeader { get; private set; } = string.Empty;
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
-        public List<T>? Items { get; private set; }
+        public TStruct? ReturnStruct { get; private set; }
 
         // Class related properties
         public string Logger { get; set; } = string.Empty;
@@ -51,7 +51,7 @@ namespace SharedClassLibrary
         /// <param name="uriPath"></param>
         public async Task RefreshDataAsync(string uriPath)
         {
-            Items = new();
+            ReturnStruct = new();
             Uri uri = new(string.Format($"{Constants.BaseUrl}{uriPath}"));
 
             try
@@ -60,7 +60,7 @@ namespace SharedClassLibrary
                 if (Response.IsSuccessStatusCode)
                 {
                     string content = await Response.Content.ReadAsStringAsync();
-                    Items = JsonSerializer.Deserialize<List<T>>(content, _serializerOptions);
+                    ReturnStruct = JsonSerializer.Deserialize<TStruct>(content, _serializerOptions);
                     HttpHeaders headers = Response.Headers;
                     if (headers.TryGetValues("Last-Modified", out var values))
                     {
@@ -81,7 +81,7 @@ namespace SharedClassLibrary
             }
             catch (Exception ex)
             {
-                Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri}");
+                Logger = string.Format($"ERROR {ex.Message} - {typeof(TValue)} - {uri}");
                 CatchedException = ex;
             }
         }
@@ -93,16 +93,16 @@ namespace SharedClassLibrary
         /// <param name="uriResourcePath"></param>
         /// <param name="create">True = Perform put request</param>
         /// <returns></returns>
-        public async Task SaveDataAsync(T item, string uriResourcePath, bool create = false)
+        public async Task SaveDataAsync(TValue item, string uriResourcePath, bool create = false)
         {
             Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
             {
-                string json = JsonSerializer.Serialize<T>(item, _serializerOptions);
+                string json = JsonSerializer.Serialize(item, _serializerOptions);
                 StringContent content = new(json, Encoding.UTF8, "application/json");
-                if (create)
+                if (!create)
                     Response = await _client.PostAsync(uri, content);
                 else
                     Response = await _client.PutAsync(uri, content);
@@ -110,7 +110,7 @@ namespace SharedClassLibrary
             }
             catch (Exception ex)
             {
-                Logger = string.Format($"ERROR {ex.Message} - {typeof(T)} - {uri} - {item}");
+                Logger = string.Format($"ERROR {ex.Message} - {typeof(TValue)} - {uri} - {item}");
                 CatchedException = ex;
             }
         }

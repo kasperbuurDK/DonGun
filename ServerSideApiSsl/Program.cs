@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
+using ServerSideApiSsl.Database;
 using ServerSideApiSsl.Hubs;
+using SharedClassLibrary;
+using System.Configuration;
 using System.Text.Json;
 
 namespace ServerSideApiSsl
@@ -17,13 +21,17 @@ namespace ServerSideApiSsl
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 options.JsonSerializerOptions.WriteIndented = true;
             });
+            builder.Configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
+            builder.Configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
             builder.Services.AddControllers();
             builder.Services.AddSignalR();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecasetRepository>();
-            builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            builder.Services.AddScoped<ISqlDbService<Player>, SqlDbService<Player>>();
+            builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler<Player>>("BasicAuthentication", null);
             builder.Services.AddAuthorization();
+            builder.Services.Configure<SqlSettings>(builder.Configuration.GetSection("SqlSettings"));
+
 
             var app = builder.Build();
 

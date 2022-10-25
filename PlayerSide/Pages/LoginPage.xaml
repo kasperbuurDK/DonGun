@@ -3,14 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.LoginPage"
              Title="LoginPage">
-    <ContentPage.Resources>
-        <!-- Light colors -->
-        <Color x:Key="LightPrimaryColor">WhiteSmoke</Color>
-        <Color x:Key="LightSecondaryColor">Black</Color>
-        <!-- Dark colors -->
-        <Color x:Key="DarkPrimaryColor">DarkGray</Color>
-        <Color x:Key="DarkSecondaryColor">White</Color>
-    </ContentPage.Resources>
     <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -24,12 +16,10 @@
                    VerticalOptions="Center"
                    HorizontalOptions="Center" />
             <Entry x:Name="userEntry"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
                    Text="user"
                    ClearButtonVisibility="WhileEditing"
                    Placeholder="Username" />
             <Entry x:Name="passEntry"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
                    Text="password"
                    ClearButtonVisibility="WhileEditing"
                    Placeholder="Password"
@@ -45,7 +35,6 @@
         <ActivityIndicator x:Name="ActivityIndicator"
                            BackgroundColor="White"
                            IsRunning="False"
-                           Color="Blue"
                            Grid.RowSpan="3" />
     </Grid>
 </ContentPage>
