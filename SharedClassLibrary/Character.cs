@@ -2,6 +2,8 @@ using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 
 using SharedClassLibrary.Exceptions;
+using SharedClassLibrary.AuxUtils;
+using SharedClassLibrary;
 
 namespace SharedClassLibrary
 {
@@ -30,9 +32,12 @@ namespace SharedClassLibrary
         private int _mp;      // Move point MAX
         private int _mpCur;   // remaining movepoints
 
+        // Navigation
         private Position _position;
+        private MoveDirections _facing;
 
         private Race_abstract _race;
+
 
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
@@ -48,6 +53,12 @@ namespace SharedClassLibrary
         {
             get => _position; 
             set { _position = value;  }
+        }
+
+        public MoveDirections Facing 
+        {
+            get => _facing;
+            set { _facing = value; }
         }
 
         public int Strength
@@ -138,27 +149,71 @@ namespace SharedClassLibrary
         public Character() { _race = new Race_abstract(0); }
 
         // Methods
-        public void Turn()
+   
+        public string Move(MoveDirections direction, int distance) 
         {
+            
+            if (_facing != direction)
+            {
+               int costOfTurn = CostOfTurningCharacter(direction);
+                if (costOfTurn > _mpCur)
+                {
+                    return "Not Enoough MP to turn";
+                } else
+                {
+                    _mpCur -= costOfTurn;
+                    _facing = direction;
+                }
+            }
 
-        }
-
-        public void Move(char direction, int distance) 
-        {
+            if (_mpCur < distance*Constants.COSTOFONEMOVE)
+            {
+                return "Not Enogh MP left to move";
+            } else 
+            {
+                _mpCur -= distance*Constants.COSTOFONEMOVE;
+            }
 
             Position newPos = direction switch
             {
-                'N' => new Position(_position.X, _position.Y + distance),
-                'E' => new Position(_position.X + distance, _position.Y),
-                'S' => new Position(_position.X, _position.Y - distance),
-                'W' => new Position(_position.X - distance, _position.Y),
+                MoveDirections.North => new Position(_position.X, _position.Y + distance),
+                MoveDirections.East => new Position(_position.X + distance, _position.Y),
+                MoveDirections.South => new Position(_position.X, _position.Y - distance),
+                MoveDirections.West => new Position(_position.X - distance, _position.Y),
                 _ => throw new WrongInputToFunction(),
             };
 
+
             _position = newPos;
+            return "Ok";
         }
 
+        private int CostOfTurningCharacter(MoveDirections turnTowards)
+        {
+            int costOfturning = 0;  
         
+            switch (turnTowards)
+            {
+                case MoveDirections.North:
+                    costOfturning = _facing == MoveDirections.South ? 2 : 1;
+                  break;
+                case MoveDirections.East:
+                    costOfturning = _facing == MoveDirections.West ? 2 : 1;
+                    break;
+                case MoveDirections.South:
+                    costOfturning = _facing == MoveDirections.North ? 2 : 1;
+                    break;
+                case MoveDirections.West:
+                    costOfturning = _facing == MoveDirections.East ? 2 : 1;
+                    break;
+                default:
+                    break;
+            }
+
+            return costOfturning;
+
+        }
+
         public override string ToString()
         {
             return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {Health}, {Resource}, {Race}]");
