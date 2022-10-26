@@ -8,7 +8,5 @@
         public const string HubUriFile = "/filehub";
         public const string RestUriUser = "/api/file/user/";
         public const string RestUriSheet = "/api/file/sheet/";
-
-        public const int COSTOFONEMOVE = 2;
     }
 }

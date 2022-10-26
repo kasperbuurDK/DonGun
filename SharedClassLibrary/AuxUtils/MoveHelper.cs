@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.AuxUtils
 {
-
     public enum MoveDirections
     {
         North,
@@ -14,6 +13,10 @@ namespace SharedClassLibrary.AuxUtils
         South,
         West
     }
+    public static class MoveHelper
+    {
+        public const int COSTOFSSINGLEMOVE = 2;
+    }
 
-    
+
 }

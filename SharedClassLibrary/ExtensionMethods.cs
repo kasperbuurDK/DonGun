@@ -61,10 +61,10 @@ namespace SharedClassLibrary
 
         public static bool PopulateObjectWithJson<T>(this T obj, string j)
         {
-            if (obj is not null)
-            {
-                JsonConvert.PopulateObject(j, obj);
-            }
+
+            if (obj is null) return false;
+            
+            JsonConvert.PopulateObject(j, obj);
             return true;
         }
 
