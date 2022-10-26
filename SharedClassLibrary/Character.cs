@@ -35,6 +35,7 @@ namespace SharedClassLibrary
         // Navigation
         private Position _position;
         private MoveDirections _facing;
+        private int _sightRange;
 
         private List<Character>? _othersInSight = new List<Character>();
 
@@ -61,6 +62,12 @@ namespace SharedClassLibrary
         {
             get => _facing;
             set { _facing = value; }
+        }
+
+        public int SightRange
+        {
+            get => _sightRange;
+            set { _sightRange = value; } 
         }
 
         public List<Character> OthersInSight 

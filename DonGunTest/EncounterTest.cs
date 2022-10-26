@@ -114,15 +114,59 @@ namespace DonGunTest
             Assert.That(_gameMaster.Move(_mainCharacter, MoveDirections.North, 20), Is.Not.EqualTo("OK"));
         }
         
-        [Test]
-        public void Current_character_can_see_another_character() 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(10)]
+        public void Current_character_see_all_in_range(int noOfOtherCharacteres) 
         {
+            _mainCharacter.Position = new Position(10, 10);
+            _mainCharacter.SightRange = 100;
+
+            for (int i = 0; i < noOfOtherCharacteres; i++)
+            {
+                Character otherCharacter = new Npc()
+                {
+                    Position = new Position(9, 9),
+                };
+
+                _gameMaster.AddCharacterToGame(otherCharacter);
+            }
+            
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-
-
-
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(1));
+            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(noOfOtherCharacteres));
         }
+        
+        [Test]
+        public void Current_character_dont_see_any_when_there_are_none_in_range() 
+        {
+
+            _mainCharacter.SightRange = 2;
+            _mainCharacter.Position = new Position(10, 10);
+
+            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) });
+
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(0));
+        }
+        
+        [Test]
+        public void Current_character_only_see_others_in_range() 
+        {
+
+            _mainCharacter.SightRange = 2;
+            _mainCharacter.Position = new Position(10, 10);
+
+            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) }); // Not in range
+            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 9) }); // In range
+            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(9, 9) }); // In range
+            
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(2));
+        }
+
+
+
+
 
 
 

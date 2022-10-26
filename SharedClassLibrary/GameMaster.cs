@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraSpellChecker.Parser;
+﻿
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
 using System;
@@ -65,10 +65,32 @@ namespace SharedClassLibrary
         {
             List<Character> othersInSight = new List<Character>();
 
-            othersInSight.Add(new Npc());
+            foreach (Character otherCharacter in _game.AllCharacters)
+            {
+                if (otherCharacter.Equals(character)) continue;
 
-            character.OthersInSight = othersInSight;
-            
+                float distanceToOther = DetermineDistanceBetweenCharacters(character, otherCharacter);
+                if (character.SightRange >= distanceToOther )
+                {
+                    othersInSight.Add(otherCharacter);
+                }
+            }
+
+            character.OthersInSight = othersInSight;            
+        }
+
+        private float DetermineDistanceBetweenCharacters(Character character, Character otherCharacter)
+        {
+            float deltaX = 
+                Math.Max(character.Position.X, otherCharacter.Position.X) - Math.Min(character.Position.X, otherCharacter.Position.X);
+            float deltaY = 
+                Math.Max(character.Position.Y, otherCharacter.Position.Y) - Math.Min(character.Position.Y, otherCharacter.Position.Y);
+
+            if (deltaX == 0) return deltaY;
+            if (deltaY == 0) return deltaX;
+
+            float distanceBetween = (float) Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+            return distanceBetween;
         }
 
         private int CostOfTurningCharacter(Character character, MoveDirections turnTowards)
@@ -93,6 +115,18 @@ namespace SharedClassLibrary
                     break;
             }
             return costOfturning;
+        }
+
+        public void AddCharacterToGame(Character characterToAdd) 
+        {
+            if (characterToAdd is Player)  
+            {
+                _game.HumanPlayers.Add((Player)characterToAdd);
+            }
+            else if (characterToAdd is Npc) 
+            {
+                _game.NonHumanPlayers.Add((Npc)characterToAdd);
+            }
         }
     }
 }
