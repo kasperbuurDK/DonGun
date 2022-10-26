@@ -10,6 +10,6 @@
 
         public int X { get; }
         public int Y { get; }
-        public override string ToString() => $"({X}, {Y})";
+        public override string ToString() => $"( x = {X}, y = {Y})";
     }
 }

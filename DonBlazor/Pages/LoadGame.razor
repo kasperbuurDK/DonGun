@@ -1,5 +1,6 @@
 ﻿@using Containers;
 @using Models;
+@using SharedClassLibrary;
 @inject HttpClient Http
 
 @page "/loadgame"
@@ -44,6 +45,8 @@ else
 
 
 @code {
+
+    
 
     private ActiveGameContainer thisGame = Containers.ActiveGameContainer.GetGameInstance;
 

@@ -1,7 +1,7 @@
 ﻿using SharedClassLibrary;
 using System.ComponentModel.DataAnnotations;
 
-namespace DonBlazor.Models
+namespace SharedClassLibrary
 {
     public class Game
     {
@@ -34,8 +34,6 @@ namespace DonBlazor.Models
         public int CurrentTurn { get; set; } = 0;
 
         public int CurrentPlayer { get; set; } = 0;
-
-        private Map? _map;
 
         public Game()
         {
