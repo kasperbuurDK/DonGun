@@ -1,68 +1,55 @@
+using Newtonsoft.Json;
 using SharedClassLibrary;
+using System.ComponentModel;
 
 namespace PlayerSide.Views;
 
 public partial class CharView : ContentView
 {
-    public static readonly BindableProperty CharHpProperty = BindableProperty.Create(nameof(CharHp), typeof(float), typeof(CharView), 0F);
-    public static readonly BindableProperty CharResProperty = BindableProperty.Create(nameof(CharRes), typeof(float), typeof(CharView), 0F);
-    public static readonly BindableProperty CharNameProperty = BindableProperty.Create(nameof(CharName), typeof(string), typeof(CharView), "Dude");
-
-
-    private Character_abstract _character;
-    public Character_abstract Character
+    public void UpdateBars(object sender, PropertyChangedEventArgs e)
     {
-        get => _character;
-        set
+        if (sender is MauiPlayer)
         {
-            _character = value;
-            CharHp = _character.HealthCurrent;
-            CharRes = _character.ResourceCurrent;
-            // TODO: Add Character profile image
+            MauiPlayer player = (MauiPlayer)sender;
+            if (e.PropertyName.Contains("Health"))
+            {
+                MainThread.BeginInvokeOnMainThread(() => UpdateHpBar(player));
+            }
+            else if (e.PropertyName.Contains("Resource"))
+            {
+                MainThread.BeginInvokeOnMainThread(() => UpdateResBar(player));
+            }
         }
     }
 
-    public float CharHp
+    public void UpdateHpBar(MauiPlayer p)
     {
-        get => (float)GetValue(CharHpProperty);
-        set
-        {
-            HpBarText.Text = string.Format($"{value} / {_character.Health}");
-            SetValue(CharHpProperty, value);
-            float preHpVal = (float)progressBarHp.Progress;
-            float hpVal = value.Remap(0, _character.Health, 0F, 1.0F);
-            if (hpVal > preHpVal)
-                progressBarHp.ProgressTo(hpVal, 250, Easing.Linear);
-            else
-                progressBarHp.ProgressTo(hpVal, 250, Easing.CubicInOut);
-        }
+        HpBarText.Text = string.Format($"{p.HealthCurrent} / {p.Health}");
+        float preHpVal = (float)progressBarHp.Progress;
+        float hpVal = p.HealthCurrent.Remap(0, p.Health, 0F, 1.0F);
+        if (hpVal > preHpVal)
+            progressBarHp.ProgressTo(hpVal, 250, Easing.Linear);
+        else
+            progressBarHp.ProgressTo(hpVal, 250, Easing.CubicInOut);
     }
 
-    public float CharRes
+    public void UpdateResBar(MauiPlayer p)
     {
-        get => (float)GetValue(CharResProperty);
-        set
-        {
-            ResBarText.Text = string.Format($"{value} / {_character.Resource}");
-            SetValue(CharResProperty, value);
-            float preResVal = (float)progressBarRes.Progress;
-            float resVal = value.Remap(0, _character.Resource, 0F, 1.0F);
-            if (resVal > preResVal)
-                progressBarRes.ProgressTo(resVal, 250, Easing.Linear);
-            else
-                progressBarRes.ProgressTo(resVal, 250, Easing.CubicInOut);
-        }
+        ResBarText.Text = string.Format($"{p.ResourceCurrent} / {p.Resource}");
+        float preResVal = (float)progressBarRes.Progress;
+        float resVal = p.ResourceCurrent.Remap(0, p.Resource, 0F, 1.0F);
+        if (resVal > preResVal)
+            progressBarRes.ProgressTo(resVal, 250, Easing.Linear);
+        else
+            progressBarRes.ProgressTo(resVal, 250, Easing.CubicInOut);
     }
 
-    public string CharName
-    {
-        get => (string)GetValue(CharNameProperty);
-        set => SetValue(CharNameProperty, value);
-    }
-
-    public CharView()
+    public CharView(MauiPlayer _character)
     {
         InitializeComponent();
-        BindingContext = this;
+        UpdateHpBar(_character);
+        UpdateResBar(_character);
+        _character.PropertyChanged += UpdateBars;
+        charaBinding.Character = _character;
     }
 }

@@ -1,4 +1,3 @@
-using AndroidX.Concurrent.Futures;
 using SharedClassLibrary;
 using System;
 using System.Collections.ObjectModel;
@@ -60,15 +59,33 @@ public partial class ModSheetPage : ContentPage
 
     private async void ChageSheetBtnClicked(object sender, EventArgs e)
     {
-        RestService<Player, Player> restService = new(Globals.RestUserInfo.AuthHeader);
-        string user = Globals.RestUserInfo.UserName;
-        await restService.SaveDataAsync(MPlayer, Constants.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
+        if (Validate())
+        { 
+            RestService<Player, Player> restService = new(Globals.RestUserInfo.AuthHeader);
+            string user = Globals.RestUserInfo.UserName;
+            await restService.SaveDataAsync(MPlayer, Constants.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
 
-        if (restService.Response.IsSuccessStatusCode)
-        {
-            await Navigation.PopAsync();
-            _callbackToParent();
+            if (restService.Response.IsSuccessStatusCode)
+            {
+                await Navigation.PopAsync();
+                _callbackToParent();
+            }
         }
+    }
+
+    private bool Validate()
+    {
+        bool isValid = true;
+        string errorMsg = string.Empty;
+        if (!MPlayer.Validate("Name", out string EMsg))
+        {
+            NameEntry.Style = Application.Current.Resources.MergedDictionaries.ToList()[1]["EntryError"] as Style;
+            errorMsg += EMsg + "\n";
+            isValid = false;
+        } else
+            NameEntry.Style = new Style(NameEntry.GetType());
+        ErrorLabel.Text = errorMsg;
+        return isValid;
     }
 
     private async void RemoveBtnClicked(object sender, EventArgs e)

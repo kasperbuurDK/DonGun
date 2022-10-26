@@ -1,29 +1,30 @@
+using PlayerSide.Views;
 using SharedClassLibrary;
 
 namespace PlayerSide.Pages;
 
 public partial class OrderPage : ContentPage
 {
+    private MauiPlayer timedPlayer;
+    Random rnd = new Random();
+    Timer _timer1, _timer2;
+
     public OrderPage()
     {
         InitializeComponent();
-        /*Globals.RestNonPlayerInfo = new RestService<Npc>(Globals.RestPlayerInfo.AuthHeader)
-        {
-            UserName = Globals.RestPlayerInfo.UserName
-        };*/
-        // REST:
-        //Globals.RestPlayerInfo.ResourceChanged += OnConnectivityChanged;
-        //Globals.RestNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
+        timedPlayer = new() { Name = "hello", Health = 10, HealthCurrent = 5, Resource = 20, ResourceCurrent = 15 };
+        MainGrid.Add(new CharView(timedPlayer));
+        _timer1 = new Timer(TimerCallBack1, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+        _timer2 = new Timer(TimerCallBack2, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(5));
     }
 
-    private void OnGameOrderChanged(object sender, EventArgs e)
+    private void TimerCallBack1(object state)
     {
-        throw new NotImplementedException();
+        timedPlayer.HealthCurrent = rnd.Next(0, timedPlayer.Health); 
     }
 
-    // Test to see if this is even needed...
-    /*public void OnConnectivityChanged(object sender, EventArgs e)
+    private void TimerCallBack2(object state)
     {
-        CharPc.Character = Globals.Connectivity;
-    }*/
+        timedPlayer.ResourceCurrent = rnd.Next(0, timedPlayer.Resource);
+    }
 }

@@ -4,7 +4,8 @@
              x:Class="PlayerSide.Pages.OrderPage"
              Title="Order"
              IconImageSource="char_icon">
-    <Grid Padding="2"
+    <Grid x:Name="MainGrid"
+            Padding="2"
           RowSpacing="2"
           ColumnSpacing="2">
         <Grid.RowDefinitions>
@@ -18,8 +19,6 @@
                Aspect="Fill"
                Source="gray_wood"
                Grid.RowSpan="2" />
-        <custom:CharView x:Name="CharPc"
-                         CharName="hello?awd"/>
         <Border Grid.Row="1"
                 Stroke="Black"
                 StrokeThickness="3"

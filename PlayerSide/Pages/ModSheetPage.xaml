@@ -21,11 +21,13 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Label Grid.Column="0"
                Text="Name" />
-        <Entry Grid.Column="1"
-               Text="{Binding Path=Name}" />
+        <Entry x:Name="NameEntry"
+                Grid.Column="1"
+               Text="{Binding Path=Name}"/>
         <Label Grid.Column="0"
                Grid.Row="1"
                Text="Dexterity" />
@@ -70,8 +72,14 @@
                 Grid.Row="7"
                 Title="Select a Race"
                 SelectedIndexChanged="SelectedIndexChanged"/>
+        <Label x:Name="ErrorLabel"
+               Grid.Row="8"
+               Grid.Column="1"
+               VerticalTextAlignment="Center"
+                Padding="4"
+               TextColor="{StaticResource ErrorRed}"/>
         <StackLayout Grid.ColumnSpan="2"
-                     Grid.Row="8"
+                     Grid.Row="9"
                      Orientation="Horizontal"
                      Padding="5"
                      Spacing="5">
@@ -81,7 +89,7 @@
             <Button x:Name="RemoveSheetBtn"
                     Text="Remove"
                     Padding="4"
-                    Clicked="RemoveBtnClicked"/>
+                    Clicked="RemoveBtnClicked" />
         </StackLayout>
     </Grid>
 </ContentPage>
