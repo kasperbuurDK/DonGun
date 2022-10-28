@@ -24,5 +24,24 @@ namespace PlayerSide
                 OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public bool Validate(string propertyName, out string EMsg)
+        {
+            bool isValid;
+            EMsg = string.Empty;
+            switch (propertyName)
+            {
+                case nameof(Name):
+                    EMsg = string.IsNullOrEmpty(Name) ? $"\"{Name}\" is not a valid name" 
+                        : Name.Any(char.IsDigit) ? $"\"{Name}\" can not contain numbers" 
+                        : string.Empty;
+                    isValid = string.IsNullOrEmpty(EMsg);
+                    break;
+                default:
+                    isValid = true;
+                    break;
+            }
+            return isValid;
+        }
     }
 }
