@@ -1,4 +1,5 @@
-﻿using PlayerSide.Views;
+﻿using Microsoft.Extensions.Configuration;
+using PlayerSide.Views;
 using SharedClassLibrary;
 using System.Collections.Generic;
 
@@ -8,17 +9,20 @@ public partial class SheetPage : ContentPage
 {
     private RestService<Dictionary<int, Player>, Player> _restService { get; set; }
     private List<int> _keys { get; set; }
+    private IConfiguration _configuration;
 
     public SheetPage()
     {
         InitializeComponent();
-        _restService = new(Globals.RestUserInfo.AuthHeader);
+        _restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
         UpdateSheetsAsync();
     }
 
     public async void UpdateSheetsAsync()
     {
-        await _restService.RefreshDataAsync(Constants.RestUriSheet + Globals.RestUserInfo.UserName);
+        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+        await _restService.RefreshDataAsync(settings.RestUriSheet + MauiProgram.RestUserInfo.UserName);
         _keys = new();
         foreach(KeyValuePair<int, Player> p in _restService.ReturnStruct) 
         {

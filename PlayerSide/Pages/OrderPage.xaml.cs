@@ -7,13 +7,13 @@ public partial class OrderPage : ContentPage
     public OrderPage()
     {
         InitializeComponent();
-        /*Globals.RestNonPlayerInfo = new RestService<Npc>(Globals.RestPlayerInfo.AuthHeader)
+        /*MauiProgram.RestNonPlayerInfo = new RestService<Npc>(MauiProgram.RestPlayerInfo.AuthHeader)
         {
-            UserName = Globals.RestPlayerInfo.UserName
+            UserName = MauiProgram.RestPlayerInfo.UserName
         };*/
         // REST:
-        //Globals.RestPlayerInfo.ResourceChanged += OnConnectivityChanged;
-        //Globals.RestNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
+        //MauiProgram.RestPlayerInfo.ResourceChanged += OnConnectivityChanged;
+        //MauiProgram.RestNonPlayerInfo.ResourceChanged += OnGameOrderChanged;
     }
 
     private void OnGameOrderChanged(object sender, EventArgs e)
@@ -24,6 +24,6 @@ public partial class OrderPage : ContentPage
     // Test to see if this is even needed...
     /*public void OnConnectivityChanged(object sender, EventArgs e)
     {
-        CharPc.Character = Globals.Connectivity;
+        CharPc.Character = MauiProgram.Connectivity;
     }*/
 }

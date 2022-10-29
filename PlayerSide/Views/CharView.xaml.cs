@@ -9,8 +9,8 @@ public partial class CharView : ContentView
     public static readonly BindableProperty CharNameProperty = BindableProperty.Create(nameof(CharName), typeof(string), typeof(CharView), "Dude");
 
 
-    private Character_abstract _character;
-    public Character_abstract Character
+    private Character _character;
+    public Character Character
     {
         get => _character;
         set
