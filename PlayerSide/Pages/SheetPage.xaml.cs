@@ -7,7 +7,7 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private RestService<Dictionary<int, Player>, Player> _restService { get; set; }
+    private RestService<Dictionary<int, MauiPlayer>, MauiPlayer> _restService { get; set; }
     private List<int> _keys { get; set; }
     private IConfiguration _configuration;
 
@@ -24,11 +24,17 @@ public partial class SheetPage : ContentPage
         Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
         await _restService.RefreshDataAsync(settings.RestUriSheet + MauiProgram.RestUserInfo.UserName);
         _keys = new();
-        foreach(KeyValuePair<int, Player> p in _restService.ReturnStruct) 
+        try
         {
-            // Needs Bindings
-            SheetStackLayout.Add(new CharView() { CharName = p.Value.Name, Character = p.Value});
-            _keys.Add(p.Key);
+            Globals.Connectivity = _restService.ReturnStruct.First().Value;
+            foreach (KeyValuePair<int, MauiPlayer> p in _restService.ReturnStruct)
+            {
+                //SheetStackLayout.Add(new CharView(p.Value));
+                _keys.Add(p.Key);
+            }
+        } catch (Exception ex)
+        {
+            // No elements
         }
     }
 }

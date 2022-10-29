@@ -63,16 +63,34 @@ public partial class ModSheetPage : ContentPage
 
     private async void ChageSheetBtnClicked(object sender, EventArgs e)
     {
-        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
-        string user = MauiProgram.RestUserInfo.UserName;
-        await restService.SaveDataAsync(MPlayer, settings.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
+        if (Validate())
+        { 
+            Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+            RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
+            string user = MauiProgram.RestUserInfo.UserName;
+            await restService.SaveDataAsync(MPlayer, settings.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
 
-        if (restService.Response.IsSuccessStatusCode)
-        {
-            await Navigation.PopAsync();
-            _callbackToParent();
+            if (restService.Response.IsSuccessStatusCode)
+            {
+                await Navigation.PopAsync();
+                _callbackToParent();
+            }
         }
+    }
+
+    private bool Validate()
+    {
+        bool isValid = true;
+        string errorMsg = string.Empty;
+        if (!MPlayer.Validate("Name", out string EMsg))
+        {
+            NameEntry.Style = Application.Current.Resources.MergedDictionaries.ToList()[1]["EntryError"] as Style;
+            errorMsg += EMsg + "\n";
+            isValid = false;
+        } else
+            NameEntry.Style = new Style(NameEntry.GetType());
+        ErrorLabel.Text = errorMsg;
+        return isValid;
     }
 
     private async void RemoveBtnClicked(object sender, EventArgs e)
