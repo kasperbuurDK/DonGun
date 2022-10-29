@@ -26,7 +26,7 @@ public partial class SheetPage : ContentPage
         _keys = new();
         try
         {
-            Globals.Connectivity = _restService.ReturnStruct.First().Value;
+            MauiProgram.Connectivity = _restService.ReturnStruct.First().Value;
             foreach (KeyValuePair<int, MauiPlayer> p in _restService.ReturnStruct)
             {
                 //SheetStackLayout.Add(new CharView(p.Value));
