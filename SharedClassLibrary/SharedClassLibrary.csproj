@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Data" Version="22.1.5" />
+    <PackageReference Include="DevExpress.Data" Version="22.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
