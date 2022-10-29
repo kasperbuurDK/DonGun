@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using PlayerSide.Views;
@@ -10,11 +11,13 @@ public partial class UserPage : ContentPage
     private RestService<Dictionary<int, MauiPlayer>, MauiPlayer> _restService { get; set; }
     private int? _selected;
     private Border priSelected = new();
+    private IConfiguration _configuration;
 
     public UserPage()
 	{
 		InitializeComponent();
-        _restService = new(Globals.RestUserInfo.AuthHeader);
+        _restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
         UpdateSheetsAsync();
     }
 
@@ -39,7 +42,8 @@ public partial class UserPage : ContentPage
     public async void UpdateSheetsAsync()
     {
         PageLock(true);
-        await _restService.RefreshDataAsync(Constants.RestUriSheet + Globals.RestUserInfo.UserName);
+        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+        await _restService.RefreshDataAsync(settings.RestUriSheet + MauiProgram.RestUserInfo.UserName);
         SheetStackLayout.Clear();
         _selected = null;
         foreach (KeyValuePair<int, MauiPlayer> p in _restService.ReturnStruct)

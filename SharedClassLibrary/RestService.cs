@@ -19,6 +19,7 @@ namespace SharedClassLibrary
         public string AuthHeader { get; private set; } = string.Empty;
         public DateTime ModifiedOn { get; set; } = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
         public TStruct? ReturnStruct { get; private set; }
+        public Uri BaseUrl { get; set; }
 
         // Class related properties
         public string Logger { get; set; } = string.Empty;
@@ -28,14 +29,16 @@ namespace SharedClassLibrary
         public event EventHandler? ResponseResived;
 
         // Constructors
-        public RestService(string user, string password) : this(Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
+        public RestService(Uri baseUrl, string user, string password) : this(baseUrl, Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
         {
             UserName = user;           
         }
-        public RestService(string authHeader)
+
+        public RestService(Uri baseUrl, string authHeader)
         {
             _client = new HttpClient();
             AuthHeader = authHeader;
+            BaseUrl = baseUrl;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
             _serializerOptions = new JsonSerializerOptions
@@ -52,7 +55,7 @@ namespace SharedClassLibrary
         public async Task RefreshDataAsync(string uriPath)
         {
             ReturnStruct = new();
-            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriPath}"));
+            Uri uri = new(string.Format($"{BaseUrl}{uriPath}"));
 
             try
             {
@@ -95,7 +98,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task SaveDataAsync(TValue item, string uriResourcePath, bool create = false)
         {
-            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
@@ -121,7 +124,7 @@ namespace SharedClassLibrary
         /// <param name="uriResourcePath"></param>
         public async Task DeleteDataAsync(string uriResourcePath)
         {
-            Uri uri = new(string.Format($"{Constants.BaseUrl}{uriResourcePath}"));
+            Uri uri = new(string.Format($"{BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try

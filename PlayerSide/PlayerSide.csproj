@@ -109,7 +109,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
-	</ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+  </ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Pages\MainPage.xaml">
@@ -169,6 +171,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Fonts\DalelandsUncial-BOpn.ttf" />
 	  <None Remove="Resources\Fonts\DalelandsUncialBold-82zA.ttf" />
 	  <None Remove="Resources\Fonts\DalelandsUncialBoldItalic-YKgL.ttf" />
@@ -182,6 +185,14 @@
 	  <None Remove="Resources\Fonts\IokharicBoldItalic-LGmZ.ttf" />
 	  <None Remove="Resources\Fonts\IokharicItalic-XMdd.ttf" />
 	  <None Remove="Resources\Images\table\order_icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -202,6 +213,7 @@
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.10" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
 	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 	</ItemGroup>
 

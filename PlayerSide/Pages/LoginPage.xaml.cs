@@ -1,15 +1,18 @@
+using Microsoft.Extensions.Configuration;
 using SharedClassLibrary;
 
 namespace PlayerSide.Pages;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
+    IConfiguration _configuration;
+    public LoginPage()
 	{
 		InitializeComponent();
-	}
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
+    }
 
-	private async void LoginBtnClicked(object sender, EventArgs e)
+    private async void LoginBtnClicked(object sender, EventArgs e)
 	{
 		if (userEntry.Text is not null && passEntry.Text is not null)
 		{
@@ -20,11 +23,12 @@ public partial class LoginPage : ContentPage
 			else
 			{
                 PageLock(true);
-                Globals.RestUserInfo = new RestService<List<User>, User>(userEntry.Text, passEntry.Text);
+                Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+                MauiProgram.RestUserInfo = new RestService<List<User>, User>(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
                 try
                 {
-                    await Globals.RestUserInfo.RefreshDataAsync(Constants.RestUriUser + Globals.RestUserInfo.UserName);
-                    if (Globals.RestUserInfo.Response.IsSuccessStatusCode)
+                    await MauiProgram.RestUserInfo.RefreshDataAsync(settings.RestUriUser + MauiProgram.RestUserInfo.UserName);
+                    if (MauiProgram.RestUserInfo.Response.IsSuccessStatusCode)
                     {
                         Application.Current.MainPage = new MainPage();
                     }
@@ -33,7 +37,7 @@ public partial class LoginPage : ContentPage
                 {
                     errorLabel.Text = $"An error accured - \"{ex.Message}\"";
                 }
-                if (Globals.RestUserInfo.Response is not null && Globals.RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (MauiProgram.RestUserInfo.Response is not null && MauiProgram.RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";
                 PageLock(false);
 			}

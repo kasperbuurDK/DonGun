@@ -1,3 +1,5 @@
+
+using Microsoft.Extensions.Configuration;
 using SharedClassLibrary;
 using System;
 using System.Collections.ObjectModel;
@@ -11,6 +13,7 @@ public partial class ModSheetPage : ContentPage
     private bool _editState;
     private int _sheetId;
     private Action _callbackToParent;
+    private IConfiguration _configuration;
 
     public MauiPlayer MPlayer { get; set; }
     public bool EditState
@@ -33,6 +36,7 @@ public partial class ModSheetPage : ContentPage
         _callbackToParent = callbackToParent;
         EditState = false;
         ChageSheetBtn.Text = "Add Sheet";
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
     }
 
     public ModSheetPage(MauiPlayer p, int id, Action callbackToParent) : this(callbackToParent)
@@ -61,9 +65,10 @@ public partial class ModSheetPage : ContentPage
     {
         if (Validate())
         { 
-            RestService<Player, Player> restService = new(Globals.RestUserInfo.AuthHeader);
-            string user = Globals.RestUserInfo.UserName;
-            await restService.SaveDataAsync(MPlayer, Constants.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
+            Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+            RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
+            string user = MauiProgram.RestUserInfo.UserName;
+            await restService.SaveDataAsync(MPlayer, settings.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
 
             if (restService.Response.IsSuccessStatusCode)
             {
@@ -90,9 +95,10 @@ public partial class ModSheetPage : ContentPage
 
     private async void RemoveBtnClicked(object sender, EventArgs e)
     {
-        RestService<Player, Player> restService = new(Globals.RestUserInfo.AuthHeader);
-        string user = Globals.RestUserInfo.UserName;
-        await restService.DeleteDataAsync(Constants.RestUriSheet + user + "/" + _sheetId.ToString());
+        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+        RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
+        string user = MauiProgram.RestUserInfo.UserName;
+        await restService.DeleteDataAsync(settings.RestUriSheet + user + "/" + _sheetId.ToString());
 
         if (restService.Response.IsSuccessStatusCode)
         {
