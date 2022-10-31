@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Pages.MovePage"
+             Title="MavePage">
+    <Grid x:Name="mainGrid"
+          RowSpacing="5"
+          ColumnSpacing="5"
+          HorizontalOptions="Fill"
+          VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="backgroundImage"
+               Grid.RowSpan="4"
+               Grid.ColumnSpan="3"
+               Aspect="Fill"
+               Source="gray_wood"/>
+        <ImageButton x:Name="UpArrow"
+                     BackgroundColor="Transparent"
+                     Source="arrow"
+                     Grid.Column="1"
+                     Grid.Row="1"
+                     Rotation="270"
+                     Command="{Binding DigitCommand}"
+                     CommandParameter="up"
+                     Aspect="Fill"
+                     Scale="0.9" />
+        <ImageButton x:Name="RightArrow"
+                     BackgroundColor="Transparent"
+                     Source="arrow"
+                     Grid.Column="2"
+                     Grid.Row="2"
+                     Rotation="0"
+                     Command="{Binding DigitCommand}"
+                     CommandParameter="right"
+                     Aspect="Fill"
+                     Scale="0.9" />
+        <ImageButton x:Name="DownArrow"
+                     BackgroundColor="Transparent"
+                     Source="arrow"
+                     Grid.Column="1"
+                     Grid.Row="3"
+                     Rotation="90"
+                     Command="{Binding DigitCommand}"
+                     CommandParameter="down"
+                     Aspect="Fill"
+                     Scale="0.9" />
+        <ImageButton x:Name="LeftArrow"
+                     BackgroundColor="Transparent"
+                     Source="arrow"
+                     Grid.Column="0"
+                     Grid.Row="2"
+                     Rotation="180"
+                     Command="{Binding DigitCommand}"
+                     CommandParameter="left"
+                     Aspect="Fill"
+                     Scale="0.9" />
+        <ImageButton x:Name="DoneBtn"
+                     Grid.Column="1"
+                     Grid.Row="2"
+                     BackgroundColor="Transparent"
+                     Source="done"
+                     Command="{Binding DigitCommand}"
+                     CommandParameter="done"
+                     Aspect="Fill"
+                     Scale="0.9" />
+    </Grid>
+</ContentPage>

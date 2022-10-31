@@ -16,9 +16,9 @@
             <Button x:Name="UserOptions"
                     Text="User options"
                     Clicked="UserOptionsBtnClicked" />
-            <Button x:Name="Debug1"
-                    Text="DebugModSheetPage"
-                    Clicked="Debug1BtnClicked" />
+            <Button x:Name="Debug2"
+                    Text="DebugMovePage"
+                    Clicked="Debug2BtnClicked" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
