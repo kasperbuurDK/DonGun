@@ -1,0 +1,46 @@
+﻿
+Requiremensts:
+
+Each turn: 
+
+	Move: // MP = Move Points
+	Character should be able to move around. Each turn the character can move a max distance defined by an internal value.
+	The Character can turn Left or Right.
+	The character can move Forward or Backwards.
+	Move cost 2 MP, turn cost 1 MP
+
+	Can see enemy:
+	A character can see characteres and get noticed when they are in sight range.
+		First without facing, later implement facing.
+
+	Attack Action:
+	When a character can see another character they can take attack action on them.
+	Attact action gives a succes score for hitting based on range and ability/weapon/++
+
+Test Move:
+ +: A character can turn and move while there are enough MPs left.
+
+ -: A character can NOT move if there are NO movepoints left
+ -: A character can NOT move if the field where the character would like to move to is occipied
+
+ Test Can see enemy:
+ +: If another character is in range the character gets notified.
+ -: If no characteres are in sight range charactere does not get notified
+
+
+
+ /*
+ Action:
+	The character can make action. Once or maybe more (defined by ressource points) pr turn.
+	The character can shoot N, NE, E, SE, S, SW, W, NW. The shoot has a range befined by users weapon.
+	A shoot moves until hitting something or when max range is reached.
+
+	Special action:
+	Can be added later
+
+	 Test Action:
+ +: The character can make an action if enough actions points are left.
+ -: The character can NOT make an Action if not points left.
+
+
+	*/

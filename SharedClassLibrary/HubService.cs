@@ -19,11 +19,11 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
-        public HubService(string authHeader) 
+        public HubService(string authHeader, string baseUrl, string hubUri) 
         {
             AuthHeader = authHeader;
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{Constants.BaseUrl}{Constants.HubUriFile}", options => options.Headers.Add("Authorization", $"Basic {AuthHeader}"))
+                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {AuthHeader}"))
                     .Build();
 
 

@@ -24,7 +24,31 @@ namespace PlayerSide
 
         public void SetImage()
         {
-            DiceImage.Source = String.Format($"{Prefix}_d{(Globals.NumAsAlpha)Result}roll.png");
+            DiceImage.Source = String.Format($"{Prefix}_d{(NumAsAlpha)Result}roll.png");
+        }
+
+        public enum NumAsAlpha
+        {
+            a = 1,
+            b,
+            c,
+            d,
+            e,
+            f,
+            g,
+            h,
+            i,
+            j,
+            k,
+            l,
+            m,
+            n,
+            o,
+            p,
+            q,
+            r,
+            s,
+            t
         }
     }
 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerSideApiSsl", "ServerS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonBlazor", "DonBlazor\DonBlazor.csproj", "{222723E1-543F-4D3F-B399-0FF7AF35C63D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonGunTest", "DonGunTest\DonGunTest.csproj", "{34E64CE0-22A0-4BB2-A6C8-D45EE1ECA2D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonGunTest", "DonGunTest\DonGunTest.csproj", "{34E64CE0-22A0-4BB2-A6C8-D45EE1ECA2D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

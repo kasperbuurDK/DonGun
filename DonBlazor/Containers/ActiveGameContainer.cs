@@ -1,37 +1,73 @@
-﻿using SharedClassLibrary;
+﻿using DevExpress.Data.Async.Helpers;
+using DonBlazor.Models;
+using SharedClassLibrary;
+using SharedClassLibrary.Exceptions;
 using System.ComponentModel.DataAnnotations;
+
 
 namespace DonBlazor.Containers
 {
-    public static class ActiveGameContainer
+
+    /// <summary>
+    /// Singleton creater of a Game instance
+    /// </summary>
+
+    public sealed class ActiveGameContainer: Game
     {
+        private static ActiveGameContainer? GameInstance = null;
+
+        public static ActiveGameContainer GetGameInstance   
+        {
+            get
+            {
+                GameInstance ??= new ActiveGameContainer();  // ?? is null-coalescing operator. ??= returns lhs if its not null else assigns rhs
+                return GameInstance;
+            }
+        }
+
+        private ActiveGameContainer()
+        {
+     
+        }
+
+        public void DestroyGameInstance()
+        {
+            GameInstance = null;
+        }
 
         // Properties      
-        public static string Id { get; set; } = Guid.NewGuid().ToString(); // Should be created and assigned at server
-
-        public static string Name { get; set; } = "A Default DonGun Game";
-
-        public static List<Player> HumanPlayers { get; set; } = new List<Player>() { };
-
-        public static List<Character_abstract> AllCharacters { get; set; } = new List<Character_abstract> { };
-
-        public static int CurrentTurn { get; set; } = 0;
-
-        public static int CurrentCharacter{ get; set; } = 0;
+        
+        public int CurrentCharacter{ 
+            get 
+            {
+                if (AllCharacters.Count == 0)
+                {
+                    throw new NoPLayersInGameException();  
+                }
+                
+                return CurrentTurn % AllCharacters.Count;
+            } 
+        }
 
         // Methods
+        public void UpdateToNewGame(Game newGame)
+        {
+            Name = newGame.Name;
+            HumanPlayers = newGame.HumanPlayers;
+            AllCharacters.Clear();
+            AllCharacters.AddRange(newGame.HumanPlayers); // At start of game, there are only Humanplayers  
+            CurrentTurn = 0;
+        }
 
-        public static void NextTurn()
+        public void NextTurn()
         {
             CurrentTurn++;
         }
 
-        public static void SetCurrentPlayer()
+       
+        public void AddPlayerToGame(Player newPlayer)
         {
-            CurrentCharacter = CurrentTurn % AllCharacters.Count;
+            HumanPlayers.Add(newPlayer);
         }
-
-
-
     }
 }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Name="myChar"
-             x:Class="PlayerSide.Views.CharView">
+             x:Class="PlayerSide.Views.CharView"
+             xmlns:local="clr-namespace:PlayerSide">
+    <ContentView.BindingContext>
+        <local:CharacterViewModel x:Name="charaBinding"/>
+    </ContentView.BindingContext>
     <ContentView.Content>
         <Frame CornerRadius="10"
                HeightRequest="100"
@@ -13,6 +16,7 @@
                   RowSpacing="2"
                   ColumnSpacing="2">
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
@@ -26,12 +30,10 @@
                        Margin="0">
                     <Grid>
                         <ProgressBar x:Name="progressBarHp"
-                                     Progress="{Binding CharHpProperty, Source={x:Reference myChar}}"
                                      HorizontalOptions="Fill"
                                      ScaleY="15"
                                      ProgressColor="Red" />
                         <Label x:Name="HpBarText"
-                               Text="Health bar"
                                FontSize="Large"
                                FontFamily="OpenSans-Semibold"
                                TextColor="Black"
@@ -47,12 +49,10 @@
                        Margin="0">
                     <Grid>
                         <ProgressBar x:Name="progressBarRes"
-                                     Progress="{Binding CharResProperty, Source={x:Reference myChar}}"
                                      HorizontalOptions="Fill"
                                      ScaleY="15"
                                      ProgressColor="Blue" />
                         <Label x:Name="ResBarText"
-                               Text="Health bar"
                                FontSize="Large"
                                FontFamily="OpenSans-Semibold"
                                TextColor="Black"
@@ -69,6 +69,17 @@
                            Aspect="Fill"
                            HorizontalOptions="Fill"
                            Grid.RowSpan="2" />
+                </Frame>
+                <Frame BackgroundColor="Grey"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Padding="0"
+                       Margin="0">
+                    <Label Text="{Binding Character.Name}"
+                        FontFamily="Dalelandsbold"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           FontSize="Medium"/>
                 </Frame>
             </Grid>
         </Frame>

@@ -102,10 +102,10 @@
 
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -119,7 +119,36 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-
+    
+    <Style x:Key="EntryError"
+           TargetType="Entry">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="FontFamily"
+                Value="OpenSansRegular" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding {StaticResource ErrorRed}}" />
+        <Setter Property="PlaceholderColor"
+                Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    
     <Style TargetType="Frame">
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
@@ -171,7 +200,7 @@
     <Style TargetType="Picker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="VisualStateManager.VisualStateGroups">

@@ -17,6 +17,11 @@ namespace SharedClassLibrary
             Type = (RaceType)type;
         }
 
+        public Race_abstract(RaceType type)
+        {
+            Type = type;
+        }
+
         public enum RaceType
         {
             Elf,

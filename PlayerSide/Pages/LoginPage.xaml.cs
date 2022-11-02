@@ -1,42 +1,45 @@
+using Microsoft.Extensions.Configuration;
 using SharedClassLibrary;
 
 namespace PlayerSide.Pages;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
+    IConfiguration _configuration;
+    public LoginPage()
 	{
 		InitializeComponent();
-	}
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
+    }
 
-	private async void LoginBtnClicked(object sender, EventArgs e)
+    private async void LoginBtnClicked(object sender, EventArgs e)
 	{
 		if (userEntry.Text is not null && passEntry.Text is not null)
 		{
-			if (userEntry.Text == String.Empty || passEntry.Text == String.Empty)
+			if (userEntry.Text == string.Empty || passEntry.Text == string.Empty)
 			{
 				errorLabel.Text = "Please input a Username and Password!";
 			}
 			else
 			{
                 PageLock(true);
-                Globals.RestPlayerInfo = new RestService<Player>(userEntry.Text, passEntry.Text);
+                Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
+                RestService<List<User>, User> RestUserInfo = new RestService<List<User>, User>(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
                 try
                 {
-                    await Globals.RestPlayerInfo.RefreshDataAsync(Constants.RestUriGet + Globals.RestPlayerInfo.UserName);
-                    if (Globals.RestPlayerInfo.Response.IsSuccessStatusCode)
+                    await RestUserInfo.RefreshDataAsync(settings.RestUriUser + RestUserInfo.UserName);
+                    if (RestUserInfo.Response.IsSuccessStatusCode)
                     {
-                        Globals.Connectivity = Globals.RestPlayerInfo.Items[0];
-                        Globals.FileUpdateHub = new(Globals.RestPlayerInfo.AuthHeader);
-                        await Globals.FileUpdateHub.Initialise();
-                        Application.Current.MainPage = new AppShell();
+                        await SecureStorage.Default.SetAsync("authHeader", RestUserInfo.AuthHeader);
+                        await SecureStorage.Default.SetAsync("username", RestUserInfo.UserName);
+                        Application.Current.MainPage = new MainPage();
                     }
                 }
                 catch (Exception ex)
                 {
                     errorLabel.Text = $"An error accured - \"{ex.Message}\"";
                 }
-                if (Globals.RestPlayerInfo.Response is not null && Globals.RestPlayerInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (RestUserInfo.Response is not null && RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";
                 PageLock(false);
 			}

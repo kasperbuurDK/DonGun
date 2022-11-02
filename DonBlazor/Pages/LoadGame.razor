@@ -1,0 +1,63 @@
+﻿@using Containers;
+@using Models;
+@using SharedClassLibrary;
+@inject HttpClient Http
+
+@page "/loadgame"
+
+<PageTitle>Load Game</PageTitle>
+
+<h1>Welcome Don</h1>
+
+Here you can load a previous game. 
+
+
+@if (savedGames != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Saved</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in savedGames)
+            {
+                <tr>
+                    <td>@game.Name</td>
+                    <td>@game.LastSaved</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else 
+{
+    <p> Currently no games available </p>
+}
+
+<button @onclick=FetchMockList> Show Games  </button>
+
+
+
+
+
+@code {
+
+    
+
+    private ActiveGameContainer thisGame = Containers.ActiveGameContainer.GetGameInstance;
+
+    private Game[]? savedGames; 
+
+    private async Task FetchMockList()  {
+        savedGames = await Http.GetFromJsonAsync<Game[]>("sample-data/savedGames.json");
+    }
+
+  private void LoadSelectedGame() {
+     // thisGame = a load method;
+  }
+
+}

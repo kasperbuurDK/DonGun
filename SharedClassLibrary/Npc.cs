@@ -1,6 +1,6 @@
 ﻿namespace SharedClassLibrary
 {
-    public class Npc : Character_abstract
+    public class Npc : Character
     {
         public Npc()
         {
