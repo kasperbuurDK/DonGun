@@ -23,8 +23,10 @@ namespace DonGunTest
         {
             _mainCharacter = new Player("Main Player")
             {
-                Position = new Position(0, 0),
+                Position = new Position(10, 10),
                 Mp = 10,
+                Team = 0,
+                SightRange = 2,
             };
             _mainCharacter.MpCur = _mainCharacter.Mp;
 
@@ -35,10 +37,10 @@ namespace DonGunTest
 
         }
 
-        [TestCase(MoveDirections.North, 1, 0, 1)]
-        [TestCase(MoveDirections.East, 1, 1, 0)]
-        [TestCase(MoveDirections.South, 1, 0, -1)]
-        [TestCase(MoveDirections.West, 1, -1, 0)]
+        [TestCase(MoveDirections.North, 1, 10, 11)]
+        [TestCase(MoveDirections.East, 1, 11, 10)]
+        [TestCase(MoveDirections.South, 1, 10, 9)]
+        [TestCase(MoveDirections.West, 1, 9, 10)]
 
         public void Character_moves_correct(MoveDirections direction, int distance, int endX, int endY)
         {
@@ -150,27 +152,46 @@ namespace DonGunTest
         }
         
         [Test]
-        public void Current_character_only_see_others_in_range() 
+        public void Current_character_only_see_others_in_range()
         {
+            CreateTwoNPSInSightAndOneOutOfSight();
 
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(2));
+        }
+
+        private void CreateTwoNPSInSightAndOneOutOfSight()
+        {
             _mainCharacter.SightRange = 2;
             _mainCharacter.Position = new Position(10, 10);
 
             _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) }); // Not in range
             _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 9) }); // In range
             _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(9, 9) }); // In range
+        }
+
+        [Test]
+        public void If_teammember_in_sight_character_can_make_a_HelpAction() 
+        {
+            _gameMaster.AddCharacterToGame(new Player("A Team Member") { Position = new Position(9, 9), Team = 0, });
             
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(2));
+         
+            Assert.That(_mainCharacter.PossibleHelperActions?.Count, Is.EqualTo(1));
+        }
+        
+        [Test]
+        public void If_non_team_member_in_sight_character_can_make_an_OffensiveAction() 
+        {
+            _gameMaster.AddCharacterToGame(new Player("A Non Team Member") { Position = new Position(9, 9), Team = 1, });
+            
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+         
+            Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.EqualTo(1));
         }
 
 
 
-
-
-
-
-      
     }
 }
 
