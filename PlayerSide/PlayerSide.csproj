@@ -175,6 +175,7 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Platforms\Android\Resources\xml\auto_backup_rules.xml" />
 	  <None Remove="Resources\Fonts\DalelandsUncial-BOpn.ttf" />
 	  <None Remove="Resources\Fonts\DalelandsUncialBold-82zA.ttf" />
 	  <None Remove="Resources\Fonts\DalelandsUncialBoldItalic-YKgL.ttf" />
