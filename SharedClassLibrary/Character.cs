@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 using SharedClassLibrary.Exceptions;
 using SharedClassLibrary.AuxUtils;
-using SharedClassLibrary;
+using SharedClassLibrary.Actions;
 
 namespace SharedClassLibrary
 {
@@ -37,10 +37,15 @@ namespace SharedClassLibrary
         private MoveDirections _facing;
         private int _sightRange;
 
-        private List<Character>? _othersInSight = new List<Character>();
+        private int _team;
+
+        private List<Character>? _othersInSight;
+        private List<IAnAction>? _possibleActions;
+        private List<HelperAction>? _possibleHelperActions;
+        private List<OffensiveAction>? _possibleOffensiveActions;
+
 
         private Race_abstract _race;
-
 
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
@@ -52,29 +57,15 @@ namespace SharedClassLibrary
 
         // Properties 
 
-        public Position Position 
-        {
-            get => _position; 
-            set { _position = value;  }
-        }
+        public Position Position { get => _position; set { _position = value; } }
 
-        public MoveDirections Facing 
-        {
-            get => _facing;
-            set { _facing = value; }
-        }
+        public MoveDirections Facing { get => _facing; set { _facing = value; } }
 
-        public int SightRange
-        {
-            get => _sightRange;
-            set { _sightRange = value; } 
-        }
+        public int SightRange { get => _sightRange; set { _sightRange = value; } }
 
-        public List<Character> OthersInSight 
-        { 
-            get => _othersInSight;
-            set { _othersInSight = value; }
-        }
+        public List<Character> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
+
+        public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
 
         public int Strength
         {
@@ -160,16 +151,44 @@ namespace SharedClassLibrary
             get { return _race; }
         }
 
+        public int Team { get => _team; set => _team = value; }
+        public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
+        public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+
         // Constructors
         public Character() { _race = new Race_abstract(0); }
 
         // Methods
-   
-        
+        public void UpdatePossibleActions()
+        {
+            if (_othersInSight != null)
+            {
+                foreach (Character otherCharacter in _othersInSight)
+                {
+                    _possibleHelperActions = new List<HelperAction>();
+                    _possibleOffensiveActions = new List<OffensiveAction>();
+                    if (otherCharacter.Team == _team)
+                    {
+                        HelperAction aHelperAction = new();
+                        _possibleHelperActions.Add(aHelperAction);
+                    }
+                    else if (otherCharacter.Team != _team)
+                    {
+                        OffensiveAction anOffensiveAction = new();
+                        _possibleOffensiveActions.Add(anOffensiveAction);
+                    }
+
+                }
+            }
+            
+        }
+
 
         public override string ToString()
         {
             return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {Health}, {Resource}, {Race}]");
         }
+
+        
     }
 }

@@ -15,11 +15,7 @@ namespace SharedClassLibrary
     {
         private Game _game;
 
-        public GameMaster(Game game)
-        {
-            _game = game;
-        }
-
+        public GameMaster(Game game) { _game = game; }
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -76,7 +72,8 @@ namespace SharedClassLibrary
                 }
             }
 
-            character.OthersInSight = othersInSight;            
+            character.OthersInSight = othersInSight;
+            character.UpdatePossibleActions();
         }
 
         private float DetermineDistanceBetweenCharacters(Character character, Character otherCharacter)
