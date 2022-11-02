@@ -19,6 +19,13 @@
             <Button x:Name="Debug2"
                     Text="DebugMovePage"
                     Clicked="Debug2BtnClicked" />
+            <Entry x:Name="SKey"
+                   Margin="5"/>
+            <Button x:Name="Debug3"
+                    Text="DebugSignalR"
+                    Clicked="Debug3BtnClicked" />
+            <Label x:Name="ErrorLabel"
+                    TextColor="{StaticResource ErrorRed}"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

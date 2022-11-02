@@ -1,35 +1,56 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using SharedClassLibrary.MessageStrings;
 using System.Windows.Input;
 
 namespace SharedClassLibrary
 {
-    public class HubService<T>
+    public class HubService
     {
         // Fields
         private readonly HubConnection hubConnection;
-        public string Logger { get; set; } = string.Empty;
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
-        public string AuthHeader { get; set; }
+        public string? SessionKey { get; set; }
         public GameSessionOptions GameOptions { get; set; } = new();
 
         // Events
-        public event EventHandler<HubEventArgs<T>>? PropertyChangedEvent;
+        public event EventHandler<HubEventArgs<FileUpdateMessage>>? FileEvent;
+        public event EventHandler<HubEventArgs<StandardMessages>>? MoveEvent;
+        public event EventHandler<HubEventArgs<StandardMessages>>? DiceEvent;
+        public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
+        public event EventHandler<HubEventArgs<StandardMessages>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
-        public HubService(string authHeader, string baseUrl, string hubUri) 
+        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon=false) 
         {
-            AuthHeader = authHeader;
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {AuthHeader}"))
+                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {authHeader}"))
                     .Build();
 
-
-            hubConnection.On<T>("ReceiveUpdateEvent", msg =>
+            if (clientDon)
             {
-                PropertyChangedEvent?.Invoke(this, new HubEventArgs<T>() { Messege = msg });
+                hubConnection.On<StandardMessages>("MoveEvent", msg =>
+                {
+                    MoveEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                });
+                hubConnection.On<StandardMessages>("DiceEvent", msg =>
+                {
+                    DiceEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                });
+            }
+            hubConnection.On<FileUpdateMessage>("FileEvent", msg =>
+            {
+                FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
+            });
+            hubConnection.On<StandardMessages>("ErrorEvent", msg =>
+            {
+                ErrorEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+            });
+            hubConnection.On<StandardMessages>("UpdateEvent", msg =>
+            {
+                UpdateEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
             });
 
             hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
@@ -56,16 +77,32 @@ namespace SharedClassLibrary
         public async Task JoinRoom(string key)
         {
             GameOptions = new GameSessionOptions() { SessionKey = key };
+            SessionKey = key;
             await hubConnection.SendAsync("JoinGameRoom", GameOptions);
+        }
+
+        /// <summary>
+        /// Leave game room with given sesstion key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task LeaveRoom(string key)
+        {
+            GameOptions = new GameSessionOptions() { SessionKey = key };
+            await hubConnection.SendAsync("LeaveGameRoom", GameOptions);
         }
 
         /// <summary>
         /// Send event to hub.
         /// </summary>
         /// <returns></returns>
-        public async Task Send(T msg)
+        public async Task Send<T>(T msg) where T : Message
         {
-            await hubConnection.SendAsync("SendUpdateEvent", msg);
+            if (SessionKey is null)
+                throw new ArgumentNullException(nameof(SessionKey));
+            msg.SessionKey = SessionKey;
+            string endpoint = msg.MsgType.ToString();
+            await hubConnection.SendAsync(endpoint, msg);
         }
     }
 

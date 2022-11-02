@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using PlayerSide.Pages;
 using SharedClassLibrary;
+using SharedClassLibrary.MessageStrings;
 using System.Reflection;
 
 namespace PlayerSide;
@@ -11,7 +12,7 @@ public static class MauiProgram
     public static Character Connectivity { get; set; }
     public static List<Character> GameOrder { get; set; }
     //public static RestService<List<User>, User> RestUserInfo { get; set; }
-    public static HubService<FileUpdateMessage> FileUpdateHub { get; set; }
+    public static HubService Hub { get; set; }
 
     public static MauiApp CreateMauiApp()
     {
