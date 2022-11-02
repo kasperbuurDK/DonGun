@@ -10,7 +10,7 @@ public static class MauiProgram
     public static IServiceProvider Services { get; private set; }
     public static Character Connectivity { get; set; }
     public static List<Character> GameOrder { get; set; }
-    public static RestService<List<User>, User> RestUserInfo { get; set; }
+    //public static RestService<List<User>, User> RestUserInfo { get; set; }
     public static HubService<FileUpdateMessage> FileUpdateHub { get; set; }
 
     public static MauiApp CreateMauiApp()

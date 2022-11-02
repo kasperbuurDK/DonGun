@@ -11,7 +11,6 @@ public partial class OptionsPage : ContentPage
     {
         // Sent dirty data back to server.
         MauiProgram.Connectivity = null;
-        MauiProgram.RestUserInfo = null;
         Application.Current.MainPage = new LoginPage();
     }
 

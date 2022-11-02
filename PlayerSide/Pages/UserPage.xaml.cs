@@ -8,15 +8,14 @@ namespace PlayerSide.Pages;
 
 public partial class UserPage : ContentPage
 {
-    private RestService<Dictionary<int, MauiPlayer>, MauiPlayer> _restService { get; set; }
     private int? _selected;
     private Border priSelected = new();
+    private Dictionary<int, MauiPlayer> _sheetDict;
     private IConfiguration _configuration;
 
     public UserPage()
 	{
 		InitializeComponent();
-        _restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
         _configuration = MauiProgram.Services.GetService<IConfiguration>();
         UpdateSheetsAsync();
     }
@@ -28,9 +27,9 @@ public partial class UserPage : ContentPage
 
     private async void ModSheetBtnClicked(object sender, EventArgs e)
     {
-        if (_selected != null)
+        if (_selected != null && _sheetDict != null)
         {
-            await Navigation.PushAsync(new ModSheetPage(_restService.ReturnStruct[(int)_selected], (int)_selected, UpdateSheetsAsync));
+            await Navigation.PushAsync(new ModSheetPage(_sheetDict[(int)_selected], (int)_selected, UpdateSheetsAsync));
         }
     }
 
@@ -43,36 +42,44 @@ public partial class UserPage : ContentPage
     {
         PageLock(true);
         Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        await _restService.RefreshDataAsync(settings.RestUriSheet + MauiProgram.RestUserInfo.UserName);
-        SheetStackLayout.Clear();
-        _selected = null;
-        foreach (KeyValuePair<int, MauiPlayer> p in _restService.ReturnStruct)
+        string authHeader = await SecureStorage.Default.GetAsync("authHeader");
+        string user = await SecureStorage.Default.GetAsync("username");
+
+        if (authHeader is not null && user is not null)
         {
-            Grid grid = new()
+            RestService<Dictionary<int, MauiPlayer>, MauiPlayer> restService = new(new Uri(settings.BaseUrl), authHeader);
+            await restService.RefreshDataAsync(settings.RestUriSheet + user);
+            SheetStackLayout.Clear();
+            _selected = null;
+            foreach (KeyValuePair<int, MauiPlayer> p in restService.ReturnStruct)
             {
-                new CharView(p.Value)
-            };
-            Button button = new() { Opacity = 0, Padding = 1 };
-            Border border = new()
-            {
-                Stroke = Color.Parse("Transparent"),
-                Background = Color.Parse("Transparent"),
-                StrokeThickness = 5,
-                Margin = new Thickness(1.5,1.5,1.5,1.5),
-                Content = button
-            };
-            button.Clicked += delegate (object sender, EventArgs e)
-            {
-                if (!border.Equals(priSelected))
+                Grid grid = new()
                 {
-                    border.Stroke = Application.Current.Resources.MergedDictionaries.First()["Primary"] as Color;
-                    _selected = p.Key;
-                    priSelected.Stroke = Color.Parse("Transparent");
-                    priSelected = border;
-                }
-            };
-            grid.Add(border);
-            SheetStackLayout.Add(grid);
+                new CharView(p.Value)
+                };
+                Button button = new() { Opacity = 0, Padding = 1 };
+                Border border = new()
+                {
+                    Stroke = Color.Parse("Transparent"),
+                    Background = Color.Parse("Transparent"),
+                    StrokeThickness = 5,
+                    Margin = new Thickness(1.5, 1.5, 1.5, 1.5),
+                    Content = button
+                };
+                button.Clicked += delegate (object sender, EventArgs e)
+                {
+                    if (!border.Equals(priSelected))
+                    {
+                        border.Stroke = Application.Current.Resources.MergedDictionaries.First()["Primary"] as Color;
+                        _selected = p.Key;
+                        priSelected.Stroke = Color.Parse("Transparent");
+                        priSelected = border;
+                    }
+                };
+                grid.Add(border);
+                SheetStackLayout.Add(grid);
+            }
+            _sheetDict = restService.ReturnStruct;
         }
         PageLock(false);
     }

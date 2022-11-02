@@ -66,14 +66,19 @@ public partial class ModSheetPage : ContentPage
         if (Validate())
         { 
             Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-            RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
-            string user = MauiProgram.RestUserInfo.UserName;
-            await restService.SaveDataAsync(MPlayer, settings.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
+            string authHeader = await SecureStorage.Default.GetAsync("authHeader");
+            string user = await SecureStorage.Default.GetAsync("username");
 
-            if (restService.Response.IsSuccessStatusCode)
+            if (authHeader is not null && user is not null)
             {
-                await Navigation.PopAsync();
-                _callbackToParent();
+                RestService<Player, Player> restService = new(new Uri(settings.BaseUrl), authHeader);
+                await restService.SaveDataAsync(MPlayer, settings.RestUriSheet + user + (!EditState ? "" : "/"+_sheetId), !EditState);
+
+                if (restService.Response.IsSuccessStatusCode)
+                {
+                    await Navigation.PopAsync();
+                    _callbackToParent();
+                }
             }
         }
     }
@@ -96,14 +101,19 @@ public partial class ModSheetPage : ContentPage
     private async void RemoveBtnClicked(object sender, EventArgs e)
     {
         Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        RestService<Player, Player> restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
-        string user = MauiProgram.RestUserInfo.UserName;
-        await restService.DeleteDataAsync(settings.RestUriSheet + user + "/" + _sheetId.ToString());
+        string authHeader = await SecureStorage.Default.GetAsync("authHeader");
+        string user = await SecureStorage.Default.GetAsync("username");
 
-        if (restService.Response.IsSuccessStatusCode)
+        if (authHeader is not null && user is not null)
         {
-            await Navigation.PopAsync();
-            _callbackToParent();
+            RestService<Player, Player> restService = new(new Uri(settings.BaseUrl),authHeader);
+            await restService.DeleteDataAsync(settings.RestUriSheet + user + "/" + _sheetId.ToString());
+
+            if (restService.Response.IsSuccessStatusCode)
+            {
+                await Navigation.PopAsync();
+                _callbackToParent();
+            }
         }
     }
 

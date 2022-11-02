@@ -7,14 +7,12 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private RestService<Dictionary<int, MauiPlayer>, MauiPlayer> _restService { get; set; }
     private List<int> _keys { get; set; }
     private IConfiguration _configuration;
 
     public SheetPage()
     {
         InitializeComponent();
-        _restService = new(MauiProgram.RestUserInfo.BaseUrl, MauiProgram.RestUserInfo.AuthHeader);
         _configuration = MauiProgram.Services.GetService<IConfiguration>();
         UpdateSheetsAsync();
     }
@@ -22,19 +20,27 @@ public partial class SheetPage : ContentPage
     public async void UpdateSheetsAsync()
     {
         Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        await _restService.RefreshDataAsync(settings.RestUriSheet + MauiProgram.RestUserInfo.UserName);
-        _keys = new();
-        try
+        string authHeader = await SecureStorage.Default.GetAsync("authHeader");
+        string user = await SecureStorage.Default.GetAsync("username");
+
+        if (authHeader is not null && user is not null)
         {
-            MauiProgram.Connectivity = _restService.ReturnStruct.First().Value;
-            foreach (KeyValuePair<int, MauiPlayer> p in _restService.ReturnStruct)
+            RestService<Dictionary<int, MauiPlayer>, MauiPlayer> restService = new(new Uri(settings.BaseUrl), authHeader);
+            await restService.RefreshDataAsync(settings.RestUriSheet + user);
+            _keys = new();
+            try
             {
-                //SheetStackLayout.Add(new CharView(p.Value));
-                _keys.Add(p.Key);
+                MauiProgram.Connectivity = restService.ReturnStruct.First().Value;
+                foreach (KeyValuePair<int, MauiPlayer> p in restService.ReturnStruct)
+                {
+                    //SheetStackLayout.Add(new CharView(p.Value));
+                    _keys.Add(p.Key);
+                }
             }
-        } catch (Exception ex)
-        {
-            // No elements
+            catch (Exception ex)
+            {
+                // No elements
+            }
         }
     }
 }

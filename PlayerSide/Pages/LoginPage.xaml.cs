@@ -24,12 +24,14 @@ public partial class LoginPage : ContentPage
 			{
                 PageLock(true);
                 Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-                MauiProgram.RestUserInfo = new RestService<List<User>, User>(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
+                RestService<List<User>, User> RestUserInfo = new RestService<List<User>, User>(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
                 try
                 {
-                    await MauiProgram.RestUserInfo.RefreshDataAsync(settings.RestUriUser + MauiProgram.RestUserInfo.UserName);
-                    if (MauiProgram.RestUserInfo.Response.IsSuccessStatusCode)
+                    await RestUserInfo.RefreshDataAsync(settings.RestUriUser + RestUserInfo.UserName);
+                    if (RestUserInfo.Response.IsSuccessStatusCode)
                     {
+                        await SecureStorage.Default.SetAsync("authHeader", RestUserInfo.AuthHeader);
+                        await SecureStorage.Default.SetAsync("username", RestUserInfo.UserName);
                         Application.Current.MainPage = new MainPage();
                     }
                 }
@@ -37,7 +39,7 @@ public partial class LoginPage : ContentPage
                 {
                     errorLabel.Text = $"An error accured - \"{ex.Message}\"";
                 }
-                if (MauiProgram.RestUserInfo.Response is not null && MauiProgram.RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (RestUserInfo.Response is not null && RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";
                 PageLock(false);
 			}
