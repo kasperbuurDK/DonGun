@@ -44,8 +44,8 @@ namespace SharedClassLibrary
         private List<HelperAction>? _possibleHelperActions;
         private List<OffensiveAction>? _possibleOffensiveActions;
 
-
         private Race_abstract _race;
+        private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 } ;
 
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
@@ -56,17 +56,11 @@ namespace SharedClassLibrary
         }
 
         // Properties 
-
         public Position Position { get => _position; set { _position = value; } }
-
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
-
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
-
         public List<Character> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
-
         public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
-
         public int Strength
         {
             set { SetPropertyField(nameof(Strength), ref _str, value); }
@@ -175,12 +169,13 @@ namespace SharedClassLibrary
                     else if (otherCharacter.Team != _team)
                     {
                         OffensiveAction anOffensiveAction = new();
+                        int distToOther = (int)Math.Floor(GameMasterHelpers.DetermineDistanceBetweenCharacters(this, otherCharacter));
+                        anOffensiveAction.ChanceToHit = distToOther > _hitModifierProfile.Length ? 0 : _hitModifierProfile[distToOther];
                         _possibleOffensiveActions.Add(anOffensiveAction);
                     }
 
                 }
             }
-            
         }
 
 

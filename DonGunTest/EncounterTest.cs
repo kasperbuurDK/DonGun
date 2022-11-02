@@ -31,9 +31,9 @@ namespace DonGunTest
             _mainCharacter.MpCur = _mainCharacter.Mp;
 
             _game = new Game();
-            _game.HumanPlayers.Add(_mainCharacter);
-
             _gameMaster = new GameMaster(_game);
+            _gameMaster.AddCharacterToGame(_mainCharacter);
+
 
         }
 
@@ -190,8 +190,50 @@ namespace DonGunTest
             Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.EqualTo(1));
         }
 
+        [TestCase(10, 100)]
+        [TestCase(9, 90)]
+        [TestCase(8, 80)]
+        [TestCase(7, 70)]
+        [TestCase(6, 60)]
+        [TestCase(5, 50)]
+        [TestCase(4, 40)]
+        [TestCase(3, 30)]
+        [TestCase(2, 20)]
+        [TestCase(1, 10)]
+        [TestCase(100, 0)]
+        public void OffensiveAction_have_a_succesrate(int xPosOfenemy, int expectedChanceToHit)
+        {
+            Npc npc = new Npc() { Position = new Position(xPosOfenemy, 10), Team = 1, };
+            _mainCharacter.SightRange = 200;
 
+            _gameMaster.AddCharacterToGame(npc);
 
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+
+            Assert.That(_mainCharacter.PossibleOffensiveActions?[0].ChanceToHit, Is.EqualTo(expectedChanceToHit));
+        }
+
+        [Test]
+        public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit() 
+        {
+            int timesTakingAction = 1000000;
+
+            Npc npc = new Npc() { Position = new Position(5, 10), Team = 1, };
+            _gameMaster.AddCharacterToGame(npc);
+            _mainCharacter.SightRange = 200;
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+
+            int timesHit = 0;
+            Parallel.For(0, timesTakingAction,
+                           index => { if (_mainCharacter.PossibleOffensiveActions[0].MakeBasicAttack()) {
+                                     Interlocked.Add(ref timesHit, 1); } }  );
+            
+            
+            int minBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToHit/100 * 0.98f);
+            int maxBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToHit/100 * 1.02f);
+
+            Assert.That(timesHit, Is.AtLeast(minBoundary));
+            Assert.That(timesHit, Is.AtMost(maxBoundary));
+        }
     }
 }
-

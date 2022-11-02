@@ -8,6 +8,9 @@ namespace SharedClassLibrary.Actions
 {
     public class HelperAction : IAnAction
     {
-
+        public bool TakeBasicAction()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
