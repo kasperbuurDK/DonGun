@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.Net;
 using DevExpress.DirectX.NativeInterop.Direct2D.CCW;
+using SharedClassLibrary.MessageStrings;
+using System.Security.Cryptography;
 
 namespace ServerSideApiSsl.Database
 {
@@ -114,6 +116,39 @@ namespace ServerSideApiSsl.Database
                     return users.First();
                 }
                 return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int CreateUser(string name, string password)
+        {
+            string sql = $"SELECT * FROM Users WHERE [Name] = '{name}'";
+            try
+            {
+                // Does the DB containe any user with this username?
+                List<User>? users = GetDataTable(sql).ToList<User>();
+                if (users?.Any() ?? false)
+                {
+                    return (int)HttpStatusCode.Conflict;
+                }
+
+                sql = $"INSERT INTO Users ([Name], [Password], [CreatedDate]) VALUES ({name}, '{HashPass(password)}', {DateTime.UtcNow})";
+                try
+                {
+                    int rowsAffected = SetDataTable(sql);
+                    if (rowsAffected >= 1)
+                    {
+                        return (int)HttpStatusCode.OK;
+                    }
+                    return (int)HttpStatusCode.BadRequest;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             catch (Exception)
             {
@@ -249,6 +284,53 @@ namespace ServerSideApiSsl.Database
             {
                 throw;
             }
+        }
+        private static string HashPass(string password)
+        {
+            byte[] salt, buf, dst;
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+
+            using (Rfc2898DeriveBytes bytes = new(password, 0x10, 0x3e8))
+            {
+                salt = bytes.Salt;
+                buf = bytes.GetBytes(0x20);
+            }
+            dst = new byte[0x31];
+            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
+            Buffer.BlockCopy(buf, 0, dst, 0x11, 0x20);
+            return Convert.ToBase64String(dst);
+        }
+
+        private static bool VerifyHashPass(string hash, string password)
+        {
+            byte[] src, buf, tempBuf, dst;
+            if (string.IsNullOrEmpty(hash))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+            
+            src = Convert.FromBase64String(hash);
+            if ((src.Length != 0x31) || (src[0] != 0))
+            {
+                return false;
+            }
+
+            dst = new byte[0x10];
+            Buffer.BlockCopy(src, 1, dst, 0, 0x10);
+            buf = new byte[0x20];
+            Buffer.BlockCopy(src, 0x11, buf, 0, 0x20);
+            using (Rfc2898DeriveBytes bytes = new(password, dst, 0x3e8))
+            {
+                tempBuf = bytes.GetBytes(0x20);
+            }
+            return buf.SequenceEqual(tempBuf);
         }
     }
 }
