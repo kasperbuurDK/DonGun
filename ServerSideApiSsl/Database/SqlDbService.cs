@@ -37,23 +37,15 @@ namespace ServerSideApiSsl.Database
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT Id FROM Users WHERE Name = '{username}' AND Password = '{password}'";
+            string sql = $"SELECT Id FROM Users WHERE Name = '{username}'";
             try
             {
-                _connection.Open();
-                SqlCommand command = new(sql, _connection);
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.Read())
+                List<User>? users = GetDataTable(sql).ToList<User>();
+                if (users?.Any() ?? false)
                 {
-                    // Need to save Id...
-                    // If more then one user exist
-                    if (reader.Read())
-                    {
-                        return false;
-                    }
-                    return true;
+                    return VerifyHashPass(users.First().Password, password);
                 }
+                return false;
             }
             catch (Exception)
             {
@@ -63,7 +55,6 @@ namespace ServerSideApiSsl.Database
             {
                 _connection.Close();
             }
-            return false;
         }
 
         private DataTable GetDataTable(string Query)
@@ -123,9 +114,9 @@ namespace ServerSideApiSsl.Database
             }
         }
 
-        public int CreateUser(string name, string password)
+        public int CreateUser(User u)
         {
-            string sql = $"SELECT * FROM Users WHERE [Name] = '{name}'";
+            string sql = $"SELECT * FROM Users WHERE [Name] = '{u.Name}'";
             try
             {
                 // Does the DB containe any user with this username?
@@ -135,7 +126,7 @@ namespace ServerSideApiSsl.Database
                     return (int)HttpStatusCode.Conflict;
                 }
 
-                sql = $"INSERT INTO Users ([Name], [Password], [CreatedDate]) VALUES ({name}, '{HashPass(password)}', {DateTime.UtcNow})";
+                sql = $"INSERT INTO Users ([Name], [Password]) VALUES ('{u.Name}', '{HashPass(u.Password)}')";
                 try
                 {
                     int rowsAffected = SetDataTable(sql);
@@ -149,6 +140,24 @@ namespace ServerSideApiSsl.Database
                 {
                     throw;
                 }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int DeleteUser(User u)
+        {
+            string sql = $"DELETE FROM Users WHERE [Name] = '{u.Name}'";
+            try
+            {
+                int rowsAffected = SetDataTable(sql);
+                if (rowsAffected >= 1)
+                {
+                    return (int)HttpStatusCode.OK;
+                }
+                return (int)HttpStatusCode.BadRequest;
             }
             catch (Exception)
             {

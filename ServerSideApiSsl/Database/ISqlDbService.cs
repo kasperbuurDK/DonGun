@@ -13,5 +13,7 @@ namespace ServerSideApiSsl.Database
         int PutSheet(int user, object data);
         public int PostSheet(int id, object data);
         public int DeleteSheet(int id);
+        public int CreateUser(User u);
+        public int DeleteUser(User u);
     }
 }
