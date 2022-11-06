@@ -1,4 +1,6 @@
-﻿namespace SharedClassLibrary
+﻿using System.Text;
+
+namespace SharedClassLibrary
 {
     public class Cup
     {
@@ -60,6 +62,16 @@
             {
                 Rolled?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder str = new();
+            foreach(Dice d in DiceList)
+            { 
+                str.Append(d.ToString());
+            }
+            return str.ToString();
         }
     }
 }
