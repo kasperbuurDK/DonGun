@@ -37,13 +37,13 @@ namespace ServerSideApiSsl.Database
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT Id FROM Users WHERE Name = '{username}'";
+            string sql = $"SELECT Id FROM Users WHERE Name = '{username}' AND Password = '{password}'";
             try
             {
                 List<User>? users = GetDataTable(sql).ToList<User>();
                 if (users?.Any() ?? false)
                 {
-                    return VerifyHashPass(users.First().Password, password);
+                    return true;
                 }
                 return false;
             }
@@ -126,7 +126,7 @@ namespace ServerSideApiSsl.Database
                     return (int)HttpStatusCode.Conflict;
                 }
 
-                sql = $"INSERT INTO Users ([Name], [Password]) VALUES ('{u.Name}', '{HashPass(u.Password)}')";
+                sql = $"INSERT INTO Users ([Name], [Password]) VALUES ('{u.Name}', '{u.Password}')";
                 try
                 {
                     int rowsAffected = SetDataTable(sql);
@@ -293,53 +293,6 @@ namespace ServerSideApiSsl.Database
             {
                 throw;
             }
-        }
-        private static string HashPass(string password)
-        {
-            byte[] salt, buf, dst;
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new ArgumentNullException(nameof(password));
-            }
-
-            using (Rfc2898DeriveBytes bytes = new(password, 0x10, 0x3e8))
-            {
-                salt = bytes.Salt;
-                buf = bytes.GetBytes(0x20);
-            }
-            dst = new byte[0x31];
-            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
-            Buffer.BlockCopy(buf, 0, dst, 0x11, 0x20);
-            return Convert.ToBase64String(dst);
-        }
-
-        private static bool VerifyHashPass(string hash, string password)
-        {
-            byte[] src, buf, tempBuf, dst;
-            if (string.IsNullOrEmpty(hash))
-            {
-                return false;
-            }
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new ArgumentNullException(nameof(password));
-            }
-            
-            src = Convert.FromBase64String(hash);
-            if ((src.Length != 0x31) || (src[0] != 0))
-            {
-                return false;
-            }
-
-            dst = new byte[0x10];
-            Buffer.BlockCopy(src, 1, dst, 0, 0x10);
-            buf = new byte[0x20];
-            Buffer.BlockCopy(src, 0x11, buf, 0, 0x20);
-            using (Rfc2898DeriveBytes bytes = new(password, dst, 0x3e8))
-            {
-                tempBuf = bytes.GetBytes(0x20);
-            }
-            return buf.SequenceEqual(tempBuf);
         }
     }
 }

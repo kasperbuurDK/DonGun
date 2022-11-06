@@ -1,9 +1,8 @@
-using Newtonsoft.Json.Linq;
 using System.ComponentModel;
-
 using SharedClassLibrary.Exceptions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Actions;
+using System.Text.Json.Serialization;
 
 namespace SharedClassLibrary
 {
@@ -56,15 +55,16 @@ namespace SharedClassLibrary
         }
 
         // Properties 
-
         public Position Position { get => _position; set { _position = value; } }
 
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
 
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
 
+        [JsonIgnore] // DOES NOT WORK, NEEDS TO BE REMOVED!
         public List<Character> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
 
+        [JsonIgnore] // DOES NOT WORK, NEEDS TO BE REMOVED!
         public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
 
         public int Strength
@@ -152,6 +152,7 @@ namespace SharedClassLibrary
         }
 
         public int Team { get => _team; set => _team = value; }
+
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
 

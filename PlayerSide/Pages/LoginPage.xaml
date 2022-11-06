@@ -27,6 +27,9 @@
             <Button x:Name="loginBtn"
                     Text="Login"
                     Clicked="LoginBtnClicked" />
+            <Button x:Name="createBtn"
+                    Text="Create"
+                    Clicked="CreateBtnClicked" />
             <Label x:Name="errorLabel"
                    TextColor="Red"
                    VerticalOptions="Center"
