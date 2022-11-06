@@ -65,4 +65,12 @@ public partial class OptionsPage : ContentPage
         if (!string.IsNullOrEmpty(SKey.Text))
             await MauiProgram.Hub.JoinRoom(SKey.Text);
     }
+
+    private async void RemoveActBtnClicked(object sender, EventArgs e)
+    {
+        // Ask is the user really wants to remove act.
+        // Remove sheets...
+        // Remove act...
+        // Logout...
+    }
 }

@@ -24,6 +24,9 @@
             <Button x:Name="Debug3"
                     Text="DebugSignalR"
                     Clicked="Debug3BtnClicked" />
+            <Button x:Name="deleteUserAct"
+                    Text="Remove Acount"
+                    Clicked="RemoveActBtnClicked" />
             <Label x:Name="ErrorLabel"
                     TextColor="{StaticResource ErrorRed}"/>
         </VerticalStackLayout>
