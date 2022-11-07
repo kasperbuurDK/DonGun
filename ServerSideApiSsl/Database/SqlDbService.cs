@@ -294,5 +294,23 @@ namespace ServerSideApiSsl.Database
                 throw;
             }
         }
+
+        public int DeleteSheets(int userid)
+        {
+            string sql = $"DELETE FROM Sheets WHERE [User] = '{userid}'";
+            try
+            {
+                int rowsAffected = SetDataTable(sql);
+                if (rowsAffected >= 1)
+                {
+                    return (int)HttpStatusCode.OK;
+                }
+                return (int)HttpStatusCode.BadRequest;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

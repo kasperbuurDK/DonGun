@@ -15,5 +15,6 @@ namespace ServerSideApiSsl.Database
         public int DeleteSheet(int id);
         public int CreateUser(User u);
         public int DeleteUser(User u);
+        public int DeleteSheets(int userid);
     }
 }
