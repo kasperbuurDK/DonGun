@@ -36,7 +36,8 @@
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
         <ActivityIndicator x:Name="ActivityIndicator"
-                           BackgroundColor="White"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
+                           Color="{StaticResource Primary}"
                            IsRunning="False"
                            Grid.RowSpan="3" />
     </Grid>

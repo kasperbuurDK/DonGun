@@ -8,9 +8,11 @@ namespace SharedClassLibrary.MessageStrings
 {
     public class Message
     {
+        public string UserName { get; set; } = string.Empty;
         public MessageType MsgType { get; set; }
         public string SessionKey { get; set; }
         public string? ConnectionId { get; set; }
+        public string LastModified { get; set; } = string.Empty;
 
         public Message(MessageType msgType) 
         {
@@ -31,6 +33,11 @@ namespace SharedClassLibrary.MessageStrings
             StdEvent,
             MoveEvent,
             UpdateEvent
-        } 
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"{UserName} - {LastModified} - {SessionKey}");
+        }
     }
 }

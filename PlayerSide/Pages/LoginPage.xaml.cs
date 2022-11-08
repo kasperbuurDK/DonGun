@@ -32,12 +32,12 @@ public partial class LoginPage : ContentPage
                     {
                         await SecureStorage.Default.SetAsync("authHeader", RestUserInfo.AuthHeader);
                         await SecureStorage.Default.SetAsync("username", RestUserInfo.UserName);
-                        Application.Current.MainPage = new MainPage();
+                        Application.Current.MainPage = new MainPage(RestUserInfo.AuthHeader);
                     }
                 }
                 catch (Exception ex)
                 {
-                    errorLabel.Text = $"An error accured - \"{ex.Message}\"";
+                    errorLabel.Text = $"An error accured - Logger: \"{RestUserInfo.Logger}\"\n Ex: \"{ex.Message}\"";
                 }
                 if (RestUserInfo.Response is not null && RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";
@@ -68,7 +68,7 @@ public partial class LoginPage : ContentPage
                     {
                         await SecureStorage.Default.SetAsync("authHeader", RestUserInfo.AuthHeader);
                         await SecureStorage.Default.SetAsync("username", RestUserInfo.UserName);
-                        Application.Current.MainPage = new MainPage();
+                        Application.Current.MainPage = new MainPage(RestUserInfo.AuthHeader);
                     }
                     if (RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Conflict)
                     {

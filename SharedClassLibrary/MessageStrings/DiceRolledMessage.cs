@@ -8,9 +8,7 @@ namespace SharedClassLibrary.MessageStrings
 {
     public class DiceRolledMessage : Message
     {
-        public string UserName { get; set; } = string.Empty;
         public string CupContents { get; set; } = string.Empty;
-        public string LastModified { get; set; } = string.Empty;
 
         public DiceRolledMessage() : base(MessageType.DiceEvent) { }
 
@@ -23,7 +21,7 @@ namespace SharedClassLibrary.MessageStrings
 
         public override string ToString()
         {
-            return string.Format($"{UserName} - {CupContents} - {LastModified}");
+            return string.Format($"{base.ToString()} - {CupContents}");
         }
     }
 }

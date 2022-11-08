@@ -46,6 +46,7 @@ public partial class ModSheetPage : ContentPage
         BindingContext = MPlayer;
         _sheetId = id;
         ChageSheetBtn.Text = "Apply changes";
+        RacePicker.SelectedItem = MPlayer.Race.Type.ToString();
         RacePicker.IsEnabled = false;
         EditState = true;
     }
@@ -121,10 +122,5 @@ public partial class ModSheetPage : ContentPage
     {
         if (Enum.TryParse((string)RacePicker.SelectedItem, out Race_abstract.RaceType tempRace))
             MPlayer.Race = new Race_abstract(tempRace);
-    }
-
-    private void RacePicker_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
     }
 }

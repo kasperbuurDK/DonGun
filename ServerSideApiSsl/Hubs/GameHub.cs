@@ -1,4 +1,4 @@
-﻿using DevExpress.Data.Helpers;
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SharedClassLibrary;
@@ -42,10 +42,12 @@ namespace ServerSideApiSsl.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
-        public async Task MoveEvent(StandardMessages msg) // To Don from Maui
+        public async Task MoveEvent(MoveMessage msg) // To Don from Maui
         {
             msg.ConnectionId = Context.ConnectionId;
             await Clients.OthersInGroup(msg.SessionKey).SendAsync("MoveEvent", msg);
+            //Debug echo
+            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
         public async Task ErrorEvent(StandardMessages msg) // From Don to Maui
@@ -53,20 +55,26 @@ namespace ServerSideApiSsl.Hubs
             if (msg.ConnectionId != null)
             {
                 await Clients.Client(msg.ConnectionId).SendAsync("ErrorEvent", msg);
+                //Debug echo
+                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
             }
         }
 
-        public async Task UpdateEvent(StandardMessages msg) // From Don to Maui
+        public async Task UpdateEvent(UpdateMessage msg) // From Don to Maui
         {
             if (msg.ConnectionId != null) {
                 await Clients.Client(msg.ConnectionId).SendAsync("UpdateEvent", msg);
+                //Debug echo
+                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
             }
         }
 
-        public async Task DiceEvent(StandardMessages msg) // To Don from Maui
+        public async Task DiceEvent(DiceRolledMessage msg) // To Don from Maui
         {
             msg.ConnectionId = Context.ConnectionId;
             await Clients.OthersInGroup(msg.SessionKey).SendAsync("DiceEvent", msg);
+            //Debug echo
+            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
     }
     

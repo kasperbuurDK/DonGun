@@ -8,10 +8,8 @@ namespace SharedClassLibrary.MessageStrings
 {
     public class FileUpdateMessage : Message
     {
-        public string UserName { get; set; } = string.Empty;
         public string UUID { get; set; } = string.Empty;
         public string SheetId { get; set; } = string.Empty;
-        public string LastModified { get; set; } = string.Empty;
 
         public FileUpdateMessage() : base(MessageType.FileEvent) { }
 
@@ -19,7 +17,7 @@ namespace SharedClassLibrary.MessageStrings
 
         public override string ToString()
         {
-            return string.Format($"{UserName} - {UUID} - {SheetId} - {LastModified} - {SessionKey}");
+            return string.Format($"{base.ToString()} - {UUID} - {SheetId}");
         }
     }
 }

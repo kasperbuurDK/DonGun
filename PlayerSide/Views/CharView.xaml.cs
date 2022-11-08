@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using SharedClassLibrary;
 using System.ComponentModel;
 

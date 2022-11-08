@@ -16,10 +16,10 @@ namespace SharedClassLibrary
 
         // Events
         public event EventHandler<HubEventArgs<FileUpdateMessage>>? FileEvent;
-        public event EventHandler<HubEventArgs<StandardMessages>>? MoveEvent;
-        public event EventHandler<HubEventArgs<StandardMessages>>? DiceEvent;
+        public event EventHandler<HubEventArgs<MoveMessage>>? MoveEvent;
+        public event EventHandler<HubEventArgs<DiceRolledMessage>>? DiceEvent;
         public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
-        public event EventHandler<HubEventArgs<StandardMessages>>? UpdateEvent;
+        public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
@@ -31,28 +31,31 @@ namespace SharedClassLibrary
 
             if (clientDon)
             {
-                hubConnection.On<StandardMessages>("MoveEvent", msg =>
+                hubConnection.On<MoveMessage>("MoveEvent", msg =>
                 {
-                    MoveEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                    MoveEvent?.Invoke(this, new HubEventArgs<MoveMessage>() { Messege = msg });
                 });
-                hubConnection.On<StandardMessages>("DiceEvent", msg =>
+                hubConnection.On<DiceRolledMessage>("DiceEvent", msg =>
                 {
-                    DiceEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                    DiceEvent?.Invoke(this, new HubEventArgs<DiceRolledMessage>() { Messege = msg });
                 });
             }
             hubConnection.On<FileUpdateMessage>("FileEvent", msg =>
             {
                 FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
             });
+
+            // Error from Don
             hubConnection.On<StandardMessages>("ErrorEvent", msg =>
             {
                 ErrorEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
             });
-            hubConnection.On<StandardMessages>("UpdateEvent", msg =>
+            hubConnection.On<UpdateMessage>("UpdateEvent", msg =>
             {
-                UpdateEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
             });
 
+            // Exception from hub system
             hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
             {
                 ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });

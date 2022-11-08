@@ -51,9 +51,6 @@ public partial class OptionsPage : ContentPage
 
     private async void Debug3BtnClicked(object sender, EventArgs e)
     {
-        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        string authHeder = await SecureStorage.Default.GetAsync("authHeader");
-        MauiProgram.Hub = new(authHeder, settings.BaseUrl, settings.HubUri);
         MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => ErrorLabel.Text = args.Messege.Messege;
         try
         {
