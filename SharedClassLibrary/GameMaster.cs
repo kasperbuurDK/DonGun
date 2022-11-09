@@ -101,6 +101,8 @@ namespace SharedClassLibrary
 
         public void AddCharacterToGame(Character characterToAdd) 
         {
+            characterToAdd.SetMaxValuesBasedOnMainStats();
+
             if (characterToAdd is Player)  
             {
                 _game.HumanPlayers.Add((Player)characterToAdd);

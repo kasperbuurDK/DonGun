@@ -2,16 +2,7 @@
 {
     public class Player : Character
     {
-        private string _name = "DJON DOE";
-
-        public string Name
-        {
-            set
-            {
-                SetPropertyField(nameof(Name), ref _name, value); ;
-            }
-            get { return _name; }
-        }
+       
 
         public Player(string name)
         {
@@ -26,5 +17,7 @@
         public string? MasteryString { get; set; }
 
         public string? StatusString { get; set; }
+
+        
     }
 }
