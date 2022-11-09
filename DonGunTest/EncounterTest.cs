@@ -196,8 +196,8 @@ namespace DonGunTest
         {
             CreateNewFriendNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-      
-            Assert.That(_mainCharacter.PossibleHelperActions?.Count, Is.GreaterThan(0));
+     
+            Assert.That(_gameMaster.PossibleHelperActions?.Count, Is.GreaterThan(0));
         }
         
         [Test]
@@ -206,7 +206,7 @@ namespace DonGunTest
             CreateNewEnemyNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
         
-            Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.GreaterThan(0));
+            Assert.That(_gameMaster.PossibleOffensiveActions?.Count, Is.GreaterThan(0));
         }
 
         
@@ -229,16 +229,17 @@ namespace DonGunTest
 
             int timesHit = 0;
             int diceValue = 10;
+            
             Parallel.For(0, timesTakingAction,
                            index => {
-                               if (_mainCharacter.PossibleOffensiveActions[0].MakeBasicAction(diceValue)) {
+                               if (_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, npc)) {
                                      Interlocked.Add(ref timesHit, 1); }
                            }
                            );
             
             
-            int minBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToSucced/100 * 0.98f);
-            int maxBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToSucced/100 * 1.02f);
+            int minBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced/100 * 0.98f);
+            int maxBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced/100 * 1.02f);
 
             if (maxBoundary > timesTakingAction) { maxBoundary = timesTakingAction; }
             if (minBoundary > timesTakingAction) { minBoundary = timesTakingAction; }
@@ -253,13 +254,14 @@ namespace DonGunTest
         {
 
             int startHealth = 100;
+            int diceValue = 10;
          
             CreateNewEnemyNearby();
             Npc enemyCharacter = _game.NonHumanPlayers[0];
             enemyCharacter.HealthMax = startHealth;
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            while (!_mainCharacter.PossibleOffensiveActions[0].MakeBasicAction(10))
+            while (!_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, enemyCharacter))
             
             Assert.That(enemyCharacter.HealthCurrent, Is.LessThan(startHealth));
         }
@@ -271,7 +273,7 @@ namespace DonGunTest
             CreateNewFriendNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
 
-            Assert.That(_mainCharacter.PossibleHelperActions.Count, Is.GreaterThan(0));
+            Assert.That(_gameMaster.PossibleHelperActions.Count, Is.GreaterThan(0));
         }
 
         
@@ -279,14 +281,19 @@ namespace DonGunTest
         public void Player_can_heal_Ally()
         {
             int startHealth = 1;
+            int diceValue = 10;
             CreateNewFriendNearby();
             Player friend = _game.HumanPlayers.Find(player => player.Name == "Friend");
             friend.HealthCurrent = startHealth;
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            
-            var theAction = _mainCharacter.PossibleHelperActions.Find(action => action.Signature == "Heal:Friend");
-            theAction.MakeBasicAction(10);
 
+            var actions = _gameMaster.PossibleHelperActions;
+            var theSig = _mainCharacter.PossibleHelperActionsSignatures[0];
+
+            var theAction = actions.Find(act => act.Signature == theSig); 
+                // _mainCharacter.PossibleHelperActions.Find(action => action.Signature == "Heal:Friend");
+
+            theAction.MakeBasicAction(diceValue, _mainCharacter, friend);
 
             Assert.That(friend.HealthCurrent, Is.GreaterThan(startHealth));
         }

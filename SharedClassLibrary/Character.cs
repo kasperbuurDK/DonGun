@@ -38,13 +38,14 @@ namespace SharedClassLibrary
         private MoveDirections _facing;
         private int _sightRange;
 
-        private int _team;
-
-//        private List<Character>? _othersInSight = new() { };
+        //        private List<Character>? _othersInSight = new() { };
         private List<string>? _othersInSight = new() { };
-        private List<IAnAction>? _possibleActions = new() { };
-        private List<HelperAction>? _possibleHelperActions = new() { };
-        private List<OffensiveAction>? _possibleOffensiveActions = new() { };
+      //  private List<IAnAction>? _possibleActions = new() { };
+        private List<string>? _possibleActionsSignatures = new() { };
+      //  private List<HelperAction>? _possibleHelperActions = new() { };
+        private List<string>? _possibleHelperActionsSignatures = new() { };
+      //  private List<OffensiveAction>? _possibleOffensiveActions = new() { };
+        private List<string>? _possibleOffensiveActionsSignatures = new() { };
 
 
         private Race_abstract _race;
@@ -75,7 +76,7 @@ namespace SharedClassLibrary
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
         public List<string> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
-        public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
+        
         public int Strength
         {
             set { SetPropertyField(nameof(Strength), ref _str, value); }
@@ -162,9 +163,14 @@ namespace SharedClassLibrary
             get { return _race; }
         }
 
-        public int Team { get => _team; set => _team = value; }
-        public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
-        public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public int Team { get; set; }
+      //  public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
+      //  public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public List<string>? PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
+        public List<string>? PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
+        public List<string> PossibleActionsSignatures { get => _possibleActionsSignatures; set { _possibleActionsSignatures = value; } }
+
+
         public int[] HitModifierProfile { get => _hitModifierProfile; set => _hitModifierProfile = value; }
 
         // Constructors
@@ -215,10 +221,6 @@ namespace SharedClassLibrary
         {
             return (_cha * RandomRange(1,5))/3;
         }
-
-
-
-
 
         public override string ToString()
         {

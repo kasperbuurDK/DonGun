@@ -16,8 +16,15 @@ namespace SharedClassLibrary
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
-
         public GameMaster(Game game) { _game = game; }
+
+        private List<IAnAction>? _possibleActions = new() { };
+        private List<HelperAction>? _possibleHelperActions = new() { };
+        private List<OffensiveAction>? _possibleOffensiveActions = new() { };
+
+        public List<IAnAction>? PossibleActions { get => _possibleActions; set => _possibleActions = value; }
+        public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
+        public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -80,10 +87,15 @@ namespace SharedClassLibrary
 
         public void UpdatePossibleActions(Character character)
         {
+
             if (character.OthersInSight != null)
             {
-                character.PossibleHelperActions = new List<HelperAction>();
-                character.PossibleOffensiveActions = new List<OffensiveAction>();
+                _possibleHelperActions = new List<HelperAction>();
+                _possibleOffensiveActions = new List<OffensiveAction>();
+                _possibleActions = new List<IAnAction>();
+
+                character.PossibleHelperActionsSignatures = new List<string>();
+                character.PossibleOffensiveActionsSignatures = new List<string>();
                 foreach (string otherSignature in character.OthersInSight)
                 {
                     var otherCharacter = _game.AllCharacters.Find(chara => chara.Signature == otherSignature);
@@ -91,33 +103,38 @@ namespace SharedClassLibrary
 
                     if (otherCharacter.Team == character.Team)
                     {
-                        HealAlly healAction = new();
-                        healAction.Sender = character;
-                        healAction.Reciever = otherCharacter;
-                        character.PossibleHelperActions.Add(healAction);
+                        HealAlly healAction = new HealAlly(character.Signature, otherSignature);
+                        healAction.SenderSignature = character.Signature;
+                        healAction.RecieverSignature = otherSignature;
+                        _possibleHelperActions.Add(healAction);
+                        character.PossibleHelperActionsSignatures.Add(healAction.Signature);
 
-                        InspireAlly inspireAction = new();
-                        healAction.Sender = character;
-                        healAction.Reciever = otherCharacter;
-                        character.PossibleHelperActions.Add(inspireAction);
+                        InspireAlly inspireAction = new InspireAlly(character.Signature, otherSignature);
+                        inspireAction.SenderSignature = character.Signature;
+                        inspireAction.RecieverSignature = otherSignature;
+                        _possibleHelperActions.Add(inspireAction);
+                        character.PossibleHelperActionsSignatures.Add(inspireAction.Signature);
 
                     }
                     else if (otherCharacter.Team != character.Team)
                     {
-                        OffensiveAction anOffensiveAction = new();
+                        OffensiveAction anOffensiveAction = new OffensiveAction(character.Signature, otherSignature);
                         int distToOther = (int)Math.Floor(GameMasterHelpers.DetermineDistanceBetweenCharacters(character, otherCharacter));
                         int baseChance = distToOther >  character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
                         int dexModifier = GameMasterHelpers.RandomRange(0, character.Dexterity) * 2;
-                        anOffensiveAction.Sender = character;
-                        anOffensiveAction.Reciever = otherCharacter;
+                        
+
+                        anOffensiveAction.SenderSignature = character.Signature;
+                        anOffensiveAction.RecieverSignature = otherCharacter.Signature;
                         anOffensiveAction.ChanceToSucced = baseChance + dexModifier;
-                        character.PossibleOffensiveActions.Add(anOffensiveAction);
+                        character.PossibleOffensiveActionsSignatures.Add(anOffensiveAction.Signature);
+                        _possibleOffensiveActions.Add(anOffensiveAction);
                     }
 
                 }
-                character.PossibleActions.Clear();
-                character.PossibleActions.AddRange(character.PossibleHelperActions);
-                character.PossibleActions.AddRange(character.PossibleOffensiveActions);
+                _possibleActions.Clear();
+                _possibleActions.AddRange(_possibleHelperActions);
+                _possibleActions.AddRange(_possibleOffensiveActions);
             }
         }
 

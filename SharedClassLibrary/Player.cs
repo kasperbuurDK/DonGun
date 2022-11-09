@@ -3,15 +3,15 @@
     public class Player : Character
     {
 
-
         public Player(string name) 
         {
             Name = name;
         }
 
-        public string OwnerName { get; set; }
+        public Player() { }
 
-               public Player() {}
+
+        public string OwnerName { get; set; }
 
         // TODO make it a more advanced not just string
         public string? RaceString { get; set; } 

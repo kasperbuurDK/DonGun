@@ -2,11 +2,12 @@
 {
     public interface IAnAction
     {
-        public Character Sender { get; set; }
-        public Character Reciever { get; set; }
+        public string SenderSignature { get; set; }
+        public string RecieverSignature { get; set; }
         public int ChanceToSucced { get; set; }
+        public string Signature { get; init; }
+        public bool MakeBasicAction(int diceValue, Character sender, Character reciever);
 
-        public bool MakeBasicAction(int diceValue);
     }
 
 }
