@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Principal;
@@ -68,6 +69,16 @@ namespace SharedClassLibrary
         {
             string clone = obj.TypeToJson();
             return clone.JsonToType<T>(); 
+        }
+
+        public static TC DownCast<TP, TC>(this TP parent) where TC : TP, new()
+        {
+            string clone = parent.TypeToJson();
+            TC? type = JsonSerializer.Deserialize<TC>(clone);
+            if (type is not null)
+                return type;
+            else
+                return new();
         }
     }
 

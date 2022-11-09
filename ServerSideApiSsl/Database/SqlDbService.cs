@@ -11,9 +11,11 @@ using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.Net;
+using System.Web;
 using DevExpress.DirectX.NativeInterop.Direct2D.CCW;
 using SharedClassLibrary.MessageStrings;
 using System.Security.Cryptography;
+using System.Drawing;
 
 namespace ServerSideApiSsl.Database
 {
@@ -37,13 +39,15 @@ namespace ServerSideApiSsl.Database
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT Id FROM Users WHERE Name = '{username}' AND Password = '{password}'";
+            string sql = $"SELECT * FROM Users WHERE Name = '{username}'";
             try
             {
-                List<User>? users = GetDataTable(sql).ToList<User>();
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
-                    return true;
+                    UserSalt u = users.First();
+                    if (u.CompareHashed(u.SaltedHash(password)))
+                        return true;
                 }
                 return false;
             }
@@ -96,15 +100,32 @@ namespace ServerSideApiSsl.Database
             }
         }
 
+        private int SetDataTable(SqlCommand command)
+        {
+            try
+            {
+                _connection.Open();
+                return command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
         public User? GetUser(string name)
         {
             string sql = $"SELECT * FROM Users WHERE [Name] = '{name}'";
             try
             {
-                List<User>? users = GetDataTable(sql).ToList<User>();
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
-                    return users.First();
+                    return (User)users.First();
                 }
                 return null;
             }
@@ -120,16 +141,23 @@ namespace ServerSideApiSsl.Database
             try
             {
                 // Does the DB containe any user with this username?
-                List<User>? users = GetDataTable(sql).ToList<User>();
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
                     return (int)HttpStatusCode.Conflict;
                 }
 
-                sql = $"INSERT INTO Users ([Name], [Password]) VALUES ('{u.Name}', '{u.Password}')";
+                UserSalt uSalt = u.DownCast<User, UserSalt>();
+                uSalt.Salt = UserSalt.CreateSalt();
+                sql = $"INSERT INTO Users ([Name], [Password], [Salt]) VALUES ('{u.Name}', @ContPass, @ContSalt)";
                 try
                 {
-                    int rowsAffected = SetDataTable(sql);
+                    SqlCommand _cmd = new SqlCommand(sql, _connection);
+                    SqlParameter paramPass = _cmd.Parameters.Add("@ContPass", SqlDbType.VarBinary);
+                    SqlParameter paramSalt = _cmd.Parameters.Add("@ContSalt", SqlDbType.VarBinary);
+                    paramPass.Value = uSalt.SaltedHash(uSalt.Password);
+                    paramSalt.Value = uSalt.Salt;
+                    int rowsAffected = SetDataTable(_cmd);
                     if (rowsAffected >= 1)
                     {
                         return (int)HttpStatusCode.OK;
