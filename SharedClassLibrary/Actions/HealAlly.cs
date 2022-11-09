@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedClassLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,14 @@ namespace SharedClassLibrary.Actions
 {
     internal class HealAlly : HelperAction
     {
-        public override string Signature { get => "Heal:" + Reciever.Name; }
-        public override bool MakeBasicAction(int diceValue)
+        public HealAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {
-            Reciever.RecieveHealing(Sender.CalculateHealing());
-            return true;
         }
 
-        
+        public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
+        {
+            reciever.RecieveHealing(sender.CalculateHealing());
+            return true;
+        }
     }
 }

@@ -8,15 +8,15 @@ namespace SharedClassLibrary.Actions
 {
     internal class InspireAlly: HelperAction
     {
-        public override string Signature => throw new NotImplementedException();
-
-        public override bool MakeBasicAction(int diceValue)
+        public InspireAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {
-            base.Reciever.RecieveInspiration(base.Sender.CalculateInspiration());
-            return true;
         }
 
-        
+        public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
+        {
+            reciever.RecieveInspiration(sender.CalculateInspiration());
+            return true;
+        }
     }
 }
 

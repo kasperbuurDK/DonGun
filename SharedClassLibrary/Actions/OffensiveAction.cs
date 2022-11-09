@@ -3,22 +3,29 @@
 namespace SharedClassLibrary.Actions
 {
     public class OffensiveAction : IAnAction
-    {
-                
+    {      
         public int ChanceToSucced { get; set; }
-        public Character Reciever { get; set; }
-        public Character Sender { get; set; }
+        public string SenderSignature { get; set; }
+        public string RecieverSignature { get; set; }
+        public string Signature { get; init; }
 
-        public bool MakeBasicAction(int diceValue)
+        public OffensiveAction(string sender, string reciever)
+        {
+            Signature = Guid.NewGuid().ToString();
+            SenderSignature = sender;
+            RecieverSignature = reciever;
+        }
+
+
+        public bool MakeBasicAction(int diceValue, Character sender, Character reciever)
         {
             bool hit = DetermineIfHit(diceValue);
             if (hit)
             {
-                Reciever.RecieveDamage(Sender.CalculateDamageGive(diceValue));
+                reciever.RecieveDamage(sender.CalculateDamageGive(diceValue));
             }
 
             return hit;
-
         }
 
         private bool DetermineIfHit(int diceValue)
@@ -43,5 +50,7 @@ namespace SharedClassLibrary.Actions
 
             return chanceToHitAfterApplyingDice * precissionModifier > GameMasterHelpers.RandomRange(0, 101 * precissionModifier);
         }
+
+        
     }
 }
