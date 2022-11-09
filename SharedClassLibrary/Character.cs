@@ -2,6 +2,7 @@ using System.ComponentModel;
 using SharedClassLibrary.Exceptions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Actions;
+using static SharedClassLibrary.AuxUtils.GameMasterHelpers;
 using System.Text.Json.Serialization;
 
 namespace SharedClassLibrary
@@ -16,19 +17,19 @@ namespace SharedClassLibrary
 
         // Data fields
         // 6 main stats
-        private int _str;
-        private int _dex;
-        private int _con;
-        private int _int;
-        private int _wis;
-        private int _cha;
+        private int _str = 10;
+        private int _dex = 10;
+        private int _con = 10;
+        private int _int = 10;
+        private int _wis = 10;
+        private int _cha = 10;
 
         // 3 main meters
-        private int _hp;
+        private int _hpMax = 100;
         private int _hpCur; // Current Hp
-        private int _resource; // magic, fury, energy, etc.
+        private int _resourceMax = 10; // magic, fury, energy, etc.
         private int _resourceCur; // Current magic, fury, energy, etc.
-        private int _mp;      // Move point MAX
+        private int _mpMax = 10;      // Move point MAX
         private int _mpCur;   // remaining movepoints
 
         // Navigation
@@ -36,16 +37,16 @@ namespace SharedClassLibrary
         private MoveDirections _facing;
         private int _sightRange;
 
-        private int _team;
-
-        private List<Character>? _othersInSight;
-        private List<IAnAction>? _possibleActions;
-        private List<HelperAction>? _possibleHelperActions;
-        private List<OffensiveAction>? _possibleOffensiveActions;
+        
+        private List<string>? _othersInSight = new() { };
+      
+        private List<string>? _possibleActionsSignatures = new() { };
+        private List<string>? _possibleHelperActionsSignatures = new() { };
+        private List<string>? _possibleOffensiveActionsSignatures = new() { };
 
 
         private Race_abstract _race;
-
+        private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 } ;
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
             if (!EqualityComparer<T>.Default.Equals(field, newValue)) 
@@ -54,19 +55,25 @@ namespace SharedClassLibrary
             } 
         }
 
+        private string _name = "DJON DOE";
+
+        public string Name
+        {
+            set
+            {
+                SetPropertyField(nameof(Name), ref _name, value); ;
+            }
+            get { return _name; }
+        }
+
+        public string Signature { get; init; }
+
         // Properties 
         public Position Position { get => _position; set { _position = value; } }
-
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
-
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
-
-        [JsonIgnore] // DOES NOT WORK, NEEDS TO BE REMOVED!
-        public List<Character> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
-
-        [JsonIgnore] // DOES NOT WORK, NEEDS TO BE REMOVED!
-        public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
-
+        public List<string> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
+        
         public int Strength
         {
             set { SetPropertyField(nameof(Strength), ref _str, value); }
@@ -97,21 +104,23 @@ namespace SharedClassLibrary
             set { SetPropertyField(nameof(Charisma), ref _cha, value); }
             get { return _cha; }
         }
-        public int Health
+        
+        public int HealthMax
         {
             set
             {
-                SetPropertyField(nameof(Health), ref _hp, value);
-                HealthCurrent = _hp;
+                SetPropertyField(nameof(HealthMax), ref _hpMax, value);
+                HealthCurrent = _hpMax;
             }
-            get { return _hp; }
+            get { return _hpMax; }
         }
+       
         public int HealthCurrent
         {
             set
             {
-                if (_hpCur > _hp)
-                    SetPropertyField(nameof(HealthCurrent), ref _hpCur, _hp);
+                if (_hpCur > _hpMax)
+                    SetPropertyField(nameof(HealthCurrent), ref _hpCur, _hpMax);
                 else if (_hpCur < 0)
                     SetPropertyField(nameof(HealthCurrent), ref _hpCur, 0);
                 else
@@ -123,8 +132,8 @@ namespace SharedClassLibrary
         {
             set
             {
-                if (_resourceCur > _resource)
-                    SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, _resource);
+                if (_resourceCur > _resourceMax)
+                    SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, _resourceMax);
                 else if (_resourceCur < 0)
                     SetPropertyField(nameof(ResourceCurrent), ref _resourceCur, 0);
                 else
@@ -133,16 +142,16 @@ namespace SharedClassLibrary
             get { return _resourceCur; }
         }
 
-        public int Resource
+        public int ResourceMax
         {
             set
             {
-                SetPropertyField(nameof(Resource), ref _resource, value);
+                SetPropertyField(nameof(ResourceMax), ref _resourceMax, value);
             }
-            get { return _resource; }
+            get { return _resourceMax; }
         }
 
-        public int Mp { get => _mp; set => _mp = value; }
+        public int MpMax { get => _mpMax; set => _mpMax = value; }
         public int MpCur { get => _mpCur; set => _mpCur = value; }
 
         public Race_abstract Race
@@ -150,46 +159,69 @@ namespace SharedClassLibrary
             set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
         }
+        
+        public int Team { get; set; }
+        public List<string>? PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
+        public List<string>? PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
+        public List<string> PossibleActionsSignatures { get => _possibleActionsSignatures; set { _possibleActionsSignatures = value; } }
 
-        public int Team { get => _team; set => _team = value; }
 
-        public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
-        public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public int[] HitModifierProfile { get => _hitModifierProfile; set => _hitModifierProfile = value; }
 
         // Constructors
-        public Character() { _race = new Race_abstract(0); }
-
-        // Methods
-        public void UpdatePossibleActions()
+        public Character() 
         {
-            if (_othersInSight != null)
-            {
-                foreach (Character otherCharacter in _othersInSight)
-                {
-                    _possibleHelperActions = new List<HelperAction>();
-                    _possibleOffensiveActions = new List<OffensiveAction>();
-                    if (otherCharacter.Team == _team)
-                    {
-                        HelperAction aHelperAction = new();
-                        _possibleHelperActions.Add(aHelperAction);
-                    }
-                    else if (otherCharacter.Team != _team)
-                    {
-                        OffensiveAction anOffensiveAction = new();
-                        _possibleOffensiveActions.Add(anOffensiveAction);
-                    }
-
-                }
-            }
             
-        }
+            Signature = Guid.NewGuid().ToString();
+            _race = new Race_abstract(0);
 
-
-        public override string ToString()
-        {
-            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {Health}, {Resource}, {Race}]");
         }
 
         
+
+        
+
+        // Methods
+        
+
+        public int CalculateDamageGive(int diceValue)
+        {
+            return RandomRange(0, _str + 1) + diceValue;
+        }
+
+        public void RecieveDamage(int damage)
+        {
+
+            _hpCur -= damage;
+        }
+
+
+        internal void RecieveHealing(int healing)
+        {
+            _hpCur += healing;
+            if (_hpCur > _hpMax) _hpCur = _hpMax;
+        }
+
+        internal int CalculateHealing()
+        {
+            return (_cha * RandomRange(1,5))/3; 
+        }
+
+        internal void RecieveInspiration(int inspiration)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int CalculateInspiration()
+        {
+            return (_cha * RandomRange(1,5))/3;
+        }
+
+        public override string ToString()
+        {
+            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}]");
+        }
+
+       
     }
 }

@@ -2,23 +2,16 @@
 {
     public class Player : Character
     {
-        private string _name = "DJON DOE";
 
-        public string Name
-        {
-            set
-            {
-                SetPropertyField(nameof(Name), ref _name, value); ;
-            }
-            get { return _name; }
-        }
-
-        public Player(string name)
+        public Player(string name) 
         {
             Name = name;
         }
 
-        public Player() {}
+        public Player() { }
+
+
+        public string OwnerName { get; set; }
 
         // TODO make it a more advanced not just string
         public string? RaceString { get; set; } 
@@ -26,5 +19,7 @@
         public string? MasteryString { get; set; }
 
         public string? StatusString { get; set; }
+
+        
     }
 }
