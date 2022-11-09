@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharedClassLibrary.Actions;
 
 namespace DonGunTest
 {
@@ -24,16 +25,36 @@ namespace DonGunTest
             _mainCharacter = new Player("Main Player")
             {
                 Position = new Position(10, 10),
-                Mp = 10,
+                MpMax = 10,
                 Team = 0,
                 SightRange = 2,
             };
-            _mainCharacter.MpCur = _mainCharacter.Mp;
+            _mainCharacter.MpCur = _mainCharacter.MpMax;
 
             _game = new Game();
             _gameMaster = new GameMaster(_game);
             _gameMaster.AddCharacterToGame(_mainCharacter);
 
+
+        }
+
+        private void CreateNewEnemyNearby()
+        {
+            _gameMaster.AddCharacterToGame(new Npc()
+            {
+                Position = new Position(_mainCharacter.Position.X - 1, _mainCharacter.Position.Y - 1),
+                Team = _mainCharacter.Team +1,
+            });
+
+        }
+
+        private void CreateNewFriendNearby()
+        {
+            _gameMaster.AddCharacterToGame(new Player("Friend")
+            {
+                Position = new Position(_mainCharacter.Position.X + 1, _mainCharacter.Position.Y + 1),
+                Team = _mainCharacter.Team,
+            });
 
         }
 
@@ -190,50 +211,90 @@ namespace DonGunTest
             Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.EqualTo(1));
         }
 
-        [TestCase(10, 100)]
-        [TestCase(9, 90)]
-        [TestCase(8, 80)]
-        [TestCase(7, 70)]
-        [TestCase(6, 60)]
-        [TestCase(5, 50)]
-        [TestCase(4, 40)]
-        [TestCase(3, 30)]
-        [TestCase(2, 20)]
-        [TestCase(1, 10)]
-        [TestCase(100, 0)]
-        public void OffensiveAction_have_a_succesrate(int xPosOfenemy, int expectedChanceToHit)
-        {
-            Npc npc = new Npc() { Position = new Position(xPosOfenemy, 10), Team = 1, };
-            _mainCharacter.SightRange = 200;
+        
 
-            _gameMaster.AddCharacterToGame(npc);
-
-            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-
-            Assert.That(_mainCharacter.PossibleOffensiveActions?[0].ChanceToHit, Is.EqualTo(expectedChanceToHit));
-        }
-
-        [Test]
-        public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit() 
+        [TestCase(1)]
+        [TestCase(5)]
+        [TestCase(10)]
+        public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit(int distanceToMainChar) 
         {
             int timesTakingAction = 1000000;
 
-            Npc npc = new Npc() { Position = new Position(5, 10), Team = 1, };
+            Npc npc = new Npc() 
+            { 
+                Position = new Position(_mainCharacter.Position.X - distanceToMainChar, _mainCharacter.Position.Y),
+                Team = 1,
+            };
             _gameMaster.AddCharacterToGame(npc);
             _mainCharacter.SightRange = 200;
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
 
             int timesHit = 0;
+            int diceValue = 10;
             Parallel.For(0, timesTakingAction,
-                           index => { if (_mainCharacter.PossibleOffensiveActions[0].MakeBasicAttack()) {
-                                     Interlocked.Add(ref timesHit, 1); } }  );
+                           index => {
+                               if (_mainCharacter.PossibleOffensiveActions[0].MakeBasicAction(diceValue)) {
+                                     Interlocked.Add(ref timesHit, 1); }
+                           }
+                           );
             
             
-            int minBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToHit/100 * 0.98f);
-            int maxBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToHit/100 * 1.02f);
+            int minBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToSucced/100 * 0.98f);
+            int maxBoundary = (int)(timesTakingAction * _mainCharacter.PossibleOffensiveActions[0].ChanceToSucced/100 * 1.02f);
+
+            if (maxBoundary > timesTakingAction) { maxBoundary = timesTakingAction; }
+            if (minBoundary > timesTakingAction) { minBoundary = timesTakingAction; }
+
 
             Assert.That(timesHit, Is.AtLeast(minBoundary));
             Assert.That(timesHit, Is.AtMost(maxBoundary));
         }
+
+        [Test]
+        public void Hitting_character_applies_damage()
+        {
+
+            int startHealth = 100;
+         
+            CreateNewEnemyNearby();
+            Npc enemyCharacter = _game.NonHumanPlayers[0];
+            enemyCharacter.HealthMax = startHealth;
+
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+            while (!_mainCharacter.PossibleOffensiveActions[0].MakeBasicAction(10))
+            
+            Assert.That(enemyCharacter.HealthCurrent, Is.LessThan(startHealth));
+        }
+
+
+        [Test]
+        public void Player_can_help_Ally()
+        {
+            CreateNewFriendNearby();
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+
+            Assert.That(_mainCharacter.PossibleHelperActions.Count, Is.GreaterThan(0));
+        }
+
+        
+        [Test]
+        public void Player_can_heal_Ally()
+        {
+            int startHealth = 1;
+            CreateNewFriendNearby();
+            Player friend = _game.HumanPlayers.Find(player => player.Name == "Friend");
+            friend.HealthCurrent = startHealth;
+            _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
+            
+            var theAction = _mainCharacter.PossibleHelperActions.Find(action => action.Signature == "Heal:Friend");
+            theAction.MakeBasicAction(10);
+
+
+            Assert.That(friend.HealthCurrent, Is.GreaterThan(startHealth));
+        }
+        
+
+
+
     }
 }

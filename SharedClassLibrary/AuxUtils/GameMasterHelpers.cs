@@ -1,4 +1,6 @@
-﻿namespace SharedClassLibrary.AuxUtils
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SharedClassLibrary.AuxUtils
 {
     public class GameMasterHelpers
     {
@@ -14,6 +16,13 @@
 
             float distanceBetween = (float)Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
             return distanceBetween;
+        }
+
+        public static int RandomRange(int minRange, int maxRange) 
+        {
+            Random random = new Random();
+
+            return random.Next(minRange, maxRange);
         }
     }
 }
