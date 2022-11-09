@@ -1,8 +1,11 @@
 ﻿
+using SharedClassLibrary.Actions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +61,7 @@ namespace SharedClassLibrary
 
         private void DetermineOthersInSight(Character character)
         {
-            List<Character> othersInSight = new List<Character>();
+            List<string> othersInSight = new List<string>();
 
             foreach (Character otherCharacter in _game.AllCharacters)
             {
@@ -67,12 +70,55 @@ namespace SharedClassLibrary
                 float distanceToOther = DetermineDistanceBetweenCharacters(character, otherCharacter);
                 if (character.SightRange >= distanceToOther )
                 {
-                    othersInSight.Add(otherCharacter);
+                    othersInSight.Add(otherCharacter.Signature);
                 }
             }
 
             character.OthersInSight = othersInSight;
-            character.UpdatePossibleActions();
+            UpdatePossibleActions(character);
+        }
+
+        public void UpdatePossibleActions(Character character)
+        {
+            if (character.OthersInSight != null)
+            {
+                character.PossibleHelperActions = new List<HelperAction>();
+                character.PossibleOffensiveActions = new List<OffensiveAction>();
+                foreach (string otherSignature in character.OthersInSight)
+                {
+                    var otherCharacter = _game.AllCharacters.Find(chara => chara.Signature == otherSignature);
+                    if (otherCharacter == null) continue;
+
+                    if (otherCharacter.Team == character.Team)
+                    {
+                        HealAlly healAction = new();
+                        healAction.Sender = character;
+                        healAction.Reciever = otherCharacter;
+                        character.PossibleHelperActions.Add(healAction);
+
+                        InspireAlly inspireAction = new();
+                        healAction.Sender = character;
+                        healAction.Reciever = otherCharacter;
+                        character.PossibleHelperActions.Add(inspireAction);
+
+                    }
+                    else if (otherCharacter.Team != character.Team)
+                    {
+                        OffensiveAction anOffensiveAction = new();
+                        int distToOther = (int)Math.Floor(GameMasterHelpers.DetermineDistanceBetweenCharacters(character, otherCharacter));
+                        int baseChance = distToOther >  character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
+                        int dexModifier = GameMasterHelpers.RandomRange(0, character.Dexterity) * 2;
+                        anOffensiveAction.Sender = character;
+                        anOffensiveAction.Reciever = otherCharacter;
+                        anOffensiveAction.ChanceToSucced = baseChance + dexModifier;
+                        character.PossibleOffensiveActions.Add(anOffensiveAction);
+                    }
+
+                }
+                character.PossibleActions.Clear();
+                character.PossibleActions.AddRange(character.PossibleHelperActions);
+                character.PossibleActions.AddRange(character.PossibleOffensiveActions);
+            }
         }
 
         private int CostOfTurningCharacter(Character character, MoveDirections turnTowards)
@@ -101,7 +147,7 @@ namespace SharedClassLibrary
 
         public void AddCharacterToGame(Character characterToAdd) 
         {
-            characterToAdd.SetMaxValuesBasedOnMainStats();
+            SetMaxValuesBasedOnMainStats(characterToAdd);
 
             if (characterToAdd is Player)  
             {
@@ -111,6 +157,14 @@ namespace SharedClassLibrary
             {
                 _game.NonHumanPlayers.Add((Npc)characterToAdd);
             }
+        }
+
+        public void SetMaxValuesBasedOnMainStats(Character character)
+        {
+            character.HealthMax = 50 + character.Constitution * 2;
+            character.SightRange = 5 + character.Intelligence / 3;
+            character.ResourceMax = character.Wisdome * 2;
+            
         }
     }
 }

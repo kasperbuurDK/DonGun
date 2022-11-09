@@ -194,21 +194,19 @@ namespace DonGunTest
         [Test]
         public void If_teammember_in_sight_character_can_make_a_HelpAction() 
         {
-            _gameMaster.AddCharacterToGame(new Player("A Team Member") { Position = new Position(9, 9), Team = 0, });
-            
+            CreateNewFriendNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-         
-            Assert.That(_mainCharacter.PossibleHelperActions?.Count, Is.EqualTo(1));
+      
+            Assert.That(_mainCharacter.PossibleHelperActions?.Count, Is.GreaterThan(0));
         }
         
         [Test]
         public void If_non_team_member_in_sight_character_can_make_an_OffensiveAction() 
         {
-            _gameMaster.AddCharacterToGame(new Player("A Non Team Member") { Position = new Position(9, 9), Team = 1, });
-            
+            CreateNewEnemyNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-         
-            Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.EqualTo(1));
+        
+            Assert.That(_mainCharacter.PossibleOffensiveActions?.Count, Is.GreaterThan(0));
         }
 
         
