@@ -26,7 +26,7 @@ public partial class SheetPage : ContentPage
         if (authHeader is not null && user is not null)
         {
             RestService<Dictionary<int, MauiPlayer>, MauiPlayer> restService = new(new Uri(settings.BaseUrl), authHeader);
-            await restService.RefreshDataAsync(settings.RestUriSheet + user);
+            //await restService.RefreshDataAsync(settings.RestUriSheet + user);
             _keys = new();
             try
             {

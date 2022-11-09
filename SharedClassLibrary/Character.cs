@@ -1,10 +1,9 @@
-using Newtonsoft.Json.Linq;
 using System.ComponentModel;
-
 using SharedClassLibrary.Exceptions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Actions;
 using static SharedClassLibrary.AuxUtils.GameMasterHelpers;
+using System.Text.Json.Serialization;
 
 namespace SharedClassLibrary
 {
@@ -160,7 +159,7 @@ namespace SharedClassLibrary
             set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
         }
-
+        
         public int Team { get; set; }
         public List<string>? PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
         public List<string>? PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }

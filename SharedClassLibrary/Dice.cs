@@ -105,5 +105,10 @@ namespace SharedClassLibrary
         {
             handler?.Invoke(this, EventArgs.Empty);
         }
+
+        public override string ToString()
+        {
+            return string.Format($"d{Maximum}-{Result}");
+        }
     }
 }

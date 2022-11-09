@@ -1,4 +1,5 @@
 using SharedClassLibrary;
+using SharedClassLibrary.MessageStrings;
 
 namespace PlayerSide.Pages;
 
@@ -12,8 +13,10 @@ public partial class DicePage : ContentPage
         _cup = new Cup(8);
         _cup.Rolled += OnCupRolled;
     }
-    void OnCupRolled(object sender, EventArgs e)
+    async void OnCupRolled(object sender, EventArgs e)
     {
+        if (MauiProgram.Hub is not null && MauiProgram.Hub.IsConnected)
+            await MauiProgram.Hub.Send(new DiceRolledMessage(_cup));
         ToggleIsEnable(true);
     }
 

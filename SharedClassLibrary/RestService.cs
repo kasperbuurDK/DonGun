@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 
 namespace SharedClassLibrary
 {
@@ -11,7 +10,6 @@ namespace SharedClassLibrary
     {
         // Fields
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _serializerOptions;
 
         // HTTP related properties
         public HttpResponseMessage? Response { get; set; }
@@ -41,11 +39,6 @@ namespace SharedClassLibrary
             BaseUrl = baseUrl;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             _client.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(ModifiedOn, new TimeSpan(0));
-            _serializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
         }
 
         /// <summary>
@@ -63,7 +56,8 @@ namespace SharedClassLibrary
                 if (Response.IsSuccessStatusCode)
                 {
                     string content = await Response.Content.ReadAsStringAsync();
-                    ReturnStruct = JsonSerializer.Deserialize<TStruct>(content, _serializerOptions);
+                    ReturnStruct = content.JsonToType<TStruct>();
+                    //ReturnStruct = JsonSerializer.Deserialize<TStruct>(content, _serializerOptions);
                     HttpHeaders headers = Response.Headers;
                     if (headers.TryGetValues("Last-Modified", out var values))
                     {
@@ -103,7 +97,8 @@ namespace SharedClassLibrary
 
             try
             {
-                string json = JsonSerializer.Serialize(item, _serializerOptions);
+                string json = item.TypeToJson();
+                //string json = JsonSerializer.Serialize(item, _serializerOptions);
                 StringContent content = new(json, Encoding.UTF8, "application/json");
                 if (!create)
                     Response = await _client.PostAsync(uri, content);

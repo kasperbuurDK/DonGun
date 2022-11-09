@@ -43,6 +43,44 @@ namespace ServerSideApiSsl.Controllers
             return ret;
         }
 
+        [HttpPut("user/{name}")]
+        public IActionResult CreateUser([FromBody] User u)
+        {
+                User? user = _userRepository.GetUser(u.Name);
+                if (user is null)
+                {
+                    int statusCode = _userRepository.CreateUser(u);
+                    if (statusCode == (int)HttpStatusCode.OK)
+                        return Ok(u.Name);
+                    else
+                        return BadRequest(u.Name);
+                }
+                else
+                    return Conflict(u.Name);
+        }
+
+        [Authorize]
+        [HttpDelete("user/{name}")]
+        public IActionResult DeleteUser([FromBody] User u)
+        {
+            if (HasAccess(u.Name))
+            {
+                int statusCode = _userRepository.DeleteSheets(u.Id);
+                if (statusCode == (int)HttpStatusCode.OK)
+                {
+                    statusCode = _userRepository.DeleteUser(u);
+                    if (statusCode == (int)HttpStatusCode.OK)
+                        return Ok(u.Name);
+                    else
+                        return BadRequest("Could not remove user!");
+                }
+                else
+                    return BadRequest("Could not remove user sheets!");
+            }
+            else
+                return Unauthorized(u.Name);
+        }
+
         [Authorize]
         [HttpGet("sheet/{name}/{id}")]
         public Player GetSheet(string name, int id)

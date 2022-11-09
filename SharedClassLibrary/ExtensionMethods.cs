@@ -1,10 +1,11 @@
 ﻿using System.Data;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Principal;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DevExpress.DirectX.Common;
-using Newtonsoft.Json;
 
 namespace SharedClassLibrary
 {
@@ -52,7 +53,7 @@ namespace SharedClassLibrary
 
         public static T JsonToType<T>(this string data) where T : class, new()
         {
-            T? type = JsonConvert.DeserializeObject<T>(data);
+            T? type = JsonSerializer.Deserialize<T>(data);
             if (type is not null)
                 return type;
             else
@@ -61,22 +62,23 @@ namespace SharedClassLibrary
 
         public static string TypeToJson<T>(this T obj)
         {
-            return JsonConvert.SerializeObject(obj);
-        }
-
-        public static bool PopulateObjectWithJson<T>(this T obj, string j)
-        {
-
-            if (obj is null) return false;
-            
-            JsonConvert.PopulateObject(j, obj);
-            return true;
+            return JsonSerializer.Serialize(obj);
         }
 
         public static T CopyObject<T>(this T obj) where T : class, new()
         {
             string clone = obj.TypeToJson();
             return clone.JsonToType<T>(); 
+        }
+
+        public static TC DownCast<TP, TC>(this TP parent) where TC : TP, new()
+        {
+            string clone = parent.TypeToJson();
+            TC? type = JsonSerializer.Deserialize<TC>(clone);
+            if (type is not null)
+                return type;
+            else
+                return new();
         }
     }
 

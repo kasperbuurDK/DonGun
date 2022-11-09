@@ -50,7 +50,7 @@ namespace ServerSideApiSsl
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHub<FileHub>("/filehub");
+            app.MapHub<GameHub>("/gamehub");
 
             app.Run();
         }

@@ -11,6 +11,7 @@
     <local:SheetPage />
     <local:OrderPage />
     <local:DicePage />
+    <local:MovePage />
     <NavigationPage     Title="Options"
                         IconImageSource="options_icon">
         <x:Arguments>

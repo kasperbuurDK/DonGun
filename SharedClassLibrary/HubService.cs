@@ -1,31 +1,64 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using SharedClassLibrary.MessageStrings;
 using System.Windows.Input;
 
 namespace SharedClassLibrary
 {
-    public class HubService<T>
+    public class HubService
     {
         // Fields
         private readonly HubConnection hubConnection;
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
-        public string AuthHeader { get; set; }
+        public string? SessionKey { get; set; }
+        public GameSessionOptions GameOptions { get; set; } = new();
 
         // Events
-        public event EventHandler<HubEventArgs<T>>? PropertyChangedEvent;
+        public event EventHandler<HubEventArgs<FileUpdateMessage>>? FileEvent;
+        public event EventHandler<HubEventArgs<MoveMessage>>? MoveEvent;
+        public event EventHandler<HubEventArgs<DiceRolledMessage>>? DiceEvent;
+        public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
+        public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
+        public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
-        public HubService(string authHeader, string baseUrl, string hubUri) 
+        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon=false) 
         {
-            AuthHeader = authHeader;
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {AuthHeader}"))
+                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {authHeader}"))
                     .Build();
 
-            hubConnection.On<T>("ReceiveUpdateEvent", msg =>
+            if (clientDon)
             {
-                PropertyChangedEvent?.Invoke(this, new HubEventArgs<T>() { Messege = msg });
+                hubConnection.On<MoveMessage>("MoveEvent", msg =>
+                {
+                    MoveEvent?.Invoke(this, new HubEventArgs<MoveMessage>() { Messege = msg });
+                });
+                hubConnection.On<DiceRolledMessage>("DiceEvent", msg =>
+                {
+                    DiceEvent?.Invoke(this, new HubEventArgs<DiceRolledMessage>() { Messege = msg });
+                });
+            }
+            hubConnection.On<FileUpdateMessage>("FileEvent", msg =>
+            {
+                FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
+            });
+
+            // Error from Don
+            hubConnection.On<StandardMessages>("ErrorEvent", msg =>
+            {
+                ErrorEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+            });
+            hubConnection.On<UpdateMessage>("UpdateEvent", msg =>
+            {
+                UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
+            });
+
+            // Exception from hub system
+            hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
+            {
+                ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });
             });
         }
 
@@ -40,12 +73,39 @@ namespace SharedClassLibrary
         }
 
         /// <summary>
+        /// Join game room with sesstion key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task JoinRoom(string key)
+        {
+            GameOptions = new GameSessionOptions() { SessionKey = key };
+            SessionKey = key;
+            await hubConnection.SendAsync("JoinGameRoom", GameOptions);
+        }
+
+        /// <summary>
+        /// Leave game room with given sesstion key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task LeaveRoom(string key)
+        {
+            GameOptions = new GameSessionOptions() { SessionKey = key };
+            await hubConnection.SendAsync("LeaveGameRoom", GameOptions);
+        }
+
+        /// <summary>
         /// Send event to hub.
         /// </summary>
         /// <returns></returns>
-        public async Task Send(T msg)
+        public async Task Send<T>(T msg) where T : Message
         {
-            await hubConnection.SendAsync("SendUpdateEvent", msg);
+            if (SessionKey is null)
+                throw new ArgumentNullException(nameof(SessionKey));
+            msg.SessionKey = SessionKey;
+            string endpoint = msg.MsgType.ToString();
+            await hubConnection.SendAsync(endpoint, msg);
         }
     }
 
@@ -55,5 +115,13 @@ namespace SharedClassLibrary
     public class HubEventArgs<T> : EventArgs
     {
         public T? Messege { get; set; }
+    }
+
+    /// <summary>
+    /// Exception contenxt resived from hub on errors.
+    /// </summary>
+    public class HubServiceException
+    {
+        public string Messege { get; set; } = string.Empty;
     }
 }

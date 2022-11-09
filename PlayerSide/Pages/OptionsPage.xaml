@@ -19,6 +19,23 @@
             <Button x:Name="Debug2"
                     Text="DebugMovePage"
                     Clicked="Debug2BtnClicked" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Entry x:Name="SKey"
+                       Margin="5" 
+                       Grid.Column="1"/>
+                <Button x:Name="Debug3"
+                        Text="DebugSignalR"
+                        Clicked="Debug3BtnClicked" />
+            </Grid>
+            <Button x:Name="deleteUserAct"
+                    Text="Remove Acount"
+                    Clicked="RemoveActBtnClicked" />
+            <Label x:Name="ErrorLabel"
+                    TextColor="{StaticResource ErrorRed}"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

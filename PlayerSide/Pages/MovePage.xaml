@@ -2,17 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.MovePage"
-             Title="MavePage">
+            Title="Move"
+             IconImageSource="move_icon">
     <Grid x:Name="mainGrid"
           RowSpacing="5"
           ColumnSpacing="5"
           HorizontalOptions="Fill"
           VerticalOptions="Fill">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -20,19 +24,38 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Image x:Name="backgroundImage"
-               Grid.RowSpan="4"
+               Grid.RowSpan="7"
                Grid.ColumnSpan="3"
                Aspect="Fill"
                Source="gray_wood"/>
+        <Stepper x:Name="_stepper"
+                 Maximum="99"
+                Grid.ColumnSpan="2"
+                 Grid.Row="4"
+                 Increment="1"
+                 HorizontalOptions="Center" 
+                 VerticalOptions="Center"/>
+        <Label Text="{Binding Source={x:Reference _stepper}, Path=Value, StringFormat='Distence: {0:F0}'}"
+               Grid.Column="2"
+               TextColor="WhiteSmoke"
+               FontSize="Header"
+               Grid.Row="4"
+               VerticalOptions="Center" />
+        <Label x:Name="ErrorLabel"
+                Grid.ColumnSpan="3"
+               Grid.Row="5"
+                    TextColor="{StaticResource ErrorRed}"
+                HorizontalOptions="Center" 
+                 VerticalOptions="Center"/>
         <ImageButton x:Name="UpArrow"
                      BackgroundColor="Transparent"
                      Source="arrow"
                      Grid.Column="1"
                      Grid.Row="1"
                      Rotation="270"
-                     Command="{Binding DigitCommand}"
-                     CommandParameter="up"
                      Aspect="Fill"
+                    Clicked="ArrowBtnClicked"
+                     ClassId="1"
                      Scale="0.9" />
         <ImageButton x:Name="RightArrow"
                      BackgroundColor="Transparent"
@@ -40,9 +63,9 @@
                      Grid.Column="2"
                      Grid.Row="2"
                      Rotation="0"
-                     Command="{Binding DigitCommand}"
-                     CommandParameter="right"
                      Aspect="Fill"
+                    Clicked="ArrowBtnClicked"
+                     ClassId="2"
                      Scale="0.9" />
         <ImageButton x:Name="DownArrow"
                      BackgroundColor="Transparent"
@@ -50,8 +73,8 @@
                      Grid.Column="1"
                      Grid.Row="3"
                      Rotation="90"
-                     Command="{Binding DigitCommand}"
-                     CommandParameter="down"
+                    Clicked="ArrowBtnClicked"
+                     ClassId="3"
                      Aspect="Fill"
                      Scale="0.9" />
         <ImageButton x:Name="LeftArrow"
@@ -60,8 +83,8 @@
                      Grid.Column="0"
                      Grid.Row="2"
                      Rotation="180"
-                     Command="{Binding DigitCommand}"
-                     CommandParameter="left"
+                    Clicked="ArrowBtnClicked"
+                     ClassId="4"
                      Aspect="Fill"
                      Scale="0.9" />
         <ImageButton x:Name="DoneBtn"
@@ -69,9 +92,20 @@
                      Grid.Row="2"
                      BackgroundColor="Transparent"
                      Source="done"
-                     Command="{Binding DigitCommand}"
-                     CommandParameter="done"
+                     Clicked="ArrowBtnClicked"
+                     ClassId="5"
                      Aspect="Fill"
                      Scale="0.9" />
+        <Frame x:Name="UpdateFrame"
+                Margin="0"
+                   Padding="1"
+                   CornerRadius="50"
+                    Grid.Row="6"
+                   Grid.ColumnSpan="3">
+            <Label x:Name="UpdateLabel"
+                    TextColor="{StaticResource Gray950}"
+                    HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Frame>
     </Grid>
 </ContentPage>

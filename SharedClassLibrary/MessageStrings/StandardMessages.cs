@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.MessageStrings
 {
-    public class StandardMessages
+    public class StandardMessages : Message
     {
         public static string AllOK => "OK";
 

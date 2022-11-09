@@ -11,7 +11,11 @@ using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.Net;
+using System.Web;
 using DevExpress.DirectX.NativeInterop.Direct2D.CCW;
+using SharedClassLibrary.MessageStrings;
+using System.Security.Cryptography;
+using System.Drawing;
 
 namespace ServerSideApiSsl.Database
 {
@@ -35,23 +39,17 @@ namespace ServerSideApiSsl.Database
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT Id FROM Users WHERE Name = '{username}' AND Password = '{password}'";
+            string sql = $"SELECT * FROM Users WHERE Name = '{username}'";
             try
             {
-                _connection.Open();
-                SqlCommand command = new(sql, _connection);
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.Read())
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
+                if (users?.Any() ?? false)
                 {
-                    // Need to save Id...
-                    // If more then one user exist
-                    if (reader.Read())
-                    {
-                        return false;
-                    }
-                    return true;
+                    UserSalt u = users.First();
+                    if (u.CompareHashed(u.SaltedHash(password)))
+                        return true;
                 }
+                return false;
             }
             catch (Exception)
             {
@@ -61,7 +59,6 @@ namespace ServerSideApiSsl.Database
             {
                 _connection.Close();
             }
-            return false;
         }
 
         private DataTable GetDataTable(string Query)
@@ -103,17 +100,92 @@ namespace ServerSideApiSsl.Database
             }
         }
 
+        private int SetDataTable(SqlCommand command)
+        {
+            try
+            {
+                _connection.Open();
+                return command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
         public User? GetUser(string name)
         {
             string sql = $"SELECT * FROM Users WHERE [Name] = '{name}'";
             try
             {
-                List<User>? users = GetDataTable(sql).ToList<User>();
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
-                    return users.First();
+                    return (User)users.First();
                 }
                 return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int CreateUser(User u)
+        {
+            string sql = $"SELECT * FROM Users WHERE [Name] = '{u.Name}'";
+            try
+            {
+                // Does the DB containe any user with this username?
+                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
+                if (users?.Any() ?? false)
+                {
+                    return (int)HttpStatusCode.Conflict;
+                }
+
+                UserSalt uSalt = u.DownCast<User, UserSalt>();
+                uSalt.Salt = UserSalt.CreateSalt();
+                sql = $"INSERT INTO Users ([Name], [Password], [Salt]) VALUES ('{u.Name}', @ContPass, @ContSalt)";
+                try
+                {
+                    SqlCommand _cmd = new SqlCommand(sql, _connection);
+                    SqlParameter paramPass = _cmd.Parameters.Add("@ContPass", SqlDbType.VarBinary);
+                    SqlParameter paramSalt = _cmd.Parameters.Add("@ContSalt", SqlDbType.VarBinary);
+                    paramPass.Value = uSalt.SaltedHash(uSalt.Password);
+                    paramSalt.Value = uSalt.Salt;
+                    int rowsAffected = SetDataTable(_cmd);
+                    if (rowsAffected >= 1)
+                    {
+                        return (int)HttpStatusCode.OK;
+                    }
+                    return (int)HttpStatusCode.BadRequest;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int DeleteUser(User u)
+        {
+            string sql = $"DELETE FROM Users WHERE [Name] = '{u.Name}'";
+            try
+            {
+                int rowsAffected = SetDataTable(sql);
+                if (rowsAffected >= 1)
+                {
+                    return (int)HttpStatusCode.OK;
+                }
+                return (int)HttpStatusCode.BadRequest;
             }
             catch (Exception)
             {
@@ -236,6 +308,24 @@ namespace ServerSideApiSsl.Database
         public int DeleteSheet(int id)
         {
             string sql = $"DELETE FROM Sheets WHERE [Id] = '{id}'";
+            try
+            {
+                int rowsAffected = SetDataTable(sql);
+                if (rowsAffected >= 1)
+                {
+                    return (int)HttpStatusCode.OK;
+                }
+                return (int)HttpStatusCode.BadRequest;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int DeleteSheets(int userid)
+        {
+            string sql = $"DELETE FROM Sheets WHERE [User] = '{userid}'";
             try
             {
                 int rowsAffected = SetDataTable(sql);

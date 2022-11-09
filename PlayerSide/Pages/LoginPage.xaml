@@ -27,13 +27,17 @@
             <Button x:Name="loginBtn"
                     Text="Login"
                     Clicked="LoginBtnClicked" />
+            <Button x:Name="createBtn"
+                    Text="Create"
+                    Clicked="CreateBtnClicked" />
             <Label x:Name="errorLabel"
                    TextColor="Red"
                    VerticalOptions="Center"
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
         <ActivityIndicator x:Name="ActivityIndicator"
-                           BackgroundColor="White"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
+                           Color="{StaticResource Primary}"
                            IsRunning="False"
                            Grid.RowSpan="3" />
     </Grid>

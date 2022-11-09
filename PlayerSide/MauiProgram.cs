@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Configuration;
 using PlayerSide.Pages;
 using SharedClassLibrary;
+using SharedClassLibrary.MessageStrings;
 using System.Reflection;
 
 namespace PlayerSide;
@@ -11,7 +13,7 @@ public static class MauiProgram
     public static Character Connectivity { get; set; }
     public static List<Character> GameOrder { get; set; }
     //public static RestService<List<User>, User> RestUserInfo { get; set; }
-    public static HubService<FileUpdateMessage> FileUpdateHub { get; set; }
+    public static HubService Hub { get; set; }
 
     public static MauiApp CreateMauiApp()
     {
@@ -27,6 +29,8 @@ public static class MauiProgram
                 fonts.AddFont("Iokharic-dqvK", "IokharicRegular");
                 fonts.AddFont("IokharicBold-Plor.ttf", "Iokharicbold");
             });
+
+        builder.UseMauiApp<App>().UseMauiCommunityToolkit();
         var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PlayerSide.appsettings.json");
 
         var config = new ConfigurationBuilder()
@@ -34,6 +38,14 @@ public static class MauiProgram
                     .Build();
 
         builder.Configuration.AddConfiguration(config);
+
+        Microsoft.Maui.Handlers.TabbedViewHandler.Mapper.AppendToMapping("FixMultiTab", (handler, view) =>
+        {
+#if ANDROID
+            var viewPager = (AndroidX.ViewPager2.Widget.ViewPager2)handler.PlatformView;
+            viewPager.OffscreenPageLimit = 5;
+#endif
+        });
 
         var app = builder.Build();
         Services = app.Services;
