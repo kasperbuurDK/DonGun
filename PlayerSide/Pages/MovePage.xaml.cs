@@ -22,7 +22,7 @@ public partial class MovePage : ContentPage
         { 
             UpdateLabel.Text = e.Messege.UpdateStr;
         };
-        UpdateFrame.BackgroundColor = Color.FromRgba(255, 255, 255, 128; // Workaround
+        UpdateFrame.BackgroundColor = Color.FromRgba(255, 255, 255, 128); // Workaround
         UpdateLabel.Text = "Done";
     }
 

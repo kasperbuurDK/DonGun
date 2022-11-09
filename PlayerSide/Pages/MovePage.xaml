@@ -37,6 +37,8 @@
                  VerticalOptions="Center"/>
         <Label Text="{Binding Source={x:Reference _stepper}, Path=Value, StringFormat='Distence: {0:F0}'}"
                Grid.Column="2"
+               TextColor="WhiteSmoke"
+               FontSize="Header"
                Grid.Row="4"
                VerticalOptions="Center" />
         <Label x:Name="ErrorLabel"

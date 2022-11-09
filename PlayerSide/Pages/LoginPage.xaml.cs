@@ -24,7 +24,7 @@ public partial class LoginPage : ContentPage
 			{
                 PageLock(true);
                 Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-                RestService<List<User>, User> RestUserInfo = new RestService<List<User>, User>(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
+                RestService<List<User>, User> RestUserInfo = new(new Uri(settings.BaseUrl), userEntry.Text, passEntry.Text);
                 try
                 {
                     await RestUserInfo.RefreshDataAsync(settings.RestUriUser + RestUserInfo.UserName);
