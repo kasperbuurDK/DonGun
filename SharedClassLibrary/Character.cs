@@ -38,13 +38,11 @@ namespace SharedClassLibrary
         private MoveDirections _facing;
         private int _sightRange;
 
-        //        private List<Character>? _othersInSight = new() { };
+        
         private List<string>? _othersInSight = new() { };
-      //  private List<IAnAction>? _possibleActions = new() { };
+      
         private List<string>? _possibleActionsSignatures = new() { };
-      //  private List<HelperAction>? _possibleHelperActions = new() { };
         private List<string>? _possibleHelperActionsSignatures = new() { };
-      //  private List<OffensiveAction>? _possibleOffensiveActions = new() { };
         private List<string>? _possibleOffensiveActionsSignatures = new() { };
 
 
@@ -164,8 +162,6 @@ namespace SharedClassLibrary
         }
 
         public int Team { get; set; }
-      //  public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
-      //  public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
         public List<string>? PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
         public List<string>? PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
         public List<string> PossibleActionsSignatures { get => _possibleActionsSignatures; set { _possibleActionsSignatures = value; } }

@@ -5,8 +5,6 @@ namespace SharedClassLibrary.Actions
     public class OffensiveAction : IAnAction
     {      
         public int ChanceToSucced { get; set; }
-      //  public Character Reciever { get; set; }
-      //  public Character Sender { get; set; }
         public string SenderSignature { get; set; }
         public string RecieverSignature { get; set; }
         public string Signature { get; init; }

@@ -291,8 +291,7 @@ namespace DonGunTest
             var theSig = _mainCharacter.PossibleHelperActionsSignatures[0];
 
             var theAction = actions.Find(act => act.Signature == theSig); 
-                // _mainCharacter.PossibleHelperActions.Find(action => action.Signature == "Heal:Friend");
-
+               
             theAction.MakeBasicAction(diceValue, _mainCharacter, friend);
 
             Assert.That(friend.HealthCurrent, Is.GreaterThan(startHealth));

@@ -8,9 +8,7 @@ namespace SharedClassLibrary.Actions
 {
     public abstract class HelperAction : IAnAction
     {
-      //  public Character Reciever { get; set; }
         public int ChanceToSucced { get; set; }
-      // public Character Sender { get; set; }
         public string Signature { get; init; }
         public string SenderSignature { get ; set ; }
         public string RecieverSignature { get; set; }
