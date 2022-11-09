@@ -10,12 +10,17 @@ namespace DonGunTest
     internal class CharacterTest
     {
 
-        Player player;
+        Player _player;
+        GameMaster _gameMaster;
+        Game _game;
 
         [SetUp]
         public void SetUp() 
         {
-            player = new Player("Test Plsyer");
+            _player = new Player("Test Plsyer");
+            _game = new Game();
+            _gameMaster = new GameMaster(_game);
+            _gameMaster.AddCharacterToGame(_player);
         }
 
 
@@ -28,12 +33,9 @@ namespace DonGunTest
 
         public void Player_has_correct_health(int consScore, int expectedResult)
         {
-            
-            player.Constitution = consScore;
-
-            player.SetMaxValuesBasedOnMainStats();
-          
-            Assert.That(player.HealthMax, Is.EqualTo(expectedResult));
+            _player.Constitution = consScore;
+            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
+            Assert.That(_player.HealthMax, Is.EqualTo(expectedResult));
         }
         
         [TestCase(0,5)]
@@ -44,10 +46,10 @@ namespace DonGunTest
        
         public void Player_has_correct_Sightrange(int intScore, int expectedResult)
         {
-            player.Intelligence = intScore;
-            player.SetMaxValuesBasedOnMainStats();
+            _player.Intelligence = intScore;
+            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
 
-            Assert.That(player.SightRange, Is.EqualTo(expectedResult));
+            Assert.That(_player.SightRange, Is.EqualTo(expectedResult));
         }
         
         [TestCase(0,0)]
@@ -58,10 +60,16 @@ namespace DonGunTest
        
         public void Player_has_correct_RessourceMax(int wisScore, int expectedResult)
         {
-            player.Wisdome = wisScore;
-            player.SetMaxValuesBasedOnMainStats();
+            _player.Wisdome = wisScore;
+            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
 
-            Assert.That(player.ResourceMax, Is.EqualTo(expectedResult));
+            Assert.That(_player.ResourceMax, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void Player_has_a_signature()
+        {
+            Assert.That(!String.IsNullOrEmpty(_player.Signature));
         }
 
     }

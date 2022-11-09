@@ -40,17 +40,15 @@ namespace SharedClassLibrary
 
         private int _team;
 
-        private List<Character>? _othersInSight = new() { };
+//        private List<Character>? _othersInSight = new() { };
+        private List<string>? _othersInSight = new() { };
         private List<IAnAction>? _possibleActions = new() { };
         private List<HelperAction>? _possibleHelperActions = new() { };
         private List<OffensiveAction>? _possibleOffensiveActions = new() { };
 
+
         private Race_abstract _race;
         private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 } ;
-
-
-       
-
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
             if (!EqualityComparer<T>.Default.Equals(field, newValue)) 
@@ -58,7 +56,6 @@ namespace SharedClassLibrary
                 field = newValue; 
             } 
         }
-
 
         private string _name = "DJON DOE";
 
@@ -71,11 +68,13 @@ namespace SharedClassLibrary
             get { return _name; }
         }
 
+        public string Signature { get; init; }
+
         // Properties 
         public Position Position { get => _position; set { _position = value; } }
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
-        public List<Character> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
+        public List<string> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
         public List<IAnAction> PossibleActions { get => _possibleActions; set { _possibleActions = value; } }
         public int Strength
         {
@@ -113,7 +112,7 @@ namespace SharedClassLibrary
             set
             {
                 SetPropertyField(nameof(HealthMax), ref _hpMax, value);
-                HealthMax = _hpMax;
+                HealthCurrent = _hpMax;
             }
             get { return _hpMax; }
         }
@@ -166,67 +165,23 @@ namespace SharedClassLibrary
         public int Team { get => _team; set => _team = value; }
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public int[] HitModifierProfile { get => _hitModifierProfile; set => _hitModifierProfile = value; }
 
         // Constructors
         public Character() 
         {
             
+            Signature = Guid.NewGuid().ToString();
             _race = new Race_abstract(0);
 
-
-    
         }
 
         
 
-        public void SetMaxValuesBasedOnMainStats()
-        {
-
-            _hpMax = 50 + _con * 2;
-            _sightRange = 5 + _int / 3;
-            _resourceMax = _wis * 2;
-            
-           
-        }
+        
 
         // Methods
-        public void UpdatePossibleActions()
-        {
-            if (_othersInSight != null)
-            {
-                _possibleHelperActions = new List<HelperAction>();
-                _possibleOffensiveActions = new List<OffensiveAction>();
-                foreach (Character otherCharacter in _othersInSight)
-                {
-                    
-                    if (otherCharacter.Team == _team)
-                    {
-                        HealAlly healAction = new ();
-                        healAction.Sender = this;
-                        healAction.Reciever = otherCharacter;
-                        _possibleHelperActions.Add(healAction);
-
-                        InspireAlly inspireAction = new ();
-                        healAction.Sender = this;
-                        healAction.Reciever = otherCharacter;
-                        _possibleHelperActions.Add(inspireAction);
-
-                    }
-                    else if (otherCharacter.Team != _team)
-                    {
-                        OffensiveAction anOffensiveAction = new();
-                        int distToOther = (int)Math.Floor(GameMasterHelpers.DetermineDistanceBetweenCharacters(this, otherCharacter));
-                        int baseChance = distToOther > _hitModifierProfile.Length ? -100000 : _hitModifierProfile[distToOther];
-                        int dexModifier = GameMasterHelpers.RandomRange(0, _dex) * 2;
-                        anOffensiveAction.Sender = this;
-                        anOffensiveAction.Reciever = otherCharacter;
-                        anOffensiveAction.ChanceToSucced = baseChance + dexModifier;
-                        _possibleOffensiveActions.Add(anOffensiveAction);
-                    }
-
-                }
-            }
-        }
+        
 
         public int CalculateDamageGive(int diceValue)
         {

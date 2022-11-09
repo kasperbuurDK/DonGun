@@ -10,3 +10,4 @@ namespace SharedClassLibrary
         public DateTime CreatedDate { get; set; } = DateTime.MinValue;
     }
 }
+
