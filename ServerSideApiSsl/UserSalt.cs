@@ -24,7 +24,9 @@ namespace ServerSideApiSsl
 
         public byte[] SaltedHash(string pass)
         {
+#pragma warning disable SYSLIB0021 // Type or member is obsolete
             HashAlgorithm algorithm = new SHA256Managed();
+#pragma warning restore SYSLIB0021 // Type or member is obsolete
             byte[] bytesPass = Encoding.ASCII.GetBytes(pass);
 
             byte[] passWithSalt = new byte[bytesPass.Length + Salt.Length];
@@ -62,10 +64,12 @@ namespace ServerSideApiSsl
 
         public static byte[] CreateSalt()
         {
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+#pragma warning disable SYSLIB0023 // Type or member is obsolete
+            using RNGCryptoServiceProvider rng = new();
             byte[] buff = new byte[32];
             rng.GetBytes(buff);
             return buff;
+#pragma warning restore SYSLIB0023 // Type or member is obsolete
         }
     }
 }
