@@ -26,27 +26,28 @@ namespace SharedClassLibrary
 
         // 3 main meters
         private int _hpMax = 100;
-        private int _hpCur; // Current Hp
+        private int _hpCur = default; // Current Hp
         private int _resourceMax = 10; // magic, fury, energy, etc.
-        private int _resourceCur; // Current magic, fury, energy, etc.
+        private int _resourceCur = default; // Current magic, fury, energy, etc.
         private int _mpMax = 10;      // Move point MAX
-        private int _mpCur;   // remaining movepoints
+        private int _mpCur = default;   // remaining movepoints
 
         // Navigation
-        private Position _position;
-        private MoveDirections _facing;
-        private int _sightRange;
+        private Position _position = default;
+        private MoveDirections _facing = default;
+        private int _sightRange = default;
 
         
-        private List<string>? _othersInSight = new() { };
+        private List<string> _othersInSight = new() { };
       
-        private List<string>? _possibleActionsSignatures = new() { };
-        private List<string>? _possibleHelperActionsSignatures = new() { };
-        private List<string>? _possibleOffensiveActionsSignatures = new() { };
+        private List<string> _possibleActionsSignatures = new() { };
+        private List<string> _possibleHelperActionsSignatures = new() { };
+        private List<string> _possibleOffensiveActionsSignatures = new() { };
 
 
         private Race_abstract _race;
         private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 } ;
+        
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
         { 
             if (!EqualityComparer<T>.Default.Equals(field, newValue)) 
@@ -161,8 +162,8 @@ namespace SharedClassLibrary
         }
         
         public int Team { get; set; }
-        public List<string>? PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
-        public List<string>? PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
+        public List<string> PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
+        public List<string> PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
         public List<string> PossibleActionsSignatures { get => _possibleActionsSignatures; set { _possibleActionsSignatures = value; } }
 
 
@@ -171,19 +172,11 @@ namespace SharedClassLibrary
         // Constructors
         public Character() 
         {
-            
             Signature = Guid.NewGuid().ToString();
             _race = new Race_abstract(0);
-
         }
 
-        
-
-        
-
         // Methods
-        
-
         public int CalculateDamageGive(int diceValue)
         {
             return RandomRange(0, _str + 1) + diceValue;
@@ -194,7 +187,6 @@ namespace SharedClassLibrary
 
             _hpCur -= damage;
         }
-
 
         internal void RecieveHealing(int healing)
         {
@@ -220,8 +212,6 @@ namespace SharedClassLibrary
         public override string ToString()
         {
             return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}]");
-        }
-
-       
+        }       
     }
 }
