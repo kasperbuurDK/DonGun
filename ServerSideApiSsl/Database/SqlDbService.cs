@@ -149,10 +149,10 @@ namespace ServerSideApiSsl.Database
 
                 UserSalt uSalt = u.DownCast<User, UserSalt>();
                 uSalt.Salt = UserSalt.CreateSalt();
-                sql = $"INSERT INTO Users ([Name], [Password], [Salt]) VALUES ('{u.Name}', @ContPass, @ContSalt)";
+                sql = $"INSERT INTO Users ([Name], [HashedPass], [Salt]) VALUES ('{u.Name}', @ContPass, @ContSalt)";
                 try
                 {
-                    SqlCommand _cmd = new SqlCommand(sql, _connection);
+                    SqlCommand _cmd = new (sql, _connection);
                     SqlParameter paramPass = _cmd.Parameters.Add("@ContPass", SqlDbType.VarBinary);
                     SqlParameter paramSalt = _cmd.Parameters.Add("@ContSalt", SqlDbType.VarBinary);
                     paramPass.Value = uSalt.SaltedHash(uSalt.Password);
