@@ -50,5 +50,7 @@ public partial class CharView : ContentView
         UpdateResBar(_character);
         _character.PropertyChanged += UpdateBars;
         charaBinding.Character = _character;
+        if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
+            charaBinding.Character.ImageName = "no_data.png";
     }
 }
