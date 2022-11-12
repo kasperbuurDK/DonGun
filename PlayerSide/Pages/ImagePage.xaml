@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Pages.ImagePage"
+             Title="ImagePage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Text="Select A Image For Your Character"
+            VerticalOptions="Center" 
+               FontSize="Large"
+            HorizontalOptions="Center" />
+        <Grid Grid.Row="1">
+            <Border Stroke="Black"
+                    StrokeThickness="3"
+                    BackgroundColor="Transparent"
+                    Padding="5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10,10,10,10" />
+                </Border.StrokeShape>
+                <ScrollView Padding="1"
+                            Margin="1,1,1,1">
+                    <StackLayout x:Name="ImageStackLayout"
+                                 Padding="2"></StackLayout>
+                </ScrollView>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.OptionsPage">
     <Grid>
-        <VerticalStackLayout Spacing="5" Padding="5">
-            <Label Text="Welcome to .NET MAUI!"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center" />
+        <VerticalStackLayout Spacing="10"
+                             Padding="10">
             <Button x:Name="logoutBtn"
                     Text="Logout"
                     Clicked="LogoutBtnClicked" />
@@ -16,21 +14,21 @@
             <Button x:Name="UserOptions"
                     Text="User options"
                     Clicked="UserOptionsBtnClicked" />
-            <Button x:Name="Debug2"
-                    Text="DebugMovePage"
-                    Clicked="Debug2BtnClicked" />
-            <Grid>
+            <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Entry x:Name="SKey"
-                       Margin="5" 
+                       TextChanged="EntryTextChanged"
                        Grid.Column="1"/>
-                <Button x:Name="Debug3"
-                        Text="DebugSignalR"
-                        Clicked="Debug3BtnClicked" />
+                <Button x:Name="Join"
+                        Text="Join Room"
+                        Clicked="JoinBtnClicked" />
             </Grid>
+            <Button x:Name="Leave"
+                    Text="Leave Room"
+                    Clicked="LeaveBtnClicked" />
             <Button x:Name="deleteUserAct"
                     Text="Remove Acount"
                     Clicked="RemoveActBtnClicked" />

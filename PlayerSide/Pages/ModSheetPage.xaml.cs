@@ -24,6 +24,8 @@ public partial class ModSheetPage : ContentPage
             _editState = value;
             RemoveSheetBtn.IsEnabled = value;
             RemoveSheetBtn.IsVisible = value;
+            AddImgBtn.IsEnabled = !value;
+            AddImgBtn.IsVisible = !value;
         }
     }
 
@@ -82,6 +84,11 @@ public partial class ModSheetPage : ContentPage
                 }
             }
         }
+    }
+
+    private async void AddImgBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ImagePage(MPlayer));
     }
 
     private bool Validate()

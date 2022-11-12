@@ -84,7 +84,6 @@ public partial class UserPage : ContentPage
         PageLock(false);
     }
 
-
     private void PageLock(bool l)
     {
         ActivityIndicator.IsRunning = l;

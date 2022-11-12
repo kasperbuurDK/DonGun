@@ -109,12 +109,16 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
-	  <PackageReference Include="CommunityToolkit.Maui" Version="1.3.0" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Pages\ImagePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using SharedClassLibrary.MessageStrings;
+using System.Net;
 using System.Windows.Input;
 
 namespace SharedClassLibrary
@@ -123,5 +124,7 @@ namespace SharedClassLibrary
     public class HubServiceException
     {
         public string Messege { get; set; } = string.Empty;
+        public int Code { get; set; } = (int)HttpStatusCode.OK;
+        public string ActionName = string.Empty;
     }
 }
