@@ -115,7 +115,7 @@ public partial class ModSheetPage : ContentPage
         if (authHeader is not null && user is not null)
         {
             RestService<Player, Player> restService = new(new Uri(settings.BaseUrl),authHeader);
-            await restService.DeleteDataAsync(settings.RestUriSheet + user + "/" + _sheetId.ToString());
+            await restService.DeleteDataAsync(MPlayer, settings.RestUriSheet + user + "/" + _sheetId.ToString());
 
             if (restService.Response.IsSuccessStatusCode)
             {

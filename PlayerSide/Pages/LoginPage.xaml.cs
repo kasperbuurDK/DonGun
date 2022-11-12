@@ -30,6 +30,7 @@ public partial class LoginPage : ContentPage
                     await RestUserInfo.RefreshDataAsync(settings.RestUriUser + RestUserInfo.UserName);
                     if (RestUserInfo.Response.IsSuccessStatusCode)
                     {
+                        MauiProgram.Connectivity = RestUserInfo.ReturnStruct.First();
                         await SecureStorage.Default.SetAsync("authHeader", RestUserInfo.AuthHeader);
                         await SecureStorage.Default.SetAsync("username", RestUserInfo.UserName);
                         Application.Current.MainPage = new MainPage(RestUserInfo.AuthHeader);

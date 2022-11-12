@@ -94,7 +94,7 @@ public partial class OptionsPage : ContentPage
             string authHeder = await SecureStorage.Default.GetAsync("authHeader");
             string user = await SecureStorage.Default.GetAsync("username");
             RestService<List<User>, User> RestUserInfo = new(new Uri(settings.BaseUrl), authHeder);
-            await RestUserInfo.DeleteDataAsync(settings.RestUriUser + user);
+            await RestUserInfo.DeleteDataAsync(MauiProgram.Connectivity, settings.RestUriUser + user);
             MauiProgram.Connectivity = null;
             Application.Current.MainPage = new LoginPage();
             deleteUserAct.IsEnabled = true;
