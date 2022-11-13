@@ -61,9 +61,9 @@ namespace ServerSideApiSsl.Controllers
 
         [Authorize]
         [HttpDelete("user/{name}")]
-        public IActionResult DeleteUser([FromBody] User u)
+        public IActionResult DeleteUser([FromBody] User u, string name)
         {
-            if (HasAccess(u.Name))
+            if (HasAccess(name))
             {
                 int statusCode = _userRepository.DeleteSheets(u.Id);
                 if (statusCode == (int)HttpStatusCode.OK)
