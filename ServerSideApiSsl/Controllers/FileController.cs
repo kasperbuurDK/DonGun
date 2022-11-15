@@ -65,17 +65,13 @@ namespace ServerSideApiSsl.Controllers
         {
             if (HasAccess(name))
             {
-                int statusCode = _userRepository.DeleteSheets(u.Id);
+                int statusCode = _userRepository.DeleteUser(u);
                 if (statusCode == (int)HttpStatusCode.OK)
                 {
-                    statusCode = _userRepository.DeleteUser(u);
-                    if (statusCode == (int)HttpStatusCode.OK)
-                        return Ok(u.Name);
-                    else
-                        return BadRequest("Could not remove user!");
+                    return Ok(u.Name);
                 }
                 else
-                    return BadRequest("Could not remove user sheets!");
+                    return BadRequest("Could not remove User!");
             }
             else
                 return Unauthorized(u.Name);
