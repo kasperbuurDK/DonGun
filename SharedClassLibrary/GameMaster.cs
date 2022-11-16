@@ -16,6 +16,11 @@ namespace SharedClassLibrary
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
+
+        public GameMaster()
+        {
+
+        }
         public GameMaster(Game game) { _game = game; }
 
         private List<IAnAction>? _possibleActions = new() { };
@@ -25,6 +30,7 @@ namespace SharedClassLibrary
         public List<IAnAction>? PossibleActions { get => _possibleActions; set => _possibleActions = value; }
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public Queue<Character> Queue { get; set; }
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -182,6 +188,22 @@ namespace SharedClassLibrary
             character.SightRange = 5 + character.Intelligence / 3;
             character.ResourceMax = character.Wisdome * 2;
             
+        }
+
+        public void StartEncounter()
+        {
+            Queue = new Queue<Character>(_game.AllCharacters);
+            _game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(_game.CharacterToAct);
+
+        }
+
+        public void EndTurn()
+        {
+            _game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(_game.CharacterToAct);
+
+
         }
     }
 }
