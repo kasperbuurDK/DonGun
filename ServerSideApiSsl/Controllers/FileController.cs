@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ServerSideApiSsl.Database;
@@ -7,6 +8,7 @@ using System.Net;
 
 namespace ServerSideApiSsl.Controllers
 {
+    [EnableCors("DevPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class FileController : ControllerBase
