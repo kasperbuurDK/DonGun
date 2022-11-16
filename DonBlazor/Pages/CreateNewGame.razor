@@ -115,18 +115,20 @@ else
 
             HubService Hub = new HubService(authHeader, baseUrl, hubUri, clientDon);
 
-
             await Hub.Initialise();
-
 
             Hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
             Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); // Subscribe to Exceptionhandler
             await Hub.JoinRoom("test");
-
+           
             activeGame = ActiveGameContainer.GetGameInstance;
             activeGame.UpdateToNewGame(newGame);
+            GameMaster gameMaster = new GameMaster(activeGame);
+            await Hub.Send(new StartGameMessage("test") { theQueue = gameMaster.Queue });
+
             createGameStatus = "Greated game succesfully";
             Navigation.NavigateTo("/activegame");
+
         }
         else {
 
