@@ -67,6 +67,16 @@ namespace SharedClassLibrary
             get { return _name; }
         }
 
+        private string _imageName = string.Empty;
+        public string ImageName
+        {
+            set
+            {
+                SetPropertyField(nameof(ImageName), ref _imageName, value); ;
+            }
+            get { return _imageName; }
+        }
+
         public string Signature { get; init; }
 
         // Properties 

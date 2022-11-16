@@ -30,7 +30,7 @@ public partial class SheetPage : ContentPage
             _keys = new();
             try
             {
-                MauiProgram.Connectivity = restService.ReturnStruct.First().Value;
+                //MauiProgram.Connectivity = restService.ReturnStruct.First().Value;
                 foreach (KeyValuePair<int, MauiPlayer> p in restService.ReturnStruct)
                 {
                     //SheetStackLayout.Add(new CharView(p.Value));

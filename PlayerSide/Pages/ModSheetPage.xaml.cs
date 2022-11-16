@@ -24,6 +24,8 @@ public partial class ModSheetPage : ContentPage
             _editState = value;
             RemoveSheetBtn.IsEnabled = value;
             RemoveSheetBtn.IsVisible = value;
+            AddImgBtn.IsEnabled = !value;
+            AddImgBtn.IsVisible = !value;
         }
     }
 
@@ -84,6 +86,11 @@ public partial class ModSheetPage : ContentPage
         }
     }
 
+    private async void AddImgBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ImagePage(MPlayer));
+    }
+
     private bool Validate()
     {
         bool isValid = true;
@@ -108,7 +115,7 @@ public partial class ModSheetPage : ContentPage
         if (authHeader is not null && user is not null)
         {
             RestService<Player, Player> restService = new(new Uri(settings.BaseUrl),authHeader);
-            await restService.DeleteDataAsync(settings.RestUriSheet + user + "/" + _sheetId.ToString());
+            await restService.DeleteDataAsync(MPlayer, settings.RestUriSheet + user + "/" + _sheetId.ToString());
 
             if (restService.Response.IsSuccessStatusCode)
             {

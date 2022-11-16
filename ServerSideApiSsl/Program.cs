@@ -25,6 +25,15 @@ namespace ServerSideApiSsl
             builder.Configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
             builder.Configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
             builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: "DevPolicy",
+                            policy =>
+                            {
+                                policy.WithOrigins("https://localhost:7116")
+                                        .AllowAnyMethod();
+                            });
+            });
             builder.Services.AddSignalR();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -32,7 +41,6 @@ namespace ServerSideApiSsl
             builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler<Player>>("BasicAuthentication", null);
             builder.Services.AddAuthorization();
             builder.Services.Configure<SqlSettings>(builder.Configuration.GetSection("SqlSettings"));
-
 
             var app = builder.Build();
 
@@ -46,6 +54,8 @@ namespace ServerSideApiSsl
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(); 
 
             app.UseAuthentication();
             app.UseAuthorization();

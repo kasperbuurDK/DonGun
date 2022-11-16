@@ -90,6 +90,10 @@
                     Text="Remove"
                     Padding="4"
                     Clicked="RemoveBtnClicked" />
+            <Button x:Name="AddImgBtn"
+                    Text="Add Image"
+                    Padding="4"
+                    Clicked="AddImgBtnClicked" />
         </StackLayout>
     </Grid>
 </ContentPage>

@@ -55,7 +55,7 @@ public partial class UserPage : ContentPage
             {
                 Grid grid = new()
                 {
-                new CharView(p.Value)
+                    new CharView(p.Value)
                 };
                 Button button = new() { Opacity = 0, Padding = 1 };
                 Border border = new()
@@ -83,7 +83,6 @@ public partial class UserPage : ContentPage
         }
         PageLock(false);
     }
-
 
     private void PageLock(bool l)
     {

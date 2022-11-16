@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ServerSideApiSsl.Database;
@@ -7,6 +8,7 @@ using System.Net;
 
 namespace ServerSideApiSsl.Controllers
 {
+    [EnableCors("DevPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class FileController : ControllerBase
@@ -61,21 +63,17 @@ namespace ServerSideApiSsl.Controllers
 
         [Authorize]
         [HttpDelete("user/{name}")]
-        public IActionResult DeleteUser([FromBody] User u)
+        public IActionResult DeleteUser([FromBody] User u, string name)
         {
-            if (HasAccess(u.Name))
+            if (HasAccess(name))
             {
-                int statusCode = _userRepository.DeleteSheets(u.Id);
+                int statusCode = _userRepository.DeleteUser(u);
                 if (statusCode == (int)HttpStatusCode.OK)
                 {
-                    statusCode = _userRepository.DeleteUser(u);
-                    if (statusCode == (int)HttpStatusCode.OK)
-                        return Ok(u.Name);
-                    else
-                        return BadRequest("Could not remove user!");
+                    return Ok(u.Name);
                 }
                 else
-                    return BadRequest("Could not remove user sheets!");
+                    return BadRequest("Could not remove User!");
             }
             else
                 return Unauthorized(u.Name);

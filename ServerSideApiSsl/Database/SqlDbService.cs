@@ -16,6 +16,8 @@ using DevExpress.DirectX.NativeInterop.Direct2D.CCW;
 using SharedClassLibrary.MessageStrings;
 using System.Security.Cryptography;
 using System.Drawing;
+using System.Data.SqlTypes;
+using DevExpress.XtraExport;
 
 namespace ServerSideApiSsl.Database
 {
@@ -39,21 +41,25 @@ namespace ServerSideApiSsl.Database
 
         public bool Authenticate(string username, string password)
         {
-            string sql = $"SELECT * FROM Users WHERE Name = '{username}'";
+            string sql = "SELECT * FROM Users WHERE Name = @ContName";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramName = _cmd.Parameters.Add("@ContName", SqlDbType.NVarChar, -1);
+            paramName.Value = username;
+            paramName.Direction = ParameterDirection.Input;
             try
             {
-                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
+                List<UserSalt>? users = GetDataTable(_cmd).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
                     UserSalt u = users.First();
                     if (u.CompareHashed(u.SaltedHash(password)))
                         return true;
                 }
-                return false;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                return false;
             }
             finally
             {
@@ -61,34 +67,15 @@ namespace ServerSideApiSsl.Database
             }
         }
 
-        private DataTable GetDataTable(string Query)
+        private DataTable GetDataTable(SqlCommand command)
         {
             try
             {
                 _connection.Open();
                 DataTable data = new();
-                SqlCommand command = new(Query, _connection);
                 SqlDataReader reader = command.ExecuteReader();
                 data.Load(reader);
                 return data;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-
-        private int SetDataTable(string Query)
-        {
-            try
-            {
-                _connection.Open();
-                SqlCommand command = new(Query, _connection);
-                return command.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -119,121 +106,199 @@ namespace ServerSideApiSsl.Database
 
         public User? GetUser(string name)
         {
-            string sql = $"SELECT * FROM Users WHERE [Name] = '{name}'";
+            string sql = "SELECT * FROM Users WHERE [Name] = @ContName";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramName = _cmd.Parameters.Add("@ContName", SqlDbType.NVarChar, -1);
+            paramName.Value = name;
+            paramName.Direction = ParameterDirection.Input;
             try
             {
-                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
+                List<UserSalt>? users = GetDataTable(_cmd).ToList<UserSalt>();
                 if (users?.Any() ?? false)
                 {
                     return (User)users.First();
                 }
-                return null;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                return null;
             }
         }
 
         public int CreateUser(User u)
         {
-            string sql = $"SELECT * FROM Users WHERE [Name] = '{u.Name}'";
+            var cmdCheck = new SqlCommand("SELECT * FROM Users WHERE [Name] = @ContName", _connection);
+            SqlParameter paramName = new()
+            {
+                ParameterName = "@ContName",
+                Value = u.Name,
+                SqlDbType = SqlDbType.NVarChar,
+                Size = -1,
+                Direction = ParameterDirection.Input
+            };
+            cmdCheck.Parameters.Add(paramName);
+
+            UserSalt uSalt = u.DownCast<User, UserSalt>();
+            uSalt.Salt = UserSalt.CreateSalt();
+            var cmdInsert = new SqlCommand("INSERT INTO Users ([Name], [HashedPass], [Salt]) VALUES (@ContName, @ContPass, @ContSalt)", _connection);
+            SqlParameter paramPass = new()
+            {
+                ParameterName = "@ContPass",
+                Value = uSalt.SaltedHash(uSalt.Password),
+                SqlDbType = SqlDbType.VarBinary,
+                Size = 50,
+                Direction = ParameterDirection.Input
+            };
+            SqlParameter paramSalt = new()
+            {
+                ParameterName = "@ContSalt",
+                Value = uSalt.Salt,
+                SqlDbType = SqlDbType.VarBinary,
+                Size = 50,
+                Direction = ParameterDirection.Input
+            };
+            SqlParameter paramNameIn = new()
+            {
+                ParameterName = "@ContName",
+                Value = u.Name,
+                SqlDbType = SqlDbType.NVarChar,
+                Size = -1,
+                Direction = ParameterDirection.Input
+            };
+            cmdInsert.Parameters.Add(paramSalt);
+            cmdInsert.Parameters.Add(paramPass);
+            cmdInsert.Parameters.Add(paramNameIn);
+            SqlTransaction? CTx = null;
             try
             {
+                _connection.Open();
+                CTx = _connection.BeginTransaction();
+                cmdCheck.Transaction = CTx;
+                cmdInsert.Transaction = CTx;
                 // Does the DB containe any user with this username?
-                List<UserSalt>? users = GetDataTable(sql).ToList<UserSalt>();
+                DataTable data = new();
+                data.Load(cmdCheck.ExecuteReader());
+                List<UserSalt>? users = data.ToList<UserSalt>();
                 if (users?.Any() ?? false)
-                {
-                    return (int)HttpStatusCode.Conflict;
-                }
+                    throw new Exception();
 
-                UserSalt uSalt = u.DownCast<User, UserSalt>();
-                uSalt.Salt = UserSalt.CreateSalt();
-                sql = $"INSERT INTO Users ([Name], [HashedPass], [Salt]) VALUES ('{u.Name}', @ContPass, @ContSalt)";
-                try
+                int rowsAffected = cmdInsert.ExecuteNonQuery();
+                if (rowsAffected >= 1)
                 {
-                    SqlCommand _cmd = new (sql, _connection);
-                    SqlParameter paramPass = _cmd.Parameters.Add("@ContPass", SqlDbType.VarBinary);
-                    SqlParameter paramSalt = _cmd.Parameters.Add("@ContSalt", SqlDbType.VarBinary);
-                    paramPass.Value = uSalt.SaltedHash(uSalt.Password);
-                    paramSalt.Value = uSalt.Salt;
-                    int rowsAffected = SetDataTable(_cmd);
-                    if (rowsAffected >= 1)
-                    {
-                        return (int)HttpStatusCode.OK;
-                    }
-                    return (int)HttpStatusCode.BadRequest;
+                    CTx.Commit();
+                    return (int)HttpStatusCode.OK;
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                CTx?.Rollback();
+                return (int)HttpStatusCode.BadRequest;
+            }
+            finally
+            {
+                _connection.Close();
             }
         }
 
         public int DeleteUser(User u)
         {
-            string sql = $"DELETE FROM Users WHERE [Name] = '{u.Name}'";
+            var cmdDeleteUser = new SqlCommand("DELETE FROM Users WHERE [Name] = @ContName", _connection);
+            SqlParameter paramName = new()
+            {
+                ParameterName = "@ContName",
+                Value = u.Name,
+                SqlDbType = SqlDbType.NVarChar,
+                Size = -1,
+                Direction = ParameterDirection.Input
+            };
+            cmdDeleteUser.Parameters.Add(paramName);
+
+            var cmdDeleteSheets = new SqlCommand("DELETE FROM Sheets WHERE [User] = @ContUserId", _connection);
+            SqlParameter paramUserId = new()
+            {
+                ParameterName = "@ContUserId",
+                Value = u.Id,
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.Input
+            };
+            cmdDeleteSheets.Parameters.Add(paramUserId);
+
+            SqlTransaction? CTx = null;
             try
             {
-                int rowsAffected = SetDataTable(sql);
+                _connection.Open();
+                CTx = _connection.BeginTransaction();
+                cmdDeleteSheets.Transaction = CTx;
+                cmdDeleteUser.Transaction = CTx;
+                cmdDeleteSheets.ExecuteNonQuery();
+                int rowsAffected = cmdDeleteUser.ExecuteNonQuery();
                 if (rowsAffected >= 1)
                 {
+                    CTx.Commit();
                     return (int)HttpStatusCode.OK;
                 }
-                return (int)HttpStatusCode.BadRequest;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                CTx?.Rollback();
+                return (int)HttpStatusCode.BadRequest;
             }
         }
 
         public Player? GetSheet(int id)
         {
-            string sql = $"SELECT * FROM Sheets WHERE [Id] = '{id}'";
+            string sql = "SELECT * FROM Sheets WHERE [Id] = @ContId";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramId = _cmd.Parameters.Add("@ContId", SqlDbType.Int);
+            paramId.Value = id;
+            paramId.Direction = ParameterDirection.Input;
             try
             {
-                Player? playerSheet = default;
-                List<Sheet>? sheets = GetDataTable(sql).ToList<Sheet>();
+                List<Sheet>? sheets = GetDataTable(_cmd).ToList<Sheet>();
                 if (sheets?.Any() ?? false)
                 {
                     Sheet sheet = sheets.First();
-                    playerSheet = sheet.Data?.JsonToType<Player>();
+                    return sheet.Data?.JsonToType<Player>();
                 }
-                return playerSheet;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                Player? playerSheet = default;
+                return playerSheet;
             }
         }
 
         public Dictionary<int, Player> GetSheets(int id)
         {
-            string sql = $"SELECT * FROM Sheets WHERE [User] = '{id}'";
+            string sql = "SELECT * FROM Sheets WHERE [User] = @ContId";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramId = _cmd.Parameters.Add("@ContId", SqlDbType.Int);
+            paramId.Value = id;
+            paramId.Direction = ParameterDirection.Input;
             try
             {
-                Dictionary<int, Player>? playerSheets = new();
-                List<Sheet>? sheets = GetDataTable(sql).ToList<Sheet>();
+                List<Sheet>? sheets = GetDataTable(_cmd).ToList<Sheet>();
                 if (sheets?.Any() ?? false)
                 {
+                    Dictionary<int, Player>? playerSheets = new();
                     foreach (Sheet sheet in sheets)
                     {
                         Player? player = sheet.Data?.JsonToType<Player>();
                         if (player is not null)
                             playerSheets.Add(sheet.Id, player);
                     }
+                    return playerSheets;
                 }
-                return playerSheets;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                Dictionary<int, Player>? playerSheets = new();
+                return playerSheets;
             }
         }
 
@@ -254,19 +319,30 @@ namespace ServerSideApiSsl.Database
                 throw new ArgumentException("Not a valid object type", nameof(data));
             }
 
-            string sql = $"INSERT INTO Sheets ([User], [Data], [Type]) VALUES ({user}, '{jsonData}', {(int)type})";
+            string sql = "INSERT INTO Sheets ([User], [Data], [Type]) VALUES (@ContUser, @ContData, @ContType)";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramUser = _cmd.Parameters.Add("@ContUser", SqlDbType.Int);
+            paramUser.Value = user;
+            paramUser.Direction = ParameterDirection.Input;
+            SqlParameter paramData = _cmd.Parameters.Add("@ContData", SqlDbType.NVarChar, -1);
+            paramData.Value = jsonData;
+            paramData.IsNullable = true;
+            paramData.Direction = ParameterDirection.Input;
+            SqlParameter paramType = _cmd.Parameters.Add("@ContType", SqlDbType.Int);
+            paramType.Value = (int)type;
+            paramType.Direction = ParameterDirection.Input;
             try
             {
-                int rowsAffected = SetDataTable(sql);
+                int rowsAffected = SetDataTable(_cmd);
                 if ( rowsAffected >= 1 )
                 {
                     return (int)HttpStatusCode.OK;
                 }
-                return (int)HttpStatusCode.BadRequest;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                return (int)HttpStatusCode.BadRequest;
             }
         }
 
@@ -289,55 +365,52 @@ namespace ServerSideApiSsl.Database
                 throw new ArgumentException("Not a valid object type", nameof(data));
             }
 
-            string sql = $"UPDATE Sheets SET [Data] = '{jsonData}', [Type] = {(int)type} WHERE [Id] = {id}";
+            string sql = "UPDATE Sheets SET [Data] = @ContData, [Type] = @ContType WHERE [Id] = @ContId";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramId = _cmd.Parameters.Add("@ContId", SqlDbType.Int);
+            paramId.Value = id;
+            paramId.Direction = ParameterDirection.Input;
+            SqlParameter paramData = _cmd.Parameters.Add("@ContData", SqlDbType.NVarChar, -1);
+            paramData.Value = jsonData;
+            paramData.IsNullable = true;
+            paramData.Direction = ParameterDirection.Input;
+            SqlParameter paramType = _cmd.Parameters.Add("@ContType", SqlDbType.Int);
+            paramType.Value = (int)type;
+            paramType.Direction = ParameterDirection.Input;
             try
             {
-                int rowsAffected = SetDataTable(sql);
+                int rowsAffected = SetDataTable(_cmd);
                 if (rowsAffected >= 1)
                 {
                     return (int)HttpStatusCode.OK;
                 }
-                return (int)HttpStatusCode.BadRequest;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
+                return (int)HttpStatusCode.BadRequest;
             }
         }
 
         public int DeleteSheet(int id)
         {
-            string sql = $"DELETE FROM Sheets WHERE [Id] = '{id}'";
+            string sql = "DELETE FROM Sheets WHERE [Id] = @ContId";
+            SqlCommand _cmd = new(sql, _connection);
+            SqlParameter paramId = _cmd.Parameters.Add("@ContId", SqlDbType.Int);
+            paramId.Value = id;
+            paramId.Direction = ParameterDirection.Input;
             try
             {
-                int rowsAffected = SetDataTable(sql);
+                int rowsAffected = SetDataTable(_cmd);
                 if (rowsAffected >= 1)
                 {
                     return (int)HttpStatusCode.OK;
                 }
-                return (int)HttpStatusCode.BadRequest;
+                throw new Exception();
             }
             catch (Exception)
             {
-                throw;
-            }
-        }
-
-        public int DeleteSheets(int userid)
-        {
-            string sql = $"DELETE FROM Sheets WHERE [User] = '{userid}'";
-            try
-            {
-                int rowsAffected = SetDataTable(sql);
-                if (rowsAffected >= 1)
-                {
-                    return (int)HttpStatusCode.OK;
-                }
                 return (int)HttpStatusCode.BadRequest;
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
     }

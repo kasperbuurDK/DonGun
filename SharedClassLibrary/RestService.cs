@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 
 namespace SharedClassLibrary
 {
@@ -117,14 +118,20 @@ namespace SharedClassLibrary
         /// Quarry server to delete item object.
         /// </summary>
         /// <param name="uriResourcePath"></param>
-        public async Task DeleteDataAsync(string uriResourcePath)
+        public async Task DeleteDataAsync(TValue item, string uriResourcePath)
         {
             Uri uri = new(string.Format($"{BaseUrl}{uriResourcePath}"));
             Response = null;
 
             try
             {
-                Response = await _client.DeleteAsync(uri);
+                string json = item.TypeToJson();
+                StringContent content = new(json, Encoding.UTF8, "application/json");
+                HttpRequestMessage request = new(HttpMethod.Delete, uri)
+                {
+                    Content = content
+                };
+                Response = await _client.SendAsync(request);
                 RaiseEvent(ResponseResived);
             }
             catch (Exception ex)

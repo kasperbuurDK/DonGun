@@ -10,7 +10,7 @@ public partial class CharView : ContentView
         if (sender is MauiPlayer)
         {
             MauiPlayer player = (MauiPlayer)sender;
-            if (e.PropertyName.Contains("Health"))
+            if (e.PropertyName.Contains("HealthMax"))
             {
                 MainThread.BeginInvokeOnMainThread(() => UpdateHpBar(player));
             }
@@ -23,9 +23,9 @@ public partial class CharView : ContentView
 
     public void UpdateHpBar(MauiPlayer p)
     {
-        HpBarText.Text = string.Format($"{p.HealthCurrent} / {p.Health}");
+        HpBarText.Text = string.Format($"{p.HealthCurrent} / {p.HealthMax}");
         float preHpVal = (float)progressBarHp.Progress;
-        float hpVal = p.HealthCurrent.Remap(0, p.Health, 0F, 1.0F);
+        float hpVal = p.HealthCurrent.Remap(0, p.HealthMax, 0F, 1.0F);
         if (hpVal > preHpVal)
             progressBarHp.ProgressTo(hpVal, 250, Easing.Linear);
         else
@@ -34,9 +34,9 @@ public partial class CharView : ContentView
 
     public void UpdateResBar(MauiPlayer p)
     {
-        ResBarText.Text = string.Format($"{p.ResourceCurrent} / {p.Resource}");
+        ResBarText.Text = string.Format($"{p.ResourceCurrent} / {p.ResourceMax}");
         float preResVal = (float)progressBarRes.Progress;
-        float resVal = p.ResourceCurrent.Remap(0, p.Resource, 0F, 1.0F);
+        float resVal = p.ResourceCurrent.Remap(0, p.ResourceMax, 0F, 1.0F);
         if (resVal > preResVal)
             progressBarRes.ProgressTo(resVal, 250, Easing.Linear);
         else
@@ -50,5 +50,7 @@ public partial class CharView : ContentView
         UpdateResBar(_character);
         _character.PropertyChanged += UpdateBars;
         charaBinding.Character = _character;
+        if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
+            charaBinding.Character.ImageName = "no_data.png";
     }
 }

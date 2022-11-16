@@ -4,8 +4,8 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Principal;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using DevExpress.DirectX.Common;
+using Newtonsoft.Json;
 
 namespace SharedClassLibrary
 {
@@ -53,7 +53,7 @@ namespace SharedClassLibrary
 
         public static T JsonToType<T>(this string data) where T : class, new()
         {
-            T? type = JsonSerializer.Deserialize<T>(data);
+            T? type = JsonConvert.DeserializeObject<T>(data);
             if (type is not null)
                 return type;
             else
@@ -62,7 +62,7 @@ namespace SharedClassLibrary
 
         public static string TypeToJson<T>(this T obj)
         {
-            return JsonSerializer.Serialize(obj);
+            return JsonConvert.SerializeObject(obj);
         }
 
         public static T CopyObject<T>(this T obj) where T : class, new()
@@ -74,7 +74,7 @@ namespace SharedClassLibrary
         public static TC DownCast<TP, TC>(this TP parent) where TC : TP, new()
         {
             string clone = parent.TypeToJson();
-            TC? type = JsonSerializer.Deserialize<TC>(clone);
+            TC? type = JsonConvert.DeserializeObject<TC>(clone);
             if (type is not null)
                 return type;
             else
