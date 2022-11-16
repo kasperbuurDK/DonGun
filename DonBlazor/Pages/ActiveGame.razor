@@ -10,9 +10,7 @@
 
 Welcome to your game. 
 
-
-
-@if (_activeGame.HumanPlayers.Count != 0)
+@if (_activeGame.HumanPlayers.Count > 0)
 {
     <br />
     @_activeGame.Name
@@ -24,6 +22,9 @@ Welcome to your game.
         <PropertyColumn Property="@(p => p.MasteryString)" Title="Mastery"  Sortable="true" />
         <PropertyColumn Property="@(p => p.StatusString)" Title="Status"  Sortable="true" />
     </QuickGrid>
+    <br />
+  
+
 
 
 } else {

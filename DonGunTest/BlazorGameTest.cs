@@ -68,28 +68,7 @@ namespace DonGunTest
             Assert.That(activeGame.Name, Is.EqualTo("Empty Game"));
         }
 
-        [Test]
-        public void Determine_Correct_Character()
-        {
-            int numberOfPlayers = 2;
-            for (int i = 0; i < numberOfPlayers; i++)
-            {
-                Player player = new Player($"player{i}");
-                activeGame.AddPlayerToGame(player);
-            }
-            activeGame.CurrentTurn = numberOfPlayers;
-
-            Assert.That(activeGame.CharacterToAct, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void Determine_Character_Without_Players_Throws_Exception() 
-        {
-            activeGame.HumanPlayers = new List<Player>() { };
-            activeGame.NonHumanPlayers = new List<Npc>() { };
-
-            Assert.Throws<NoPLayersInGameException>(() => { int testValue = activeGame.CurrentCharacter; });
-        }
+        
 
         [Test]
         public void AllCharacters_Are_The_Sum_Of_Human_And_NPCs()
