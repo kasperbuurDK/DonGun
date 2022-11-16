@@ -22,12 +22,18 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
         public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
+        public event EventHandler<HubEventArgs<StartGameMessage>>? StartGameEvetnHandler;
+
 
         // Constructor
-        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon=false) 
+        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon = false)
         {
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {authHeader}"))
+                    .WithUrl($"{baseUrl}{hubUri}",
+                    options => {
+                    options.Headers.Add("Authorization", $"Basic {authHeader}");
+                    options.Headers.Add("Access-Control-Allow-Origin", "*");
+                    })
                     .Build();
 
             if (clientDon)
@@ -61,6 +67,12 @@ namespace SharedClassLibrary
             {
                 ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });
             });
+
+            hubConnection.On<StartGameMessage>("StartGame", msg =>
+            {
+                StartGameEvetnHandler?.Invoke(this, new HubEventArgs<StartGameMessage>() { Messege = msg });
+            });
+
         }
 
         // Methods

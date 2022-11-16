@@ -3,6 +3,7 @@ using DonBlazor.Models;
 using SharedClassLibrary;
 using SharedClassLibrary.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using static System.Net.WebRequestMethods;
 
 
 namespace DonBlazor.Containers
@@ -14,8 +15,8 @@ namespace DonBlazor.Containers
 
     public sealed class ActiveGameContainer: Game
     {
+        
         private static ActiveGameContainer? GameInstance = null;
-
         public static ActiveGameContainer GetGameInstance   
         {
             get
@@ -27,7 +28,7 @@ namespace DonBlazor.Containers
 
         private ActiveGameContainer()
         {
-     
+            
         }
 
         public void DestroyGameInstance()
@@ -37,18 +38,6 @@ namespace DonBlazor.Containers
 
         // Properties      
         
-        public int CurrentCharacter{ 
-            get 
-            {
-                if (AllCharacters.Count == 0)
-                {
-                    throw new NoPLayersInGameException();  
-                }
-                
-                return CurrentTurn % AllCharacters.Count;
-            } 
-        }
-
         // Methods
         public void UpdateToNewGame(Game newGame)
         {

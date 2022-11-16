@@ -206,7 +206,7 @@ namespace SharedClassLibrary
 
         internal int CalculateHealing()
         {
-            return (_cha * RandomRange(1,5))/3; 
+            return (_cha * RandomRange(3,9))/3; 
         }
 
         internal void RecieveInspiration(int inspiration)
@@ -216,7 +216,7 @@ namespace SharedClassLibrary
 
         internal int CalculateInspiration()
         {
-            return (_cha * RandomRange(1,5))/3;
+            return (_cha * RandomRange(3,9))/3;
         }
 
         public override string ToString()

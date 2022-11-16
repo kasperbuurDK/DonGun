@@ -32,7 +32,8 @@ namespace SharedClassLibrary.MessageStrings
             DiceEvent,
             StdEvent,
             MoveEvent,
-            UpdateEvent
+            UpdateEvent,
+            StartGame
         }
 
         public override string ToString()

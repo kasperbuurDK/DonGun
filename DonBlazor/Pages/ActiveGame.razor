@@ -1,4 +1,5 @@
 ﻿@using Containers;
+@using SharedClassLibrary;
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 @page "/activegame"
@@ -9,27 +10,31 @@
 
 Welcome to your game. 
 
-
-
-@if (activeGame.HumanPlayers.Count != 0)
+@if (_activeGame.HumanPlayers.Count > 0)
 {
     <br />
-    @activeGame.Name
+    @_activeGame.Name
     <br />
 
-    <QuickGrid Items="@activeGame.HumanPlayers.AsQueryable()">
+    <QuickGrid Items="@_activeGame.HumanPlayers.AsQueryable()">
         <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
         <PropertyColumn Property="@(p => p.RaceString)" Title="Race" Sortable="true" />
         <PropertyColumn Property="@(p => p.MasteryString)" Title="Mastery"  Sortable="true" />
         <PropertyColumn Property="@(p => p.StatusString)" Title="Status"  Sortable="true" />
     </QuickGrid>
+    <br />
+  
+
+
+
 } else {
     <p>No game loaded create a new or load an existing game</p>
 }
 
 
 @code {
-  private ActiveGameContainer activeGame = Containers.ActiveGameContainer.GetGameInstance;
-  
+    private ActiveGameContainer _activeGame = ActiveGameContainer.GetGameInstance;
+    private GameMaster gameMaster = new GameMaster(ActiveGameContainer.GetGameInstance);
+
 
 }

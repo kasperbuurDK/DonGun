@@ -2,13 +2,7 @@
 using SharedClassLibrary.Actions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SharedClassLibrary
 {
@@ -16,6 +10,8 @@ namespace SharedClassLibrary
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
+
+        public GameMaster(){ }
         public GameMaster(Game game) { _game = game; }
 
         private List<IAnAction>? _possibleActions = new() { };
@@ -25,6 +21,7 @@ namespace SharedClassLibrary
         public List<IAnAction>? PossibleActions { get => _possibleActions; set => _possibleActions = value; }
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
+        public Queue<Character> Queue { get; set; }
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -88,12 +85,14 @@ namespace SharedClassLibrary
         public void UpdatePossibleActions(Character character)
         {
 
+            _possibleHelperActions = new List<HelperAction>();
+            _possibleOffensiveActions = new List<OffensiveAction>();
+            _possibleActions = new List<IAnAction>();
+
+
             if (character.OthersInSight != null)
             {
-                _possibleHelperActions = new List<HelperAction>();
-                _possibleOffensiveActions = new List<OffensiveAction>();
-                _possibleActions = new List<IAnAction>();
-
+                
                 character.PossibleHelperActionsSignatures = new List<string>();
                 character.PossibleOffensiveActionsSignatures = new List<string>();
                 foreach (string otherSignature in character.OthersInSight)
@@ -135,6 +134,10 @@ namespace SharedClassLibrary
                 _possibleActions.Clear();
                 _possibleActions.AddRange(_possibleHelperActions);
                 _possibleActions.AddRange(_possibleOffensiveActions);
+            }
+            else
+            {
+                 // make empty lists
             }
         }
 
@@ -182,6 +185,22 @@ namespace SharedClassLibrary
             character.SightRange = 5 + character.Intelligence / 3;
             character.ResourceMax = character.Wisdome * 2;
             
+        }
+
+        public void StartEncounter()
+        {
+            Queue = new Queue<Character>(_game.AllCharacters);
+            _game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(_game.CharacterToAct);
+
+        }
+
+        public void EndTurn()
+        {
+            _game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(_game.CharacterToAct);
+
+
         }
     }
 }

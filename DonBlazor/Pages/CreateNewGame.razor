@@ -2,7 +2,8 @@
 @using Models;
 @using SharedClassLibrary;
 @using Containers;
-@using System.Text
+@using System.Text;
+@using SharedClassLibrary.MessageStrings;
 @inject NavigationManager Navigation
 
 <PageTitle>Create New Game</PageTitle>
@@ -53,15 +54,14 @@ else
 
 
 @code{
-    Game newGame = new();
+
     private string? playerName;
     private string? gameName;
     private List<Player> playersInGame = new List<Player>() {};
-    private bool readyToCreate = false;
     private string? createGameStatus = "";
-    private StringBuilder creationStatus = new StringBuilder(""); 
+    private StringBuilder creationStatus = new StringBuilder("");
 
-    ActiveGameContainer activeGame = ActiveGameContainer.GetGameInstance;
+    ActiveGameContainer? activeGame;
 
     private void AddPlayer() 
     {
@@ -78,7 +78,7 @@ else
         }
     }
 
-    private void CreateGame()
+    private async void CreateGame()
     {
         bool allGood = true;
         Game newGame = new();
@@ -100,17 +100,35 @@ else
                 creationStatus.Append(" and at least one player");
             } else {
                 createGameStatus = "Game must have at least One player";
-
             }
-            
+
             allGood = false;
         }
 
         if (allGood)
         {
+
+            string authHeader = "dXNlcjpwYXNzd29yZA==";    // Should be set a global place
+            string baseUrl = "https://dungun.azurewebsites.net";
+            string hubUri = "/gamehub";
+            bool clientDon = true;
+
+            HubService Hub = new HubService(authHeader, baseUrl, hubUri, clientDon);
+
+            await Hub.Initialise();
+
+            Hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
+            Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); // Subscribe to Exceptionhandler
+            await Hub.JoinRoom("test");
+           
+            activeGame = ActiveGameContainer.GetGameInstance;
             activeGame.UpdateToNewGame(newGame);
+            GameMaster gameMaster = new GameMaster(activeGame);
+            await Hub.Send(new StartGameMessage("test") { theQueue = gameMaster.Queue });
+
             createGameStatus = "Greated game succesfully";
             Navigation.NavigateTo("/activegame");
+
         }
         else {
 
