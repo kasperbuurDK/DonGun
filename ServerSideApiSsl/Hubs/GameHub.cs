@@ -69,6 +69,13 @@ namespace ServerSideApiSsl.Hubs
             }
         }
 
+        public async Task StartGame(StartGameMessage msg) // From Don to Maui
+        {
+                await Clients.OthersInGroup(msg.SessionKey).SendAsync("StartGame", msg);
+                //Debug echo
+                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });  
+        }
+
         public async Task DiceEvent(DiceRolledMessage msg) // To Don from Maui
         {
             msg.ConnectionId = Context.ConnectionId;
