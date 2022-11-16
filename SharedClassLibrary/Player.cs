@@ -10,7 +10,6 @@
 
         public Player() { }
 
-
         public string OwnerName { get; set; }
 
         // TODO make it a more advanced not just string
