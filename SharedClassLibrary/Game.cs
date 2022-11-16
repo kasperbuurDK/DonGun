@@ -19,7 +19,6 @@ namespace SharedClassLibrary
 
         public List<Npc> NonHumanPlayers { get; set; } = new List<Npc>() { };
 
-
         public List<Character> AllCharacters
         {
             get
@@ -34,6 +33,8 @@ namespace SharedClassLibrary
         public int CurrentTurn { get; set; } = 0;
 
         public int CurrentPlayer { get; set; } = 0;
+
+        public Character CharacterToAct { get; set; }
 
         public Game()
         {
