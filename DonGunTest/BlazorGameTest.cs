@@ -79,7 +79,7 @@ namespace DonGunTest
             }
             activeGame.CurrentTurn = numberOfPlayers;
 
-            Assert.That(activeGame.CurrentCharacter, Is.EqualTo(0));
+            Assert.That(activeGame.CharacterToAct, Is.EqualTo(0));
         }
 
         [Test]

@@ -23,10 +23,14 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
 
         // Constructor
-        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon=false) 
+        public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon = false)
         {
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{baseUrl}{hubUri}", options => options.Headers.Add("Authorization", $"Basic {authHeader}"))
+                    .WithUrl($"{baseUrl}{hubUri}",
+                    options => {
+                    options.Headers.Add("Authorization", $"Basic {authHeader}");
+                    options.Headers.Add("Access-Control-Allow-Origin", "*");
+                    })
                     .Build();
 
             if (clientDon)

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SharedClassLibrary.MessageStrings
-{
+{   
     public class UpdateMessage : Message
     {
         public string UpdateStr { get; set; } = string.Empty;
