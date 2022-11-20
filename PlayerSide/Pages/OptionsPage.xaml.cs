@@ -1,4 +1,7 @@
+using CommunityToolkit.Maui.Views;
+using Java.Lang;
 using Microsoft.Extensions.Configuration;
+using PlayerSide.Views;
 using SharedClassLibrary;
 using SharedClassLibrary.MessageStrings;
 using System.Linq.Expressions;
@@ -48,25 +51,39 @@ public partial class OptionsPage : ContentPage
 
     private async void JoinBtnClicked(object sender, EventArgs e)
     {
-        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => 
-        { 
-            ErrorLabel.Text = args.Messege.Messege;
-            if (args.Messege.ActionName == "JoinGameRoom" && args.Messege.Code == (int)HttpStatusCode.OK)
-                SKey.IsEnabled = false;
-            if (args.Messege.ActionName == "LeaveGameRoom" && args.Messege.Code == (int)HttpStatusCode.OK)
-                SKey.IsEnabled = true;
-        };
-        try
+        SelectPopUp popup = new();
+        var result = await this.ShowPopupAsync(popup);
+
+        if (result is int IntResult)
         {
-            await MauiProgram.Hub.Initialise();
+            MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => LockJoin(args.Messege));
+            try
+            {
+                await MauiProgram.Hub.Initialise();
+            }
+            catch (HttpRequestException ex)
+            {
+                ErrorLabel.Text = ex.Message;
+            }
+            if (!string.IsNullOrEmpty(SKey.Text))
+            {
+                await MauiProgram.Hub.JoinRoom(SKey.Text, MauiProgram.Sheets[IntResult]);
+            }
         }
-        catch (HttpRequestException ex)
+    }
+
+    private void LockJoin(HubServiceException args)
+    {
+        ErrorLabel.Text = args.Messege;
+        if (args.ActionName == "JoinGameRoom" && args.Code == (int)HttpStatusCode.OK)
         {
-            ErrorLabel.Text = ex.Message;
+            SKey.IsEnabled = false;
+            Join.IsEnabled = false;
         }
-        if (!string.IsNullOrEmpty(SKey.Text)) 
+        if (args.ActionName == "LeaveGameRoom" && args.Code == (int)HttpStatusCode.OK)
         {
-            await MauiProgram.Hub.JoinRoom(SKey.Text);
+            SKey.IsEnabled = true;
+            Join.IsEnabled = true;
         }
     }
 
@@ -80,8 +97,6 @@ public partial class OptionsPage : ContentPage
         {
             ErrorLabel.Text = ex.Message;
         }
-        if (!string.IsNullOrEmpty(SKey.Text))
-            await MauiProgram.Hub.JoinRoom(SKey.Text);
     }
 
     private async void RemoveActBtnClicked(object sender, EventArgs e)

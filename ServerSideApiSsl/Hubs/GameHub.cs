@@ -15,7 +15,7 @@ namespace ServerSideApiSsl.Hubs
             if (options is not null && !string.IsNullOrEmpty(options.SessionKey))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, options.SessionKey);
-                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = $"Joined room {options.SessionKey}", ActionName = nameof(JoinGameRoom) });
+                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = $"{options.Sheet.Name} Joined room {options.SessionKey}", ActionName = nameof(JoinGameRoom) });
             }
             else
             {
