@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary
 {
-    public class GameSessionOptions
+    public class GameSessionOptions : MessageStrings.Message
     {
-        public string SessionKey { get; set; } = string.Empty;
+        public Player Sheet { get; set; } = new Player(); 
     }
 }

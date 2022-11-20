@@ -82,7 +82,8 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task Initialise()
         {
-            await hubConnection.StartAsync();
+            if (!IsConnected)
+                await hubConnection.StartAsync();
         }
 
         /// <summary>
@@ -93,6 +94,19 @@ namespace SharedClassLibrary
         public async Task JoinRoom(string key)
         {
             GameOptions = new GameSessionOptions() { SessionKey = key };
+            SessionKey = key;
+            await hubConnection.SendAsync("JoinGameRoom", GameOptions);
+        }
+
+        /// <summary>
+        /// Join game room with sesstion key and give selectet sheet
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public async Task JoinRoom(string key, Player p)
+        {
+            GameOptions = new GameSessionOptions() { SessionKey = key , Sheet = p};
             SessionKey = key;
             await hubConnection.SendAsync("JoinGameRoom", GameOptions);
         }
@@ -137,6 +151,6 @@ namespace SharedClassLibrary
     {
         public string Messege { get; set; } = string.Empty;
         public int Code { get; set; } = (int)HttpStatusCode.OK;
-        public string ActionName = string.Empty;
+        public string ActionName { get; set; } = string.Empty;
     }
 }

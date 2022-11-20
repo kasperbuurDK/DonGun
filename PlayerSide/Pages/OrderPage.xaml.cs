@@ -20,11 +20,11 @@ public partial class OrderPage : ContentPage
 
     private void TimerCallBack1(object state)
     {
-        timedPlayer.HealthCurrent = rnd.Next(0, timedPlayer.HealthMax); 
+        //timedPlayer.HealthCurrent = rnd.Next(0, timedPlayer.HealthMax); 
     }
 
     private void TimerCallBack2(object state)
     {
-        timedPlayer.ResourceCurrent = rnd.Next(0, timedPlayer.ResourceMax);
+        //timedPlayer.ResourceCurrent = rnd.Next(0, timedPlayer.ResourceMax);
     }
 }

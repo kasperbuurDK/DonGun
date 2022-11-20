@@ -10,7 +10,6 @@ public partial class UserPage : ContentPage
 {
     private int? _selected;
     private Border priSelected = new();
-    private Dictionary<int, MauiPlayer> _sheetDict;
     private IConfiguration _configuration;
 
     public UserPage()
@@ -27,9 +26,9 @@ public partial class UserPage : ContentPage
 
     private async void ModSheetBtnClicked(object sender, EventArgs e)
     {
-        if (_selected != null && _sheetDict != null)
+        if (_selected != null && MauiProgram.Sheets != null)
         {
-            await Navigation.PushAsync(new ModSheetPage(_sheetDict[(int)_selected], (int)_selected, UpdateSheetsAsync));
+            await Navigation.PushAsync(new ModSheetPage(MauiProgram.Sheets[(int)_selected], (int)_selected, UpdateSheetsAsync));
         }
     }
 
@@ -79,7 +78,7 @@ public partial class UserPage : ContentPage
                 grid.Add(border);
                 SheetStackLayout.Add(grid);
             }
-            _sheetDict = restService.ReturnStruct;
+            MauiProgram.Sheets = restService.ReturnStruct;
         }
         PageLock(false);
     }
