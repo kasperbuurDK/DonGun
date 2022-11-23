@@ -23,6 +23,7 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
         public event EventHandler<HubEventArgs<StartGameMessage>>? StartGame;
         public event EventHandler<HubEventArgs<GameSessionOptions>>? JoinEvent;
+        public event EventHandler<HubEventArgs<GameSessionOptions>>? LeaveEvent;
         public event EventHandler<HubEventArgs<NewTurnMessage>>? NewTurnEvent;
         public event EventHandler<HubEventArgs<EndMyTurnMessage>>? EndTurnEvent;
        
@@ -54,6 +55,11 @@ namespace SharedClassLibrary
                 hubConnection.On<GameSessionOptions>("JoinEvent", msg =>
                 {
                     JoinEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
+                });
+                
+                hubConnection.On<GameSessionOptions>("LeaveEvent", msg =>
+                {
+                    LeaveEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
                 });
                 
                 hubConnection.On<EndMyTurnMessage>(Message.MessageType.EndMyTurn.ToString(), msg =>
