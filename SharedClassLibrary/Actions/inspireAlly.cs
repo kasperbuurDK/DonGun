@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Actions
 {
-    internal class InspireAlly: HelperAction
+    public class InspireAlly: HelperAction
     {
         public InspireAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {

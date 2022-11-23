@@ -19,7 +19,7 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<FileUpdateMessage>>? FileEvent;
         public event EventHandler<HubEventArgs<MoveMessage>>? MoveEvent;
         public event EventHandler<HubEventArgs<DiceRolledMessage>>? DiceEvent;
-        public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
+       // public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
         public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
         public event EventHandler<HubEventArgs<StartGameMessage>>? StartGameEvetnHandler;
@@ -52,15 +52,18 @@ namespace SharedClassLibrary
                 FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
             });
 
+            /*
             // Error from Don
             hubConnection.On<StandardMessages>("ErrorEvent", msg =>
             {
                 ErrorEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
             });
+           */
             hubConnection.On<UpdateMessage>("UpdateEvent", msg =>
             {
                 UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
             });
+            
 
             // Exception from hub system
             hubConnection.On<HubServiceException>("ExceptionHandler", msg =>

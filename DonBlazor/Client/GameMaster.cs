@@ -1,19 +1,19 @@
-﻿
+﻿using DonBlazor.Containers;
+using SharedClassLibrary;
 using SharedClassLibrary.Actions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
+using DonBlazor.Client;
 
 
-namespace SharedClassLibrary
+namespace DonBlazor.Client
 {
-
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
-
-        public GameMaster(){ }
-        public GameMaster(Game game) { _game = game; }
-
+       
+        public GameMaster() { }
+        
         private List<IAnAction>? _possibleActions = new() { };
         private List<HelperAction>? _possibleHelperActions = new() { };
         private List<OffensiveAction>? _possibleOffensiveActions = new() { };
@@ -22,6 +22,7 @@ namespace SharedClassLibrary
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
         public Queue<Character> Queue { get; set; }
+        public Game Game { get => _game; set => _game = value; }
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -30,7 +31,7 @@ namespace SharedClassLibrary
                 int costOfTurn = CostOfTurningCharacter(character, direction);
                 if (costOfTurn > character.MpCur)
                 {
-                    return MessageStrings.StandardMessages.NotEnough("MP", "turn" );
+                    return StandardMessages.NotEnough("MP", "turn");
                 }
                 else
                 {
@@ -41,7 +42,7 @@ namespace SharedClassLibrary
 
             if (character.MpCur < distance * MoveHelper.COSTOFSSINGLEMOVE)
             {
-                return MessageStrings.StandardMessages.NotEnough("MP", "move"); ;
+                return StandardMessages.NotEnough("MP", "move"); ;
             }
             else
             {
@@ -60,19 +61,19 @@ namespace SharedClassLibrary
             character.Position = newPos;
             DetermineOthersInSight(character);
 
-            return MessageStrings.StandardMessages.AllOK;
+            return StandardMessages.AllOK;
         }
 
         private void DetermineOthersInSight(Character character)
         {
             List<string> othersInSight = new List<string>();
 
-            foreach (Character otherCharacter in _game.AllCharacters)
+            foreach (Character otherCharacter in Game.AllCharacters)
             {
                 if (otherCharacter.Equals(character)) continue;
 
                 float distanceToOther = DetermineDistanceBetweenCharacters(character, otherCharacter);
-                if (character.SightRange >= distanceToOther )
+                if (character.SightRange >= distanceToOther)
                 {
                     othersInSight.Add(otherCharacter.Signature);
                 }
@@ -92,12 +93,12 @@ namespace SharedClassLibrary
 
             if (character.OthersInSight != null)
             {
-                
+
                 character.PossibleHelperActionsSignatures = new List<string>();
                 character.PossibleOffensiveActionsSignatures = new List<string>();
                 foreach (string otherSignature in character.OthersInSight)
                 {
-                    var otherCharacter = _game.AllCharacters.Find(chara => chara.Signature == otherSignature);
+                    var otherCharacter = Game.AllCharacters.Find(chara => chara.Signature == otherSignature);
                     if (otherCharacter == null) continue;
 
                     if (otherCharacter.Team == character.Team)
@@ -118,10 +119,10 @@ namespace SharedClassLibrary
                     else if (otherCharacter.Team != character.Team)
                     {
                         OffensiveAction anOffensiveAction = new OffensiveAction(character.Signature, otherSignature);
-                        int distToOther = (int)Math.Floor(GameMasterHelpers.DetermineDistanceBetweenCharacters(character, otherCharacter));
-                        int baseChance = distToOther >  character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
-                        int dexModifier = GameMasterHelpers.RandomRange(0, character.Dexterity) * 2;
-                        
+                        int distToOther = (int)Math.Floor(DetermineDistanceBetweenCharacters(character, otherCharacter));
+                        int baseChance = distToOther > character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
+                        int dexModifier = RandomRange(0, character.Dexterity) * 2;
+
 
                         anOffensiveAction.SenderSignature = character.Signature;
                         anOffensiveAction.RecieverSignature = otherCharacter.Signature;
@@ -137,7 +138,7 @@ namespace SharedClassLibrary
             }
             else
             {
-                 // make empty lists
+                // make empty lists
             }
         }
 
@@ -165,17 +166,17 @@ namespace SharedClassLibrary
             return costOfturning;
         }
 
-        public void AddCharacterToGame(Character characterToAdd) 
+        public void AddCharacterToGame(Character characterToAdd)
         {
             SetMaxValuesBasedOnMainStats(characterToAdd);
 
-            if (characterToAdd is Player)  
+            if (characterToAdd is Player)
             {
-                _game.HumanPlayers.Add((Player)characterToAdd);
+                Game.HumanPlayers.Add((Player)characterToAdd);
             }
-            else if (characterToAdd is Npc) 
+            else if (characterToAdd is Npc)
             {
-                _game.NonHumanPlayers.Add((Npc)characterToAdd);
+                Game.NonHumanPlayers.Add((Npc)characterToAdd);
             }
         }
 
@@ -184,23 +185,21 @@ namespace SharedClassLibrary
             character.HealthMax = 50 + character.Constitution * 2;
             character.SightRange = 5 + character.Intelligence / 3;
             character.ResourceMax = character.Wisdome * 2;
-            
+
         }
 
         public void StartEncounter()
         {
-            Queue = new Queue<Character>(_game.AllCharacters);
-            _game.CharacterToAct = Queue.Dequeue();
-            Queue.Enqueue(_game.CharacterToAct);
+            Queue = new Queue<Character>(Game.AllCharacters);
+            Game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(Game.CharacterToAct);
 
         }
 
         public void EndTurn()
         {
-            _game.CharacterToAct = Queue.Dequeue();
-            Queue.Enqueue(_game.CharacterToAct);
-
-
+            Game.CharacterToAct = Queue.Dequeue();
+            Queue.Enqueue(Game.CharacterToAct);
         }
     }
 }
