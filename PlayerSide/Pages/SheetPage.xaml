@@ -4,27 +4,8 @@
              x:Class="PlayerSide.Pages.SheetPage"
              Title="Sheet"
              IconImageSource="order_icon">
-    <Grid BackgroundColor="WhiteSmoke">
-        <Image x:Name="backgroundImage"
-               Aspect="Fill"
-               Source="simple_border.png" />
-        <Border Stroke="Black"
-                StrokeThickness="3"
-                BackgroundColor="Transparent"
-                Padding="5">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="10,10,10,10" />
-            </Border.StrokeShape>
-            <ScrollView Padding="0"
-                        Margin="0,0,0,0">
-                <StackLayout x:Name="SheetStackLayout"
-                    Padding="2">
-
-                </StackLayout>
-            </ScrollView>
-        </Border>
-        <ActivityIndicator x:Name="ActivityIndicator"
-                           BackgroundColor="White"
-                           IsRunning="False"/>
+    <Grid BackgroundColor="WhiteSmoke"
+          x:Name="MainGridSheet">
+        <Label Text="ddddddlffffffffddddrlllllllrllllllææææææædd"/>
     </Grid>
 </ContentPage>

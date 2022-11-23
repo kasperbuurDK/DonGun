@@ -5,26 +5,39 @@ namespace PlayerSide.Pages;
 
 public partial class OrderPage : ContentPage
 {
-    private MauiPlayer timedPlayer;
-    Random rnd = new Random();
-    Timer _timer1, _timer2;
-
+    public Queue<Character> Queue{ get; set; }
+    private CharView _cVChild;
     public OrderPage()
     {
         InitializeComponent();
-        timedPlayer = new() { Name = "hello", HealthMax = 10, HealthCurrent = 5, ResourceMax = 20, ResourceCurrent = 15 };
-        MainGrid.Add(new CharView(timedPlayer));
-        _timer1 = new Timer(TimerCallBack1, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-        _timer2 = new Timer(TimerCallBack2, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+        MauiProgram.Hub.StartGameEvetnHandler += (sender, args) => MainThread.InvokeOnMainThreadAsync(() => RefreshQueue(args.Messege.theQueue));
+        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
     }
 
-    private void TimerCallBack1(object state)
+    public void RefreshQueue(Queue<Character> q)
     {
-        //timedPlayer.HealthCurrent = rnd.Next(0, timedPlayer.HealthMax); 
+        Queue = q;
+        QueueStackLayout.Clear();
+        foreach (Character p in Queue)
+        {
+            Grid grid = new()
+                {
+                    new CharView((MauiPlayer)p)
+                };
+            QueueStackLayout.Add(grid);
+        }
     }
 
-    private void TimerCallBack2(object state)
+    public void SetCharView(HubServiceException args)
     {
-        //timedPlayer.ResourceCurrent = rnd.Next(0, timedPlayer.ResourceMax);
+        if (args.ActionName == "JoinGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
+        {
+            _cVChild = new(MauiProgram.Sheet);
+            MainGrid.Add(_cVChild);
+        }
+        if (args.ActionName == "LeaveGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
+        {
+            MainGrid.Remove(_cVChild);
+        }
     }
 }

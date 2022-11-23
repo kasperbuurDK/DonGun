@@ -7,40 +7,31 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private List<int> _keys { get; set; }
-    private IConfiguration _configuration;
+    private SheetView? _cVChild;
 
     public SheetPage()
     {
         InitializeComponent();
-        _configuration = MauiProgram.Services.GetService<IConfiguration>();
-        UpdateSheetsAsync();
+        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
     }
 
-    public async void UpdateSheetsAsync()
+    public SheetPage(MauiPlayer mPChild) : this()
     {
-        Settings settings = _configuration.GetRequiredSection("Settings").Get<Settings>();
-        string authHeader = await SecureStorage.Default.GetAsync("authHeader");
-        string user = await SecureStorage.Default.GetAsync("username");
+        _cVChild = new SheetView(mPChild);
+        MainGridSheet.Add(_cVChild);
+    }
 
-        if (authHeader is not null && user is not null)
+    public void SetCharView(HubServiceException args)
+    {
+        if (args.ActionName == "JoinGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
         {
-            RestService<Dictionary<int, MauiPlayer>, MauiPlayer> restService = new(new Uri(settings.BaseUrl), authHeader);
-            //await restService.RefreshDataAsync(settings.RestUriSheet + user);
-            _keys = new();
-            try
-            {
-                //MauiProgram.Connectivity = restService.ReturnStruct.First().Value;
-                foreach (KeyValuePair<int, MauiPlayer> p in restService.ReturnStruct)
-                {
-                    //SheetStackLayout.Add(new CharView(p.Value));
-                    _keys.Add(p.Key);
-                }
-            }
-            catch (Exception ex)
-            {
-                // No elements
-            }
+            var tabbedpage = Parent as TabbedPage;
+            tabbedpage.Children.Remove(this);
+            tabbedpage.Children.Insert(0, new SheetPage(MauiProgram.Sheet));
+        }
+        if (args.ActionName == "LeaveGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
+        {
+            MainGridSheet.Remove(_cVChild);
         }
     }
 }

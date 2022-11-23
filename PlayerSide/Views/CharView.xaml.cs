@@ -10,7 +10,7 @@ public partial class CharView : ContentView
         if (sender is MauiPlayer)
         {
             MauiPlayer player = (MauiPlayer)sender;
-            if (e.PropertyName.Contains("HealthMax"))
+            if (e.PropertyName.Contains("Health"))
             {
                 MainThread.BeginInvokeOnMainThread(() => UpdateHpBar(player));
             }
