@@ -4,7 +4,7 @@ using SharedClassLibrary.MessageStrings;
 
 namespace DonBlazor.Containers
 {
-    public sealed class ActiveGameMasterContainer: GameMaster
+    public sealed class ActiveGameMasterContainer : GameMaster
     {
         private static ActiveGameMasterContainer? GameMasterInstance = null;
 
@@ -44,19 +44,19 @@ namespace DonBlazor.Containers
                 {
                     Console.WriteLine(e.Messege?.Sheet);
                     var player = e.Messege?.Sheet;
-                    
+
 
                     AddCharacterToGame(e.Messege?.Sheet);
-                    connectionsId.Add( e.Messege.Sheet.OwnerName, e.Messege.ConnectionId);
+                    connectionsId.Add(e.Messege.Sheet.OwnerName, e.Messege.ConnectionId);
 
                     // TODO add to dictionary
-                   // e.Messege.ConnectionId
-                  
-                }; 
-               // Hub.MoveEvent +=
-               // Hub.ActionEvent +=
-               // Hub.LeaveaEvent +=
-               // Hub.EndTurn += 
+                    // e.Messege.ConnectionId
+
+                };
+                // Hub.MoveEvent +=
+                // Hub.ActionEvent +=
+                // Hub.LeaveaEvent +=
+                // Hub.EndTurn += 
 
                 await Hub.JoinRoom(roomName);
 
@@ -72,4 +72,3 @@ namespace DonBlazor.Containers
 
     }
 }
-    

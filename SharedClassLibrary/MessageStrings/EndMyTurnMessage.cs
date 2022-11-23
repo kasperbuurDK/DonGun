@@ -1,12 +1,4 @@
-﻿using SharedClassLibrary.MessageStrings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SharedClassLibrary.MessageStrings.Message;
-
-namespace SharedClassLibrary.MessageStrings
+﻿namespace SharedClassLibrary.MessageStrings
 {
     public class EndMyTurnMessage : Message
     {
@@ -29,4 +21,4 @@ namespace SharedClassLibrary.MessageStrings
 
 
 
-  
+

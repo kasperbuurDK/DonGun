@@ -48,17 +48,17 @@ namespace ServerSideApiSsl.Controllers
         [HttpPut("user/{name}")]
         public IActionResult CreateUser([FromBody] User u)
         {
-                User? user = _userRepository.GetUser(u.Name);
-                if (user is null)
-                {
-                    int statusCode = _userRepository.CreateUser(u);
-                    if (statusCode == (int)HttpStatusCode.OK)
-                        return Ok(u.Name);
-                    else
-                        return BadRequest(u.Name);
-                }
+            User? user = _userRepository.GetUser(u.Name);
+            if (user is null)
+            {
+                int statusCode = _userRepository.CreateUser(u);
+                if (statusCode == (int)HttpStatusCode.OK)
+                    return Ok(u.Name);
                 else
-                    return Conflict(u.Name);
+                    return BadRequest(u.Name);
+            }
+            else
+                return Conflict(u.Name);
         }
 
         [Authorize]
@@ -123,18 +123,20 @@ namespace ServerSideApiSsl.Controllers
 
         [Authorize]
         [HttpPut("sheet/{name}")]
-        public IActionResult SetPlayerSheet([FromBody]Player p, string name)
+        public IActionResult SetPlayerSheet([FromBody] Player p, string name)
         {
             if (HasAccess(name))
             {
                 User? user = _userRepository.GetUser(name);
-                if (user is not null) {
+                if (user is not null)
+                {
                     int statusCode = _userRepository.PutSheet(user.Id, p);
                     if (statusCode == (int)HttpStatusCode.OK)
                         return Ok(name);
                     else
                         return BadRequest(name);
-                } else
+                }
+                else
                     return NotFound(name);
             }
             else

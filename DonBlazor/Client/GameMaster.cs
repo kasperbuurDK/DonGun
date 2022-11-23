@@ -1,19 +1,16 @@
-﻿using DonBlazor.Containers;
-using SharedClassLibrary;
+﻿using SharedClassLibrary;
 using SharedClassLibrary.Actions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
-using DonBlazor.Client;
-using System.Diagnostics;
 
 namespace DonBlazor.Client
 {
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
-       
+
         public GameMaster() { }
-        
+
         private List<IAnAction>? _possibleActions = new() { };
         private List<HelperAction>? _possibleHelperActions = new() { };
         private List<OffensiveAction>? _possibleOffensiveActions = new() { };
@@ -204,7 +201,7 @@ namespace DonBlazor.Client
         {
             Game.CharacterToAct = Queue.Dequeue();
             Queue.Enqueue(Game.CharacterToAct);
-           // Game.CharacterToAct.
+            // Game.CharacterToAct.
         }
     }
 }

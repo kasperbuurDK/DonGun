@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using SharedClassLibrary.MessageStrings;
 using System.Net;
-using System.Windows.Input;
 
 namespace SharedClassLibrary
 {
@@ -26,7 +25,7 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<GameSessionOptions>>? LeaveEvent;
         public event EventHandler<HubEventArgs<NewTurnMessage>>? NewTurnEvent;
         public event EventHandler<HubEventArgs<EndMyTurnMessage>>? EndTurnEvent;
-       
+
 
 
 
@@ -35,9 +34,10 @@ namespace SharedClassLibrary
         {
             hubConnection = new HubConnectionBuilder()
                     .WithUrl($"{baseUrl}{hubUri}",
-                    options => {
-                    options.Headers.Add("Authorization", $"Basic {authHeader}");
-                    options.Headers.Add("Access-Control-Allow-Origin", "*");
+                    options =>
+                    {
+                        options.Headers.Add("Authorization", $"Basic {authHeader}");
+                        options.Headers.Add("Access-Control-Allow-Origin", "*");
                     })
                     .Build();
 
@@ -56,31 +56,31 @@ namespace SharedClassLibrary
                 {
                     JoinEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
                 });
-                
+
                 hubConnection.On<GameSessionOptions>("LeaveEvent", msg =>
                 {
                     LeaveEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
                 });
-                
+
                 hubConnection.On<EndMyTurnMessage>(Message.MessageType.EndMyTurn.ToString(), msg =>
                 {
                     EndTurnEvent?.Invoke(this, new HubEventArgs<EndMyTurnMessage>() { Messege = msg });
                 });
 
 
-            } 
+            }
             else  // Only for Mob users
             {
                 hubConnection.On<StartGameMessage>(Message.MessageType.StartGame.ToString(), msg =>
                 {
                     StartGame?.Invoke(this, new HubEventArgs<StartGameMessage>() { Messege = msg });
                 });
-                
+
                 hubConnection.On<NewTurnMessage>(Message.MessageType.NewTurn.ToString(), msg =>
                 {
                     NewTurnEvent?.Invoke(this, new HubEventArgs<NewTurnMessage>() { Messege = msg });
                 });
-                
+
                 hubConnection.On<UpdateMessage>(Message.MessageType.UpdateEvent.ToString(), msg =>
                 {
                     UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
@@ -127,7 +127,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task JoinRoom(string key, Player p)
         {
-            GameOptions = new GameSessionOptions() { SessionKey = key , Sheet = p};
+            GameOptions = new GameSessionOptions() { SessionKey = key, Sheet = p };
             SessionKey = key;
             await hubConnection.SendAsync("JoinGameRoom", GameOptions);
         }

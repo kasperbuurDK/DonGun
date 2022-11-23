@@ -1,6 +1,4 @@
 ﻿using SharedClassLibrary;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ServerSideApiSsl.Database
 {

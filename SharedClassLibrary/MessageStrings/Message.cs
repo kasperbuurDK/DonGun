@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.MessageStrings
+﻿namespace SharedClassLibrary.MessageStrings
 {
     public class Message
     {
@@ -14,7 +8,7 @@ namespace SharedClassLibrary.MessageStrings
         public string? ConnectionId { get; set; }
         public string LastModified { get; set; } = string.Empty;
 
-        public Message(MessageType msgType) 
+        public Message(MessageType msgType)
         {
             MsgType = msgType;
             SessionKey ??= string.Empty;

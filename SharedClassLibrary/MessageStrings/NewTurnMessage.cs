@@ -1,14 +1,6 @@
-﻿using SharedClassLibrary.MessageStrings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SharedClassLibrary.MessageStrings.Message;
-
-namespace SharedClassLibrary.MessageStrings
+﻿namespace SharedClassLibrary.MessageStrings
 {
-    public class NewTurnMessage: Message
+    public class NewTurnMessage : Message
     {
         public Queue<Character> TheQueue { get; set; }
         public List<string> Happenings { get; set; }

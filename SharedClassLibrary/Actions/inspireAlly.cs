@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.Actions
+﻿namespace SharedClassLibrary.Actions
 {
-    public class InspireAlly: HelperAction
+    public class InspireAlly : HelperAction
     {
         public InspireAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {

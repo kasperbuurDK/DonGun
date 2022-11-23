@@ -1,11 +1,4 @@
-﻿using SharedClassLibrary;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.ComponentModel;
 
 namespace PlayerSide
 {
@@ -22,11 +15,11 @@ namespace PlayerSide
         public MauiPlayer Character
         {
             get => _character;
-            set 
+            set
             {
                 _character = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
-            } 
+            }
         }
     }
 }

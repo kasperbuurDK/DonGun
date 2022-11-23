@@ -3,7 +3,7 @@
 namespace SharedClassLibrary.Actions
 {
     public class OffensiveAction : IAnAction
-    {      
+    {
         public int ChanceToSucced { get; set; }
         public string SenderSignature { get; set; }
         public string RecieverSignature { get; set; }
@@ -51,6 +51,6 @@ namespace SharedClassLibrary.Actions
             return chanceToHitAfterApplyingDice * precissionModifier > GameMasterHelpers.RandomRange(0, 101 * precissionModifier);
         }
 
-        
+
     }
 }

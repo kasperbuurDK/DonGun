@@ -3,7 +3,7 @@
     public class Player : Character
     {
 
-        public Player(string name) 
+        public Player(string name)
         {
             Name = name;
         }
@@ -19,6 +19,6 @@
 
         public string StatusString { get; set; } = string.Empty;
 
-        
+
     }
 }
