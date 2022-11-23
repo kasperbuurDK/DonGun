@@ -1,5 +1,6 @@
 ﻿@using Containers;
 @using SharedClassLibrary;
+@using Client;
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 @page "/activegame"
@@ -34,7 +35,6 @@ Welcome to your game.
 
 @code {
     private ActiveGameContainer _activeGame = ActiveGameContainer.GetGameInstance;
-    private GameMaster gameMaster = new GameMaster(ActiveGameContainer.GetGameInstance);
-
+    private GameMaster gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
 
 }

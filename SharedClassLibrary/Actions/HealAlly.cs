@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Actions
 {
-    internal class HealAlly : HelperAction
+    public class HealAlly : HelperAction
     {
         public HealAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {

@@ -6,23 +6,28 @@ using DonBlazor.Containers;
 using SharedClassLibrary;
 using System.Numerics;
 using SharedClassLibrary.Exceptions;
+using DonBlazor.Client;
 
 namespace DonGunTest
 {
     public class BlazorGameTest
     {
-        private ActiveGameContainer activeGame;
+        private ActiveGameContainer _activeGame;
+        private GameMaster _gameMaster;
+
 
         [SetUp]
         public void SetUp()
         {
-            activeGame = ActiveGameContainer.GetGameInstance;
-            activeGame.Name = "Active test";
-            activeGame.HumanPlayers = new List<Player> { };
-            activeGame.NonHumanPlayers = new List<Npc> { };
-            activeGame.Created = DateTime.Now; 
-            activeGame.LastSaved = DateTime.Now;
-            activeGame.CurrentTurn = 999;
+            _gameMaster= new GameMaster();
+
+            _activeGame = ActiveGameContainer.GetGameInstance;
+            _activeGame.Name = "Active test";
+            _activeGame.HumanPlayers = new List<Player> { };
+            _activeGame.NonHumanPlayers = new List<Npc> { };
+            _activeGame.Created = DateTime.Now; 
+            _activeGame.LastSaved = DateTime.Now;
+            _activeGame.CurrentTurn = 999;
         }
 
 
@@ -30,19 +35,19 @@ namespace DonGunTest
         public void Is_Game_Created_Correctly()
         {
             //Assert
-            Assert.That(activeGame, Is.Not.EqualTo(null));
+            Assert.That(_activeGame, Is.Not.EqualTo(null));
         }
 
         [Test]
         public void NextTurn_Adds_1_Turn()
         {
             // Arrange
-            activeGame.CurrentTurn = 0;
+            _activeGame.CurrentTurn = 0;
             // Act
-            activeGame.NextTurn();
+            _activeGame.NextTurn();
 
             //Assert
-            Assert.That(activeGame.CurrentTurn, Is.EqualTo(1));
+            Assert.That(_activeGame.CurrentTurn, Is.EqualTo(1));
         }
 
         [TestCase(1)]
@@ -52,20 +57,20 @@ namespace DonGunTest
             for (int i = 0; i < numberOfPlayersToAdd; i++) 
             {
                 Player player = new Player($"player{i}");
-                activeGame.AddPlayerToGame(player);
+               
             }
 
-            Assert.That(activeGame.HumanPlayers.Count, Is.EqualTo(numberOfPlayersToAdd));
+            Assert.That(_activeGame.HumanPlayers.Count, Is.EqualTo(numberOfPlayersToAdd));
         }
 
         [Test]
         public void Destroy_Activegame_Results_in_an_empty_game()
         {
             // Act
-            activeGame.DestroyGameInstance();
-            activeGame = ActiveGameContainer.GetGameInstance;
+            _activeGame.DestroyGameInstance();
+            _activeGame = ActiveGameContainer.GetGameInstance;
 
-            Assert.That(activeGame.Name, Is.EqualTo("Empty Game"));
+            Assert.That(_activeGame.Name, Is.EqualTo("Empty Game"));
         }
 
         
@@ -76,22 +81,22 @@ namespace DonGunTest
             int noOfHumans = 2;
             int noOfNPCs = 6;
 
-            activeGame.HumanPlayers = new List<Player>() { };
-            activeGame.NonHumanPlayers = new List<Npc>() { };
+            _activeGame.HumanPlayers = new List<Player>() { };
+            _activeGame.NonHumanPlayers = new List<Npc>() { };
 
             for (int i = 0; i < noOfHumans; i++)
             {
                 Player player = new($"player{i}");
-                activeGame.HumanPlayers.Add(player);
+                _activeGame.HumanPlayers.Add(player);
             }
 
             for (int i = 0; i < noOfNPCs; i++)
             {
                 Npc npc = new();
-                activeGame.NonHumanPlayers.Add(npc);
+                _activeGame.NonHumanPlayers.Add(npc);
             }
 
-            Assert.That(activeGame.AllCharacters, Has.Count.EqualTo(noOfHumans + noOfNPCs));
+            Assert.That(_activeGame.AllCharacters, Has.Count.EqualTo(noOfHumans + noOfNPCs));
         }
     }
 }

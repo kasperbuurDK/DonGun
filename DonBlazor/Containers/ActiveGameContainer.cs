@@ -14,8 +14,7 @@ namespace DonBlazor.Containers
     /// </summary>
 
     public sealed class ActiveGameContainer: Game
-    {
-        
+    {   
         private static ActiveGameContainer? GameInstance = null;
         public static ActiveGameContainer GetGameInstance   
         {
@@ -53,10 +52,6 @@ namespace DonBlazor.Containers
             CurrentTurn++;
         }
 
-       
-        public void AddPlayerToGame(Player newPlayer)
-        {
-            HumanPlayers.Add(newPlayer);
-        }
+     
     }
 }
