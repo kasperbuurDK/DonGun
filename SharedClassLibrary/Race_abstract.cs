@@ -11,7 +11,7 @@ namespace SharedClassLibrary
         public Race_abstract()
         { }
 
-        public Race_abstract(int type) 
+        public Race_abstract(int type)
         {
             Type = (RaceType)type;
         }

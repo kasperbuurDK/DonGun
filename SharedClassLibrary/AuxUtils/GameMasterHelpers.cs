@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SharedClassLibrary.AuxUtils
+﻿namespace SharedClassLibrary.AuxUtils
 {
     public class GameMasterHelpers
     {
@@ -18,7 +16,7 @@ namespace SharedClassLibrary.AuxUtils
             return distanceBetween;
         }
 
-        public static int RandomRange(int minRange, int maxRange) 
+        public static int RandomRange(int minRange, int maxRange)
         {
             Random random = new Random();
 

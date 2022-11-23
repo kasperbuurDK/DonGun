@@ -1,9 +1,15 @@
 ﻿@page "/"
+@using DonBlazor.Client;
+@using DonBlazor.Containers;
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Hello, Don!</h1>
 
-Welcome to your new app.
+Welcome to your mansion.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    private ActiveGameMasterContainer _gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+
+
+}

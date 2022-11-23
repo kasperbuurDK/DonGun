@@ -1,13 +1,6 @@
-﻿using SharedClassLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.Actions
+﻿namespace SharedClassLibrary.Actions
 {
-    internal class HealAlly : HelperAction
+    public class HealAlly : HelperAction
     {
         public HealAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {
@@ -15,7 +8,7 @@ namespace SharedClassLibrary.Actions
 
         public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
         {
-            reciever.RecieveHealing(sender.CalculateHealing());
+            reciever.RecieveHealing(sender.CalculateHealing(diceValue));
             return true;
         }
     }

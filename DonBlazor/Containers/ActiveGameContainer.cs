@@ -1,9 +1,4 @@
-﻿using DevExpress.Data.Async.Helpers;
-using DonBlazor.Models;
-using SharedClassLibrary;
-using SharedClassLibrary.Exceptions;
-using System.ComponentModel.DataAnnotations;
-using static System.Net.WebRequestMethods;
+﻿using SharedClassLibrary;
 
 
 namespace DonBlazor.Containers
@@ -13,11 +8,10 @@ namespace DonBlazor.Containers
     /// Singleton creater of a Game instance
     /// </summary>
 
-    public sealed class ActiveGameContainer: Game
+    public sealed class ActiveGameContainer : Game
     {
-        
         private static ActiveGameContainer? GameInstance = null;
-        public static ActiveGameContainer GetGameInstance   
+        public static ActiveGameContainer GetGameInstance
         {
             get
             {
@@ -28,7 +22,7 @@ namespace DonBlazor.Containers
 
         private ActiveGameContainer()
         {
-            
+
         }
 
         public void DestroyGameInstance()
@@ -37,7 +31,7 @@ namespace DonBlazor.Containers
         }
 
         // Properties      
-        
+
         // Methods
         public void UpdateToNewGame(Game newGame)
         {
@@ -53,10 +47,6 @@ namespace DonBlazor.Containers
             CurrentTurn++;
         }
 
-       
-        public void AddPlayerToGame(Player newPlayer)
-        {
-            HumanPlayers.Add(newPlayer);
-        }
+
     }
 }

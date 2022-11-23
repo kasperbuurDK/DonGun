@@ -1,0 +1,16 @@
+
+
+
+ <QuickGrid Items="@_activeGame.HumanPlayers.AsQueryable()">
+        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.RaceString)" Title="Race" Sortable="true" />
+        <PropertyColumn Property="@(p => p.MasteryString)" Title="Mastery"  Sortable="true" />
+        <PropertyColumn Property="@(p => p.StatusString)" Title="Status"  Sortable="true" />
+    </QuickGrid>
+ <br />
+
+
+ @code {
+
+
+ }

@@ -67,8 +67,8 @@ namespace SharedClassLibrary
         public override string ToString()
         {
             StringBuilder str = new();
-            foreach(Dice d in DiceList)
-            { 
+            foreach (Dice d in DiceList)
+            {
                 str.Append(d.ToString());
             }
             return str.ToString();

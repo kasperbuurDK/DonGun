@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
-using PlayerSide.Pages;
 using SharedClassLibrary;
-using SharedClassLibrary.MessageStrings;
 using System.Reflection;
 
 namespace PlayerSide;
@@ -13,7 +11,7 @@ public static class MauiProgram
     public static User Connectivity { get; set; }
     public static MauiPlayer? Sheet { get; set; }
     public static List<Character> GameOrder { get; set; }
-    public static Dictionary<int, MauiPlayer> Sheets  { get; set; }
+    public static Dictionary<int, MauiPlayer> Sheets { get; set; }
     public static HubService Hub { get; set; }
 
     public static MauiApp CreateMauiApp()

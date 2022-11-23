@@ -1,9 +1,6 @@
-﻿
-using System.ComponentModel;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 
 namespace SharedClassLibrary
 {
@@ -30,7 +27,7 @@ namespace SharedClassLibrary
         // Constructors
         public RestService(Uri baseUrl, string user, string password) : this(baseUrl, Convert.ToBase64String(Encoding.ASCII.GetBytes(user + ":" + password)))
         {
-            UserName = user;           
+            UserName = user;
         }
 
         public RestService(Uri baseUrl, string authHeader)

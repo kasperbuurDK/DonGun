@@ -1,9 +1,5 @@
-﻿using SharedClassLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DonBlazor.Client;
+using SharedClassLibrary;
 
 namespace DonGunTest
 {
@@ -15,7 +11,7 @@ namespace DonGunTest
         Game _game;
 
         [SetUp]
-        public void SetUp() 
+        public void SetUp()
         {
             _player = new Player("Test Plsyer");
             _game = new Game();
@@ -37,13 +33,13 @@ namespace DonGunTest
             _gameMaster.SetMaxValuesBasedOnMainStats(_player);
             Assert.That(_player.HealthMax, Is.EqualTo(expectedResult));
         }
-        
-        [TestCase(0,5)]
-        [TestCase(5,6)]
-        [TestCase(10,8)]
-        [TestCase(15,10)]
-        [TestCase(20,11)]
-       
+
+        [TestCase(0, 5)]
+        [TestCase(5, 6)]
+        [TestCase(10, 8)]
+        [TestCase(15, 10)]
+        [TestCase(20, 11)]
+
         public void Player_has_correct_Sightrange(int intScore, int expectedResult)
         {
             _player.Intelligence = intScore;
@@ -51,13 +47,13 @@ namespace DonGunTest
 
             Assert.That(_player.SightRange, Is.EqualTo(expectedResult));
         }
-        
-        [TestCase(0,0)]
-        [TestCase(5,10)]
-        [TestCase(10,20)]
-        [TestCase(15,30)]
-        [TestCase(20,40)]
-       
+
+        [TestCase(0, 0)]
+        [TestCase(5, 10)]
+        [TestCase(10, 20)]
+        [TestCase(15, 30)]
+        [TestCase(20, 40)]
+
         public void Player_has_correct_RessourceMax(int wisScore, int expectedResult)
         {
             _player.Wisdome = wisScore;

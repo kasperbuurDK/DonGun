@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.Actions
+﻿namespace SharedClassLibrary.Actions
 {
     public abstract class HelperAction : IAnAction
     {
         public int ChanceToSucced { get; set; }
         public string Signature { get; init; }
-        public string SenderSignature { get ; set ; }
+        public string SenderSignature { get; set; }
         public string RecieverSignature { get; set; }
 
         public HelperAction(string senderSig, string recieverSig)
@@ -22,6 +16,6 @@ namespace SharedClassLibrary.Actions
 
         public abstract bool MakeBasicAction(int diceValue, Character sender, Character reciever);
 
-        
+
     }
 }

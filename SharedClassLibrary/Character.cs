@@ -1,9 +1,5 @@
-using System.ComponentModel;
-using SharedClassLibrary.Exceptions;
 using SharedClassLibrary.AuxUtils;
-using SharedClassLibrary.Actions;
 using static SharedClassLibrary.AuxUtils.GameMasterHelpers;
-using System.Text.Json.Serialization;
 
 namespace SharedClassLibrary
 {
@@ -37,23 +33,23 @@ namespace SharedClassLibrary
         private MoveDirections _facing = default;
         private int _sightRange = default;
 
-        
+
         private List<string> _othersInSight = new() { };
-      
+
         private List<string> _possibleActionsSignatures = new() { };
         private List<string> _possibleHelperActionsSignatures = new() { };
         private List<string> _possibleOffensiveActionsSignatures = new() { };
 
 
         private Race_abstract _race;
-        private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 } ;
-        
-        protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue) 
-        { 
-            if (!EqualityComparer<T>.Default.Equals(field, newValue)) 
-            { 
-                field = newValue; 
-            } 
+        private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 };
+
+        protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        {
+            if (!EqualityComparer<T>.Default.Equals(field, newValue))
+            {
+                field = newValue;
+            }
         }
 
         private string _name = "DJON DOE";
@@ -84,7 +80,7 @@ namespace SharedClassLibrary
         public MoveDirections Facing { get => _facing; set { _facing = value; } }
         public int SightRange { get => _sightRange; set { _sightRange = value; } }
         public List<string> OthersInSight { get => _othersInSight; set { _othersInSight = value; } }
-        
+
         public int Strength
         {
             set { SetPropertyField(nameof(Strength), ref _str, value); }
@@ -115,7 +111,7 @@ namespace SharedClassLibrary
             set { SetPropertyField(nameof(Charisma), ref _cha, value); }
             get { return _cha; }
         }
-        
+
         public int HealthMax
         {
             set
@@ -125,7 +121,7 @@ namespace SharedClassLibrary
             }
             get { return _hpMax; }
         }
-       
+
         public int HealthCurrent
         {
             set
@@ -170,7 +166,7 @@ namespace SharedClassLibrary
             set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
         }
-        
+
         public int Team { get; set; }
         public List<string> PossibleHelperActionsSignatures { get => _possibleHelperActionsSignatures; set => _possibleHelperActionsSignatures = value; }
         public List<string> PossibleOffensiveActionsSignatures { get => _possibleOffensiveActionsSignatures; set => _possibleOffensiveActionsSignatures = value; }
@@ -180,7 +176,7 @@ namespace SharedClassLibrary
         public int[] HitModifierProfile { get => _hitModifierProfile; set => _hitModifierProfile = value; }
 
         // Constructors
-        public Character() 
+        public Character()
         {
             Signature = Guid.NewGuid().ToString();
             _race = new Race_abstract(0);
@@ -204,9 +200,9 @@ namespace SharedClassLibrary
             if (_hpCur > _hpMax) _hpCur = _hpMax;
         }
 
-        internal int CalculateHealing()
+        internal int CalculateHealing(int diceValue)
         {
-            return (_cha * RandomRange(3,9))/3; 
+            return (_cha * RandomRange(3, 9)) / 3 + diceValue;
         }
 
         internal void RecieveInspiration(int inspiration)
@@ -214,14 +210,15 @@ namespace SharedClassLibrary
             throw new NotImplementedException();
         }
 
-        internal int CalculateInspiration()
+        internal int CalculateInspiration(int diceValue)
         {
-            return (_cha * RandomRange(3,9))/3;
+            return (_cha * RandomRange(3, 9)) / 3 + diceValue;
         }
 
         public override string ToString()
         {
-            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}]");
-        }       
+            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}] \n" +
+                $"sign: {Signature} - Team: {Team}");
+        }
     }
 }

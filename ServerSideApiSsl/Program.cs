@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.DependencyInjection;
 using ServerSideApiSsl.Database;
 using ServerSideApiSsl.Hubs;
 using SharedClassLibrary;
-using System.Configuration;
 using System.Text.Json;
 
 namespace ServerSideApiSsl
@@ -55,7 +53,7 @@ namespace ServerSideApiSsl
 
             app.UseRouting();
 
-            app.UseCors(); 
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

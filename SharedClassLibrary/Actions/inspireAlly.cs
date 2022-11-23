@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.Actions
+﻿namespace SharedClassLibrary.Actions
 {
-    internal class InspireAlly: HelperAction
+    public class InspireAlly : HelperAction
     {
         public InspireAlly(string senderSig, string recieverSig) : base(senderSig, recieverSig)
         {
@@ -14,7 +8,7 @@ namespace SharedClassLibrary.Actions
 
         public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
         {
-            reciever.RecieveInspiration(sender.CalculateInspiration());
+            reciever.RecieveInspiration(sender.CalculateInspiration(diceValue));
             return true;
         }
     }

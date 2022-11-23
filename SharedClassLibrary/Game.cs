@@ -1,5 +1,4 @@
-﻿using SharedClassLibrary;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SharedClassLibrary
 {
@@ -27,7 +26,7 @@ namespace SharedClassLibrary
                 listOfAll.AddRange(HumanPlayers);
                 listOfAll.AddRange(NonHumanPlayers);
                 return listOfAll;
-            } 
+            }
 
         }
         public int CurrentTurn { get; set; } = 0;
@@ -38,8 +37,8 @@ namespace SharedClassLibrary
 
         public Game()
         {
-            
- 
+
+
         }
 
 

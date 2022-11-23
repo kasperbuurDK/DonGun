@@ -1,9 +1,5 @@
-﻿using SharedClassLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DonBlazor.Client;
+using SharedClassLibrary;
 
 namespace DonGunTest
 {
@@ -36,7 +32,7 @@ namespace DonGunTest
             _gameMaster.AddCharacterToGame(_player1);
             _gameMaster.AddCharacterToGame(_player2);
             _gameMaster.AddCharacterToGame(_player3);
-            
+
             _gameMaster.AddCharacterToGame(_npc1);
             _gameMaster.AddCharacterToGame(_npc2);
             _gameMaster.AddCharacterToGame(_npc3);
@@ -45,11 +41,11 @@ namespace DonGunTest
 
 
         [Test]
-        public void Queue_lengt_match_lengt_og_all_characters() 
+        public void Queue_lengt_match_lengt_og_all_characters()
         {
 
             _gameMaster.StartEncounter();
-            
+
             Assert.That(_gameMaster.Queue.Count, Is.EqualTo(6));
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace SharedClassLibrary.Exceptions;
 
-public class NoPLayersInGameException: Exception
+public class NoPLayersInGameException : Exception
 {
-    
+
 }

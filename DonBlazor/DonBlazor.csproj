@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Components\ListOfUsers.razor" />
+    <Content Remove="Pages\ListOfUsers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="0.1.0-alpha.22351.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.9" PrivateAssets="all" />
@@ -15,6 +20,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ListOfUsers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\ListOfUsers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Components\" />
   </ItemGroup>
 
 </Project>
