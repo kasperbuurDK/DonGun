@@ -2,6 +2,7 @@
 @using SharedClassLibrary;
 @using Client;
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using SharedClassLibrary.MessageStrings;
 
 @page "/activegame"
 
@@ -11,30 +12,41 @@
 
 Welcome to your game. 
 
-@if (_activeGame.HumanPlayers.Count > 0)
+@if (_activeGame.AllCharacters.Count > 0)
 {
     <br />
     @_activeGame.Name
     <br />
 
-    <QuickGrid Items="@_activeGame.HumanPlayers.AsQueryable()">
+    <QuickGrid Items="@_activeGame.AllCharacters.AsQueryable()">
         <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-        <PropertyColumn Property="@(p => p.RaceString)" Title="Race" Sortable="true" />
-        <PropertyColumn Property="@(p => p.MasteryString)" Title="Mastery"  Sortable="true" />
-        <PropertyColumn Property="@(p => p.StatusString)" Title="Status"  Sortable="true" />
     </QuickGrid>
     <br />
-  
-
-
 
 } else {
-    <p>No game loaded create a new or load an existing game</p>
+    <p>No characters in the game</p>
 }
+
+<button @onclick="StartGame"> Start Game  </button>
 
 
 @code {
     private ActiveGameContainer _activeGame = ActiveGameContainer.GetGameInstance;
-    private GameMaster gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+
+
+    private async void StartGame()
+    {
+        var gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+        await gameMaster.Hub.Send<StartGameMessage>(new StartGameMessage(gameMaster.Game.Name) {  }); 
+    }
+
+    private void IndicateTurn()
+    {
+
+
+     // take from queue and find connectionId    
+    
+    }
 
 }
+

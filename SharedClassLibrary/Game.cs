@@ -18,7 +18,7 @@ namespace SharedClassLibrary
         public List<Player> HumanPlayers { get; set; } = new List<Player>() { };
 
         public List<Npc> NonHumanPlayers { get; set; } = new List<Npc>() { };
-
+        
         public List<Character> AllCharacters
         {
             get

@@ -4,7 +4,7 @@ using SharedClassLibrary.Actions;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.Exceptions;
 using DonBlazor.Client;
-
+using System.Diagnostics;
 
 namespace DonBlazor.Client
 {
@@ -23,6 +23,8 @@ namespace DonBlazor.Client
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
         public Queue<Character> Queue { get; set; }
         public Game Game { get => _game; set => _game = value; }
+
+        public Dictionary<string, string> connectionsId = new Dictionary<string, string>() { };
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -168,6 +170,8 @@ namespace DonBlazor.Client
 
         public void AddCharacterToGame(Character characterToAdd)
         {
+
+            Console.WriteLine("in addCharacter");
             SetMaxValuesBasedOnMainStats(characterToAdd);
 
             if (characterToAdd is Player)
@@ -178,6 +182,8 @@ namespace DonBlazor.Client
             {
                 Game.NonHumanPlayers.Add((Npc)characterToAdd);
             }
+
+            Console.WriteLine("numbers of characteres in game: " + Game.AllCharacters.Count);
         }
 
         public void SetMaxValuesBasedOnMainStats(Character character)
@@ -191,15 +197,14 @@ namespace DonBlazor.Client
         public void StartEncounter()
         {
             Queue = new Queue<Character>(Game.AllCharacters);
-            Game.CharacterToAct = Queue.Dequeue();
-            Queue.Enqueue(Game.CharacterToAct);
-
+            Game.CharacterToAct = Queue.Peek();
         }
 
         public void EndTurn()
         {
             Game.CharacterToAct = Queue.Dequeue();
             Queue.Enqueue(Game.CharacterToAct);
+           // Game.CharacterToAct.
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SharedClassLibrary.Actions
 
         public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
         {
-            reciever.RecieveInspiration(sender.CalculateInspiration());
+            reciever.RecieveInspiration(sender.CalculateInspiration(diceValue));
             return true;
         }
     }

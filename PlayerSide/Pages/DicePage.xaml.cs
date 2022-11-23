@@ -16,7 +16,7 @@ public partial class DicePage : ContentPage
     async void OnCupRolled(object sender, EventArgs e)
     {
         if (MauiProgram.Hub is not null && MauiProgram.Hub.IsConnected)
-            await MauiProgram.Hub.Send(new DiceRolledMessage(_cup));
+            await MauiProgram.Hub.Send(new ActionMessage(_cup));
         ToggleIsEnable(true);
     }
 

@@ -15,7 +15,7 @@ namespace SharedClassLibrary.Actions
 
         public override bool MakeBasicAction(int diceValue, Character sender, Character reciever)
         {
-            reciever.RecieveHealing(sender.CalculateHealing());
+            reciever.RecieveHealing(sender.CalculateHealing(diceValue));
             return true;
         }
     }

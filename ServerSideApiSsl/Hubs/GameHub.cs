@@ -69,7 +69,7 @@ namespace ServerSideApiSsl.Hubs
                 await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });  
         }
 
-        public async Task DiceEvent(DiceRolledMessage msg) // To Don from Maui
+        public async Task DiceEvent(ActionMessage msg) // To Don from Maui
         {
             msg.ConnectionId = Context.ConnectionId;
             await Clients.OthersInGroup(msg.SessionKey).SendAsync("DiceEvent", msg);
