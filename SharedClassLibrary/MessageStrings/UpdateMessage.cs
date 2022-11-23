@@ -1,12 +1,7 @@
 ﻿using SharedClassLibrary.Actions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharedClassLibrary.MessageStrings
-{   
+{
     public class UpdateMessage : Message
     {
 

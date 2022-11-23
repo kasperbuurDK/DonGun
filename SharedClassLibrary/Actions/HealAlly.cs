@@ -1,11 +1,4 @@
-﻿using SharedClassLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedClassLibrary.Actions
+﻿namespace SharedClassLibrary.Actions
 {
     public class HealAlly : HelperAction
     {

@@ -1,13 +1,6 @@
-﻿using SharedClassLibrary;
-using SharedClassLibrary.Exceptions;
+﻿using DonBlazor.Client;
+using SharedClassLibrary;
 using SharedClassLibrary.AuxUtils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharedClassLibrary.Actions;
-using DonBlazor.Client;
 
 namespace DonGunTest
 {
@@ -44,7 +37,7 @@ namespace DonGunTest
             _gameMaster.AddCharacterToGame(new Npc()
             {
                 Position = new Position(_mainCharacter.Position.X - 1, _mainCharacter.Position.Y - 1),
-                Team = _mainCharacter.Team +1,
+                Team = _mainCharacter.Team + 1,
             });
 
         }
@@ -67,7 +60,7 @@ namespace DonGunTest
         public void Character_moves_correct(MoveDirections direction, int distance, int endX, int endY)
         {
             _gameMaster.Move(_mainCharacter, direction, distance);
-            
+
             Assert.That(_mainCharacter.Position, Is.EqualTo(new Position(endX, endY)));
         }
 
@@ -80,7 +73,7 @@ namespace DonGunTest
 
             // Act
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 1);
-            
+
             // Assert
             Assert.That(_mainCharacter.MpCur, Is.EqualTo(8));
         }
@@ -89,22 +82,22 @@ namespace DonGunTest
         [TestCase(MoveDirections.North, MoveDirections.East, 1)]
         [TestCase(MoveDirections.North, MoveDirections.East, 1)]
         [TestCase(MoveDirections.North, MoveDirections.North, 0)]
-        
+
         [TestCase(MoveDirections.South, MoveDirections.North, 2)]
         [TestCase(MoveDirections.South, MoveDirections.West, 1)]
         [TestCase(MoveDirections.South, MoveDirections.East, 1)]
         [TestCase(MoveDirections.South, MoveDirections.South, 0)]
-        
+
         [TestCase(MoveDirections.East, MoveDirections.West, 2)]
         [TestCase(MoveDirections.East, MoveDirections.North, 1)]
         [TestCase(MoveDirections.East, MoveDirections.South, 1)]
         [TestCase(MoveDirections.East, MoveDirections.East, 0)]
-        
+
         [TestCase(MoveDirections.West, MoveDirections.East, 2)]
         [TestCase(MoveDirections.West, MoveDirections.North, 1)]
         [TestCase(MoveDirections.West, MoveDirections.South, 1)]
         [TestCase(MoveDirections.West, MoveDirections.West, 0)]
-         
+
         public void Turning_consumes_correct_MP(MoveDirections startFacing, MoveDirections turnTo, int expectedCost)
         {
             // Arrange
@@ -112,7 +105,7 @@ namespace DonGunTest
 
             // Act
             _gameMaster.Move(_mainCharacter, turnTo, 0);
-            
+
             // Assert
             Assert.That(_mainCharacter.MpCur, Is.EqualTo(10 - expectedCost));
         }
@@ -125,23 +118,23 @@ namespace DonGunTest
 
             // Act
             string moveStatus = _gameMaster.Move(_mainCharacter, MoveDirections.South, 4);
-            
+
             // Assert
             Assert.That(_mainCharacter.MpCur, Is.EqualTo(10 - expectedCost));
         }
 
         [Test]
-        public void Using_to_many_MP_is_not_OK() 
+        public void Using_to_many_MP_is_not_OK()
         {
             _mainCharacter.Facing = MoveDirections.North;
-              
+
             Assert.That(_gameMaster.Move(_mainCharacter, MoveDirections.North, 20), Is.Not.EqualTo("OK"));
         }
-        
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(10)]
-        public void Current_character_see_all_in_range(int noOfOtherCharacteres) 
+        public void Current_character_see_all_in_range(int noOfOtherCharacteres)
         {
             _mainCharacter.Position = new Position(10, 10);
             _mainCharacter.SightRange = 100;
@@ -155,13 +148,13 @@ namespace DonGunTest
 
                 _gameMaster.AddCharacterToGame(otherCharacter);
             }
-            
+
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
             Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(noOfOtherCharacteres));
         }
-        
+
         [Test]
-        public void Current_character_dont_see_any_when_there_are_none_in_range() 
+        public void Current_character_dont_see_any_when_there_are_none_in_range()
         {
 
             _mainCharacter.SightRange = 2;
@@ -172,7 +165,7 @@ namespace DonGunTest
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
             Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(0));
         }
-        
+
         [Test]
         public void Current_character_only_see_others_in_range()
         {
@@ -193,34 +186,34 @@ namespace DonGunTest
         }
 
         [Test]
-        public void If_teammember_in_sight_character_can_make_a_HelpAction() 
+        public void If_teammember_in_sight_character_can_make_a_HelpAction()
         {
             CreateNewFriendNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-     
+
             Assert.That(_gameMaster.PossibleHelperActions?.Count, Is.GreaterThan(0));
         }
-        
+
         [Test]
-        public void If_non_team_member_in_sight_character_can_make_an_OffensiveAction() 
+        public void If_non_team_member_in_sight_character_can_make_an_OffensiveAction()
         {
             CreateNewEnemyNearby();
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-        
+
             Assert.That(_gameMaster.PossibleOffensiveActions?.Count, Is.GreaterThan(0));
         }
 
-        
+
 
         [TestCase(1)]
         [TestCase(5)]
         [TestCase(10)]
-        public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit(int distanceToMainChar) 
+        public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit(int distanceToMainChar)
         {
             int timesTakingAction = 1000000;
 
-            Npc npc = new Npc() 
-            { 
+            Npc npc = new Npc()
+            {
                 Position = new Position(_mainCharacter.Position.X - distanceToMainChar, _mainCharacter.Position.Y),
                 Team = 1,
             };
@@ -230,17 +223,20 @@ namespace DonGunTest
 
             int timesHit = 0;
             int diceValue = 10;
-            
+
             Parallel.For(0, timesTakingAction,
-                           index => {
-                               if (_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, npc)) {
-                                     Interlocked.Add(ref timesHit, 1); }
+                           index =>
+                           {
+                               if (_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, npc))
+                               {
+                                   Interlocked.Add(ref timesHit, 1);
+                               }
                            }
                            );
-            
-            
-            int minBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced/100 * 0.98f);
-            int maxBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced/100 * 1.02f);
+
+
+            int minBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced / 100 * 0.98f);
+            int maxBoundary = (int)(timesTakingAction * _gameMaster.PossibleOffensiveActions[0].ChanceToSucced / 100 * 1.02f);
 
             if (maxBoundary > timesTakingAction) { maxBoundary = timesTakingAction; }
             if (minBoundary > timesTakingAction) { minBoundary = timesTakingAction; }
@@ -256,15 +252,15 @@ namespace DonGunTest
 
             int startHealth = 100;
             int diceValue = 10;
-         
+
             CreateNewEnemyNearby();
             Npc enemyCharacter = _game.NonHumanPlayers[0];
             enemyCharacter.HealthMax = startHealth;
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
             while (!_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, enemyCharacter))
-            
-            Assert.That(enemyCharacter.HealthCurrent, Is.LessThan(startHealth));
+
+                Assert.That(enemyCharacter.HealthCurrent, Is.LessThan(startHealth));
         }
 
 
@@ -277,7 +273,7 @@ namespace DonGunTest
             Assert.That(_gameMaster.PossibleHelperActions.Count, Is.GreaterThan(0));
         }
 
-        
+
         [Test]
         public void Player_can_heal_Ally()
         {
@@ -291,13 +287,13 @@ namespace DonGunTest
             var actions = _gameMaster.PossibleHelperActions;
             var theSig = _mainCharacter.PossibleHelperActionsSignatures[0];
 
-            var theAction = actions.Find(act => act.Signature == theSig); 
-               
+            var theAction = actions.Find(act => act.Signature == theSig);
+
             theAction.MakeBasicAction(diceValue, _mainCharacter, friend);
 
             Assert.That(friend.HealthCurrent, Is.GreaterThan(startHealth));
         }
-        
+
 
 
 

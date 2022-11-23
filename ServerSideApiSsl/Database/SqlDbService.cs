@@ -1,23 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Data.SqlClient;
-using System.Collections.Concurrent;
-using System.ComponentModel;
-using SharedClassLibrary;
-using User = SharedClassLibrary.User;
-using System.Data.Common;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using SharedClassLibrary;
 using System.Data;
-using System.Reflection;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.Net;
-using System.Web;
-using DevExpress.DirectX.NativeInterop.Direct2D.CCW;
-using SharedClassLibrary.MessageStrings;
-using System.Security.Cryptography;
-using System.Drawing;
-using System.Data.SqlTypes;
-using DevExpress.XtraExport;
+using User = SharedClassLibrary.User;
 
 namespace ServerSideApiSsl.Database
 {
@@ -310,11 +296,13 @@ namespace ServerSideApiSsl.Database
             {
                 type = TypeCode.Player;
                 jsonData = p.TypeToJson();
-            } else if (data is Npc n)
+            }
+            else if (data is Npc n)
             {
                 type = TypeCode.Npc;
                 jsonData = n.TypeToJson();
-            } else
+            }
+            else
             {
                 throw new ArgumentException("Not a valid object type", nameof(data));
             }
@@ -334,7 +322,7 @@ namespace ServerSideApiSsl.Database
             try
             {
                 int rowsAffected = SetDataTable(_cmd);
-                if ( rowsAffected >= 1 )
+                if (rowsAffected >= 1)
                 {
                     return (int)HttpStatusCode.OK;
                 }

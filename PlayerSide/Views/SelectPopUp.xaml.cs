@@ -1,6 +1,4 @@
 using CommunityToolkit.Maui.Views;
-using DevExpress.Xpo.DB;
-using SharedClassLibrary;
 
 namespace PlayerSide.Views;
 
@@ -9,13 +7,13 @@ public partial class SelectPopUp : Popup
     private int? _selected;
     private Border priSelected = new();
     public SelectPopUp()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         CreateContent();
-	}
+    }
 
-	private void CreateContent()
-	{
+    private void CreateContent()
+    {
         _selected = null;
         foreach (KeyValuePair<int, MauiPlayer> p in MauiProgram.Sheets)
         {
@@ -47,7 +45,7 @@ public partial class SelectPopUp : Popup
         }
     }
 
-	void OnJoinButtonClicked(object sender, EventArgs e) => Close(_selected);
+    void OnJoinButtonClicked(object sender, EventArgs e) => Close(_selected);
 
     void OnCancelButtonClicked(object sender, EventArgs e) => Close(null);
 }

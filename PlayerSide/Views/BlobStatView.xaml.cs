@@ -1,6 +1,3 @@
-using SharedClassLibrary;
-using System;
-
 namespace PlayerSide.Views;
 
 public partial class BlobStatView : ContentView
@@ -30,7 +27,7 @@ public partial class BlobStatView : ContentView
         set => SetValue(textImage, value);
     }
     public BlobStatView()
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
 }

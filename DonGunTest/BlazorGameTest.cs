@@ -1,12 +1,6 @@
-using DonBlazor;
-using System;
-using NUnit.Framework;
-using DonBlazor.Models;
+using DonBlazor.Client;
 using DonBlazor.Containers;
 using SharedClassLibrary;
-using System.Numerics;
-using SharedClassLibrary.Exceptions;
-using DonBlazor.Client;
 
 namespace DonGunTest
 {
@@ -19,13 +13,13 @@ namespace DonGunTest
         [SetUp]
         public void SetUp()
         {
-            _gameMaster= new GameMaster();
+            _gameMaster = new GameMaster();
 
             _activeGame = ActiveGameContainer.GetGameInstance;
             _activeGame.Name = "Active test";
             _activeGame.HumanPlayers = new List<Player> { };
             _activeGame.NonHumanPlayers = new List<Npc> { };
-            _activeGame.Created = DateTime.Now; 
+            _activeGame.Created = DateTime.Now;
             _activeGame.LastSaved = DateTime.Now;
             _activeGame.CurrentTurn = 999;
         }
@@ -52,12 +46,12 @@ namespace DonGunTest
 
         [TestCase(1)]
         [TestCase(5)]
-        public void Adding_New_Players_Result_In_Correct_Number (int numberOfPlayersToAdd) 
+        public void Adding_New_Players_Result_In_Correct_Number(int numberOfPlayersToAdd)
         {
-            for (int i = 0; i < numberOfPlayersToAdd; i++) 
+            for (int i = 0; i < numberOfPlayersToAdd; i++)
             {
                 Player player = new Player($"player{i}");
-               
+
             }
 
             Assert.That(_activeGame.HumanPlayers.Count, Is.EqualTo(numberOfPlayersToAdd));
@@ -73,7 +67,7 @@ namespace DonGunTest
             Assert.That(_activeGame.Name, Is.EqualTo("Empty Game"));
         }
 
-        
+
 
         [Test]
         public void AllCharacters_Are_The_Sum_Of_Human_And_NPCs()

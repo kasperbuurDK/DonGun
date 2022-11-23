@@ -17,7 +17,7 @@
 
         private void SetStatsAccordingToType(NPCtype type)
         {
-            
+
         }
 
         public NPCtype Type { get; set; }

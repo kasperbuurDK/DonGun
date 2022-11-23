@@ -8,9 +8,9 @@
         UndeadLich
     }
 
-    public struct OrcBase 
+    public struct OrcBase
     {
-        
+
     }
 
 }

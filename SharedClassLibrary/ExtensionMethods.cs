@@ -1,11 +1,6 @@
-﻿using System.Data;
-using System.Net.Http.Json;
+﻿using Newtonsoft.Json;
+using System.Data;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Principal;
-using System.Text.Json;
-using DevExpress.DirectX.Common;
-using Newtonsoft.Json;
 
 namespace SharedClassLibrary
 {
@@ -68,7 +63,7 @@ namespace SharedClassLibrary
         public static T CopyObject<T>(this T obj) where T : class, new()
         {
             string clone = obj.TypeToJson();
-            return clone.JsonToType<T>(); 
+            return clone.JsonToType<T>();
         }
 
         public static TC DownCast<TP, TC>(this TP parent) where TC : TP, new()
