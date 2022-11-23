@@ -1,0 +1,36 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:PlayerSide.Views"
+             x:Class="PlayerSide.Pages.OrderPage"
+             Title="Order"
+             IconImageSource="char_icon">
+    <Grid x:Name="MainGrid"
+            Padding="2"
+          RowSpacing="2"
+          ColumnSpacing="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="backgroundImage"
+               Aspect="Fill"
+               Source="gray_wood"
+               Grid.RowSpan="2" />
+        <Border Grid.Row="1"
+                Stroke="Black"
+                StrokeThickness="3"
+                BackgroundColor="Transparent"
+                Padding="5">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10" />
+            </Border.StrokeShape>
+            <ScrollView Padding="0"
+                        Margin="0,0,0,0">
+                <StackLayout Padding="2"></StackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+</ContentPage>

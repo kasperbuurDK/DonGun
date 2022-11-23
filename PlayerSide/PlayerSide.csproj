@@ -19,15 +19,75 @@
 		<ApplicationIdGuid>7B72C07E-9324-4C7B-BBE8-9499C004A0D7</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<AndroidSigningKeyStore>key.keystore</AndroidSigningKeyStore>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-ios|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-maccatalyst|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-maccatalyst|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows10.0.19041.0|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows10.0.19041.0|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningStorePass>dongun</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>dongun</AndroidSigningKeyPass>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -39,7 +99,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -48,4 +107,127 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\ImagePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ModSheetPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MovePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\OptionsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\UserPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\BlobStatView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CharView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\OrderPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\DicePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DiceSelectView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SelectPopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SheetView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+    <MauiImage Include="Resources\Images\char\*" />
+    <MauiImage Include="Resources\Images\deight\*" />
+    <MauiImage Include="Resources\Images\dfour\*" />
+    <MauiImage Include="Resources\Images\dhundred\*" />
+    <MauiImage Include="Resources\Images\dsix\*" />
+    <MauiImage Include="Resources\Images\dtwelve\*" />
+    <MauiImage Include="Resources\Images\dtwenty\*" />
+    <MauiImage Include="Resources\Images\sheet\*" />
+    <MauiImage Include="Resources\Images\table\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Remove="Models\**" />
+	  <Compile Remove="Models\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <MauiCss Remove="Models\**" />
+	  <MauiXaml Remove="Models\**" />
+	  <None Remove="Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="appsettings.json" />
+	  <None Remove="Platforms\Android\Resources\xml\auto_backup_rules.xml" />
+	  <None Remove="Resources\Fonts\DalelandsUncial-BOpn.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialBold-82zA.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialBoldItalic-YKgL.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensed-rWYK.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedBold-MEyv.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedBoldItalic-Kpye.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialCondensedItalic-2BrX.ttf" />
+	  <None Remove="Resources\Fonts\DalelandsUncialItalic-vG2L.ttf" />
+	  <None Remove="Resources\Fonts\Iokharic-dqvK.ttf" />
+	  <None Remove="Resources\Fonts\IokharicBold-Plor.ttf" />
+	  <None Remove="Resources\Fonts\IokharicBoldItalic-LGmZ.ttf" />
+	  <None Remove="Resources\Fonts\IokharicItalic-XMdd.ttf" />
+	  <None Remove="Resources\Images\table\order_icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Pages\MainPage.xaml.cs">
+	    <DependentUpon>MainPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\SheetPage.xaml.cs">
+	    <DependentUpon>SheetPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\BlobStatView.xaml.cs">
+	    <DependentUpon>BlobStatView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\OrderPage.xaml.cs">
+	    <DependentUpon>OrderPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlayerSideHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 </Project>

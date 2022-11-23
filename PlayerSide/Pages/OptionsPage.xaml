@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Pages.OptionsPage">
+    <Grid>
+        <VerticalStackLayout Spacing="10"
+                             Padding="10">
+            <Button x:Name="logoutBtn"
+                    Text="Logout"
+                    Clicked="LogoutBtnClicked" />
+            <Button x:Name="SendFileUpEvent"
+                    Text="DG_SendFileUpdateEvent"
+                    Clicked="SendFileUpdateBtnClicked" />
+            <Button x:Name="UserOptions"
+                    Text="User options"
+                    Clicked="UserOptionsBtnClicked" />
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Entry x:Name="SKey"
+                       TextChanged="EntryTextChanged"
+                       Grid.Column="1"/>
+                <Button x:Name="Join"
+                        Text="Join Room"
+                        Clicked="JoinBtnClicked" />
+            </Grid>
+            <Button x:Name="Leave"
+                    Text="Leave Room"
+                    Clicked="LeaveBtnClicked" />
+            <Button x:Name="deleteUserAct"
+                    Text="Remove Acount"
+                    Clicked="RemoveActBtnClicked" />
+            <Label x:Name="ErrorLabel"
+                    TextColor="{StaticResource ErrorRed}"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

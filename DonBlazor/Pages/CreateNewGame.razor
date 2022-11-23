@@ -1,0 +1,113 @@
+﻿@page "/createnewgame"
+@using Models;
+@using SharedClassLibrary;
+@using Containers;
+@using System.Text;
+@using SharedClassLibrary.MessageStrings;
+@inject NavigationManager Navigation
+
+<PageTitle>Create New Game</PageTitle>
+
+<h1>Welcome Don!</h1>
+
+<p> Game Name </p>
+<input placeholder="Give the game a name" @bind="gameName" />
+
+@if (npcsInGame.Count == 0)
+{
+    <p><em>You have not added any NPCs to the game</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Race</th>
+                <th>Mastery</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var npc in npcsInGame)
+            {
+                <tr>
+                    <td>@npc.Type</td>    // TODO add more here
+                    <td>@npc.Number</td>    // TODO add more here
+                </tr>
+            }
+        </tbody>
+        
+    </table>
+    
+}
+<input placeholder="Add a player name" @bind="playerName" />
+<button @onclick="AddNpc">Add PLayer</button>
+
+<br />
+
+<button @onclick="CreateGame" >Create Game</button>
+
+
+
+@code{
+
+    private string? playerName;
+    private string? gameName;
+    private List<Npc> npcsInGame = new List<Npc>() {};
+    private string? createGameStatus = "";
+    private StringBuilder creationStatus = new StringBuilder("");
+
+    ActiveGameContainer? activeGame;
+
+    private void AddNpc() 
+    {
+        if (playerName != null) {
+            Npc newPlayer = new Npc();
+            // Should be made possisble to choose
+            npcsInGame.Add(newPlayer);
+
+        } else {
+            WarnOfSomethingWrong("Player must have a name");
+        }
+    }
+
+    private async void CreateGame()
+    {
+        bool allGood = true;
+
+        Game newGame = new();
+        var _gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+
+
+        if (!String.IsNullOrEmpty(gameName)) {
+            newGame.Name = gameName;
+        }
+        else {
+            creationStatus.Append("Game must have a name");
+            allGood = false;
+        }
+
+        if (allGood)
+        {
+            _gameMaster.Game = newGame;
+            // Add loading screen
+            await _gameMaster.SetupHub(newGame.Name);
+            createGameStatus = "Created game succesfully";
+            
+            await _gameMaster.Hub.Send(new FileUpdateMessage(newGame.Name));
+            
+            Navigation.NavigateTo("/activegame");
+        }
+        else {
+
+            WarnOfSomethingWrong(creationStatus.ToString());
+        }
+    }
+
+    private void WarnOfSomethingWrong(string message) 
+    {
+        // MAKE SOME KIND OF ALERT
+    }
+
+}
