@@ -204,9 +204,9 @@ namespace SharedClassLibrary
             if (_hpCur > _hpMax) _hpCur = _hpMax;
         }
 
-        internal int CalculateHealing()
+        internal int CalculateHealing(int diceValue)
         {
-            return (_cha * RandomRange(3,9))/3; 
+            return (_cha * RandomRange(3,9))/3 + diceValue; 
         }
 
         internal void RecieveInspiration(int inspiration)
@@ -214,14 +214,15 @@ namespace SharedClassLibrary
             throw new NotImplementedException();
         }
 
-        internal int CalculateInspiration()
+        internal int CalculateInspiration(int diceValue)
         {
-            return (_cha * RandomRange(3,9))/3;
+            return (_cha * RandomRange(3,9))/3 + diceValue;
         }
 
         public override string ToString()
         {
-            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}]");
+            return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}] \n" +
+                $"sign: {Signature} - Team: {Team}" );
         }       
     }
 }

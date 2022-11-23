@@ -18,12 +18,14 @@ namespace SharedClassLibrary
         // Events
         public event EventHandler<HubEventArgs<FileUpdateMessage>>? FileEvent;
         public event EventHandler<HubEventArgs<MoveMessage>>? MoveEvent;
-        public event EventHandler<HubEventArgs<DiceRolledMessage>>? DiceEvent;
-       // public event EventHandler<HubEventArgs<StandardMessages>>? ErrorEvent;
+        public event EventHandler<HubEventArgs<ActionMessage>>? ActionEvent;
         public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
-        public event EventHandler<HubEventArgs<StartGameMessage>>? StartGameEvetnHandler;
+        public event EventHandler<HubEventArgs<StartGameMessage>>? StartGame;
         public event EventHandler<HubEventArgs<GameSessionOptions>>? JoinEvent;
+        public event EventHandler<HubEventArgs<NewTurnMessage>>? NewTurnEvent;
+        public event EventHandler<HubEventArgs<EndMyTurnMessage>>? EndTurnEvent;
+       
 
 
 
@@ -38,44 +40,52 @@ namespace SharedClassLibrary
                     })
                     .Build();
 
-            if (clientDon)
+            if (clientDon) // Only for web/don
             {
-                hubConnection.On<MoveMessage>("MoveEvent", msg =>
+                hubConnection.On<MoveMessage>(Message.MessageType.MoveEvent.ToString(), msg =>
                 {
                     MoveEvent?.Invoke(this, new HubEventArgs<MoveMessage>() { Messege = msg });
                 });
-                hubConnection.On<DiceRolledMessage>("DiceEvent", msg =>
+                hubConnection.On<ActionMessage>(Message.MessageType.ActionEvent.ToString(), msg =>
                 {
-                    DiceEvent?.Invoke(this, new HubEventArgs<DiceRolledMessage>() { Messege = msg });
+                    ActionEvent?.Invoke(this, new HubEventArgs<ActionMessage>() { Messege = msg });
                 });
-            }
-            hubConnection.On<FileUpdateMessage>("FileEvent", msg =>
-            {
-                FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
-            });
 
-            
-            // Error from Don
-            hubConnection.On<GameSessionOptions>("JoinEvent", msg =>
+                hubConnection.On<GameSessionOptions>("JoinEvent", msg =>
+                {
+                    JoinEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
+                });
+                
+                hubConnection.On<EndMyTurnMessage>(Message.MessageType.EndMyTurn.ToString(), msg =>
+                {
+                    EndTurnEvent?.Invoke(this, new HubEventArgs<EndMyTurnMessage>() { Messege = msg });
+                });
+
+
+            } 
+            else  // Only for Mob users
             {
-                JoinEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
-            });
-           
-            hubConnection.On<UpdateMessage>("UpdateEvent", msg =>
-            {
-                UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
-            });
-            
+                hubConnection.On<StartGameMessage>(Message.MessageType.StartGame.ToString(), msg =>
+                {
+                    StartGame?.Invoke(this, new HubEventArgs<StartGameMessage>() { Messege = msg });
+                });
+                
+                hubConnection.On<NewTurnMessage>(Message.MessageType.NewTurn.ToString(), msg =>
+                {
+                    NewTurnEvent?.Invoke(this, new HubEventArgs<NewTurnMessage>() { Messege = msg });
+                });
+                
+                hubConnection.On<UpdateMessage>(Message.MessageType.UpdateEvent.ToString(), msg =>
+                {
+                    UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
+                });
+
+            }
 
             // Exception from hub system
             hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
             {
                 ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });
-            });
-
-            hubConnection.On<StartGameMessage>("StartGame", msg =>
-            {
-                StartGameEvetnHandler?.Invoke(this, new HubEventArgs<StartGameMessage>() { Messege = msg });
             });
 
         }

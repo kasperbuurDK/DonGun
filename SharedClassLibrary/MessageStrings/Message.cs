@@ -29,11 +29,13 @@ namespace SharedClassLibrary.MessageStrings
         {
             ErrorEvent,
             FileEvent,
-            DiceEvent,
+            ActionEvent,
             StdEvent,
             MoveEvent,
             UpdateEvent,
-            StartGame
+            StartGame,
+            NewTurn,
+            EndMyTurn
         }
 
         public override string ToString()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedClassLibrary.MessageStrings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,18 +8,25 @@ using static SharedClassLibrary.MessageStrings.Message;
 
 namespace SharedClassLibrary.MessageStrings
 {
-    public class StartGameMessage: Message
+    public class EndMyTurnMessage : Message
     {
-        public StartGameMessage(string sessionKey) : base(MessageType.StartGame, sessionKey)
+
+        public EndMyTurnMessage(string sessionKey) : base(MessageType.EndMyTurn, sessionKey)
         {
 
         }
-        
-        
+
         public override string ToString()
         {
-            return string.Format($"{base.ToString()} - Game Started {DateTime.Now}");
+            return string.Format($"{base.ToString()} - {UserName}'s Turn Ended {DateTime.Now}");
         }
 
     }
 }
+
+
+
+
+
+
+  
