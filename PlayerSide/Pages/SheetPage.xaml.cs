@@ -7,31 +7,32 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private SheetView? _cVChild;
-
     public SheetPage()
     {
         InitializeComponent();
-        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
+        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => ShowView(args.Messege));
+        //MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => ShowView(args.Messege));
     }
 
-    public SheetPage(MauiPlayer mPChild) : this()
-    {
-        _cVChild = new SheetView(mPChild);
-        MainGridSheet.Add(_cVChild);
-    }
-
-    public void SetCharView(HubServiceException args)
+    private void ShowView(HubServiceException args)
     {
         if (args.ActionName == "JoinGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
         {
-            var tabbedpage = Parent as TabbedPage;
-            tabbedpage.Children.Remove(this);
-            tabbedpage.Children.Insert(0, new SheetPage(MauiProgram.Sheet));
+            MainGrid.Opacity = 1;
+            if (string.IsNullOrEmpty(MauiProgram.Sheet.ImageName))
+                MauiProgram.Sheet.ImageName = "no_data.png";
+            CharaImg.Source = MauiProgram.Sheet.ImageName;
+            NameText.Text = MauiProgram.Sheet.Name;
+            IconDex.Text = MauiProgram.Sheet.Dexterity.ToString();
+            IconStr.Text = MauiProgram.Sheet.Strength.ToString();
+            IconWis.Text = MauiProgram.Sheet.Wisdome.ToString();
+            IconInt.Text = MauiProgram.Sheet.Intelligence.ToString();
+            IconCon.Text = MauiProgram.Sheet.Constitution.ToString();
+            IconCha.Text = MauiProgram.Sheet.Charisma.ToString();
         }
         if (args.ActionName == "LeaveGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
         {
-            MainGridSheet.Remove(_cVChild);
+            MainGrid.Opacity = 0;
         }
     }
 }
