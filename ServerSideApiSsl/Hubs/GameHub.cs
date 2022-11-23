@@ -16,6 +16,7 @@ namespace ServerSideApiSsl.Hubs
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, options.SessionKey);
                 await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = $"{options.Sheet.Name} Joined room {options.SessionKey}", ActionName = nameof(JoinGameRoom) });
+                await Clients.OthersInGroup(options.SessionKey).SendAsync("JoinEvent", new GameSessionOptions() { ConnectionId = Context.ConnectionId, Sheet = options.Sheet, UserName = options.UserName });
             }
             else
             {
@@ -51,15 +52,6 @@ namespace ServerSideApiSsl.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
-        public async Task ErrorEvent(StandardMessages msg) // From Don to Maui
-        {
-            if (msg.ConnectionId != null)
-            {
-                await Clients.Client(msg.ConnectionId).SendAsync("ErrorEvent", msg);
-                //Debug echo
-                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
-            }
-        }
 
         public async Task UpdateEvent(UpdateMessage msg) // From Don to Maui
         {

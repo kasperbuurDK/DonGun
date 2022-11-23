@@ -23,6 +23,8 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<UpdateMessage>>? UpdateEvent;
         public event EventHandler<HubEventArgs<HubServiceException>>? ExceptionHandlerEvent;
         public event EventHandler<HubEventArgs<StartGameMessage>>? StartGameEvetnHandler;
+        public event EventHandler<HubEventArgs<GameSessionOptions>>? JoinEvent;
+
 
 
         // Constructor
@@ -52,13 +54,13 @@ namespace SharedClassLibrary
                 FileEvent?.Invoke(this, new HubEventArgs<FileUpdateMessage>() { Messege = msg });
             });
 
-            /*
+            
             // Error from Don
-            hubConnection.On<StandardMessages>("ErrorEvent", msg =>
+            hubConnection.On<GameSessionOptions>("JoinEvent", msg =>
             {
-                ErrorEvent?.Invoke(this, new HubEventArgs<StandardMessages>() { Messege = msg });
+                JoinEvent?.Invoke(this, new HubEventArgs<GameSessionOptions>() { Messege = msg });
             });
-           */
+           
             hubConnection.On<UpdateMessage>("UpdateEvent", msg =>
             {
                 UpdateEvent?.Invoke(this, new HubEventArgs<UpdateMessage>() { Messege = msg });
