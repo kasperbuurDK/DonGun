@@ -10,13 +10,14 @@ public partial class OrderPage : ContentPage
     public OrderPage()
     {
         InitializeComponent();
-        MauiProgram.Hub.StartGameEvetnHandler += (sender, args) => MainThread.InvokeOnMainThreadAsync(() => RefreshQueue(args.Messege.theQueue));
+        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue));
         MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
     }
 
     public void RefreshQueue(Queue<Character> q)
     {
         Queue = q;
+        MauiProgram.GameOrder = q;
         QueueStackLayout.Clear();
         foreach (Character p in Queue)
         {

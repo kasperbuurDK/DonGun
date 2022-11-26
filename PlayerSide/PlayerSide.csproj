@@ -152,6 +152,9 @@
 	  <MauiXaml Update="Pages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\DicePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SelectPopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -219,6 +222,9 @@
 	  </Compile>
 	  <Compile Update="Pages\OrderPage.xaml.cs">
 	    <DependentUpon>OrderPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\DicePopUp.xaml.cs">
+	    <DependentUpon>DicePopUp.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

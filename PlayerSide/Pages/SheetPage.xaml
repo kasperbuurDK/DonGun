@@ -9,7 +9,7 @@
     <Grid BackgroundColor="WhiteSmoke"
           x:Name="MainGridSheet">
         <Image Source="simple_border"
-               VerticalOptions="Fill"
+               VerticalOptions=""
                BackgroundColor="Transparent"/>
         <Grid Padding="10"
               Margin="0,0,0,0"
@@ -91,29 +91,23 @@
             <custom:BlobStatView x:Name="IconCha"
                                  Border="main_stat_cha.png"
                                  Grid.Row="6" />
-            <Border Grid.Row="3"
-                    Grid.Column="1"
-                    Grid.RowSpan="4"
-                    Stroke="Black"
-                    StrokeThickness="3"
-                    BackgroundColor="Transparent"
-                    Padding="5">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="10,10,10,10" />
-                </Border.StrokeShape>
-                <ScrollView Padding="0"
-                            Margin="0,0,0,0">
-                    <StackLayout Padding="2">
-                        <Label x:Name="DebugLabel"
-                               FontSize="Medium"
-                               FontFamily="DalelandsRegular"
-                               TextColor="Black"
-                               BackgroundColor="Transparent"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
-                    </StackLayout>
-                </ScrollView>
-            </Border>
+            <Grid Grid.Row="3"
+                  Grid.Column="1"
+                  Grid.RowSpan="4">
+                <Border Stroke="Black"
+                        StrokeThickness="3"
+                        BackgroundColor="Transparent"
+                        Padding="5">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10,10,10,10" />
+                    </Border.StrokeShape>
+                    <ScrollView Padding="0"
+                                Margin="0,0,0,0">
+                        <StackLayout x:Name="SheetStackLayout"
+                                     Padding="2"></StackLayout>
+                    </ScrollView>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </ContentPage>

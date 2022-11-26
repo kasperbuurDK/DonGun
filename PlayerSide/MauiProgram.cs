@@ -10,7 +10,7 @@ public static class MauiProgram
     public static IServiceProvider Services { get; private set; }
     public static User Connectivity { get; set; }
     public static MauiPlayer? Sheet { get; set; }
-    public static List<Character> GameOrder { get; set; }
+    public static Queue<Character> GameOrder { get; set; }
     public static Dictionary<int, MauiPlayer> Sheets { get; set; }
     public static HubService Hub { get; set; }
 
