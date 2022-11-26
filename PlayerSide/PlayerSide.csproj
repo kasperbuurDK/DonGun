@@ -137,6 +137,9 @@
 	  <MauiXaml Update="Views\BlobStatView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\AnActionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CharView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -222,6 +225,9 @@
 	  </Compile>
 	  <Compile Update="Pages\OrderPage.xaml.cs">
 	    <DependentUpon>OrderPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\AnActionView.xaml.cs">
+	    <DependentUpon>AnActionView.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\DicePopUp.xaml.cs">
 	    <DependentUpon>DicePopUp.xaml</DependentUpon>

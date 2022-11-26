@@ -32,6 +32,9 @@
             <Button x:Name="deleteUserAct"
                     Text="Remove Acount"
                     Clicked="RemoveActBtnClicked" />
+            <Button x:Name="forceUpdate"
+                    Text="Update Action"
+                    Clicked="UpdateBtnClicked" />
             <Label x:Name="ErrorLabel"
                     TextColor="{StaticResource ErrorRed}"/>
         </VerticalStackLayout>

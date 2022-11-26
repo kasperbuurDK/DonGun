@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Views.AnActionView"
+             xmlns:local="clr-namespace:PlayerSide">
+    <ContentView.BindingContext>
+        <local:CharacterViewModel x:Name="charaBinding"/>
+    </ContentView.BindingContext>
+    <ContentView.Content>
+        <Frame CornerRadius="10"
+               HeightRequest="100"
+               Padding="5"
+               BackgroundColor="Transparent"
+               BorderColor="Transparent">
+            <Grid Padding="2"
+                  RowSpacing="2"
+                  ColumnSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2.5*" />
+                </Grid.ColumnDefinitions>
+                <Label x:Name="Res" />
+                <Label x:Name="Send"
+                       Grid.Row="1" />
+                <Label x:Name="Chance"
+                       Grid.Row="2" />
+                <Label x:Name="Sign"
+                       Grid.Column="1" />
+            </Grid>
+        </Frame>
+    </ContentView.Content>
+</ContentView>

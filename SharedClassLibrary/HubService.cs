@@ -11,6 +11,7 @@ namespace SharedClassLibrary
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+        public string? ConnectionId => hubConnection.ConnectionId;
         public string? SessionKey { get; set; }
         public GameSessionOptions GameOptions { get; set; } = new();
 
@@ -25,9 +26,6 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<GameSessionOptions>>? LeaveEvent;
         public event EventHandler<HubEventArgs<NewTurnMessage>>? NewTurnEvent;
         public event EventHandler<HubEventArgs<EndMyTurnMessage>>? EndTurnEvent;
-
-
-
 
         // Constructor
         public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon = false)

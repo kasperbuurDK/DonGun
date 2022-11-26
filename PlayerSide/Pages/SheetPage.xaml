@@ -9,7 +9,7 @@
     <Grid BackgroundColor="WhiteSmoke"
           x:Name="MainGridSheet">
         <Image Source="simple_border"
-               VerticalOptions=""
+               Aspect="Fill"
                BackgroundColor="Transparent"/>
         <Grid Padding="10"
               Margin="0,0,0,0"

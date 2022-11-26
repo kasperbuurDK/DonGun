@@ -23,13 +23,14 @@ public partial class SheetPage : ContentPage
     private void UpdateActionList(UpdateMessage messege)
     {
         SheetStackLayout.Clear();
+        if (messege.possibleActions is null || messege.possibleActions.Count == 0)
+            return;
         _selected = null;
         foreach (IAnAction p in messege.possibleActions)
         {
             Grid grid = new()
             {
-
-                //new AnActionView(p) // Need IanAction view
+                new AnActionView(p)
             };
             Button button = new() { Opacity = 0, Padding = 1 };
             Border border = new()
