@@ -105,6 +105,17 @@ namespace SharedClassLibrary
                 await hubConnection.StartAsync();
         }
 
+        // Methods
+        /// <summary>
+        /// Close Connection to Hub
+        /// </summary>
+        /// <returns></returns>
+        public async Task Close()
+        {
+            if (IsConnected)
+                await hubConnection.StopAsync();
+        }
+
         /// <summary>
         /// Join game room with sesstion key
         /// </summary>

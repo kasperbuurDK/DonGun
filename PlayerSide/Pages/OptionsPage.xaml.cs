@@ -4,6 +4,7 @@ using PlayerSide.Views;
 using SharedClassLibrary;
 using SharedClassLibrary.Actions;
 using SharedClassLibrary.MessageStrings;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Net;
 
@@ -48,30 +49,6 @@ public partial class OptionsPage : ContentPage
     private async void UserOptionsBtnClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new UserPage());
-    }
-
-    // Debug -- Remove
-    private async void UpdateBtnClicked(object sender, EventArgs e)
-    {
-        Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
-        string authHeder = await SecureStorage.Default.GetAsync("authHeader");
-        HubService don = new(authHeder, settings.BaseUrl, settings.HubUri, true);
-        await don.Initialise();
-        await don.JoinRoom(SKey.Text);
-        Queue<Character> myQ = new();
-        myQ.Enqueue(new Player() { Signature = "SomeDude1"});
-        myQ.Enqueue(new Npc() { Signature = "SomeDude2"});
-        List<string> misHaps = new() {"What ", "Is ", "This ", "For ", "? " };
-        NewTurnMessage msg = new(SKey.Text, myQ, misHaps);
-        await don.Send(msg);
-        UpdateMessage Umsg = new()
-        {
-            ConnectionId = MauiProgram.Hub.ConnectionId,
-            UpdateStr = "Hello?",
-            possibleActions = new List<IAnAction>()
-        };
-        Umsg.possibleActions.Add(new OffensiveAction("SomeDude1", "SomeDude2"));
-        await don.Send(Umsg);
     }
 
     private async void JoinBtnClicked(object sender, EventArgs e)

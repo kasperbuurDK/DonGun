@@ -103,8 +103,10 @@
                     </Border.StrokeShape>
                     <ScrollView Padding="0"
                                 Margin="0,0,0,0">
-                        <StackLayout x:Name="SheetStackLayout"
-                                     Padding="2"></StackLayout>
+                        <StackLayout x:Name="SheetActionStackLayout"
+                                     Padding="2">
+                            <Label Text="Action go here!" />
+                        </StackLayout>
                     </ScrollView>
                 </Border>
             </Grid>

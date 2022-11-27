@@ -10,7 +10,7 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private IAnAction _selected;
+    private AnAction _selected;
     private Border priSelected = new();
 
     public SheetPage()
@@ -22,11 +22,11 @@ public partial class SheetPage : ContentPage
 
     private void UpdateActionList(UpdateMessage messege)
     {
-        SheetStackLayout.Clear();
-        if (messege.possibleActions is null || messege.possibleActions.Count == 0)
+        SheetActionStackLayout.Clear();
+        if (messege.PossibleActionsJson is null || messege.PossibleActionsJson.JsonToType<List<AnAction>>().Count == 0)
             return;
         _selected = null;
-        foreach (IAnAction p in messege.possibleActions)
+        foreach (AnAction p in messege.PossibleActionsJson.JsonToType<List<AnAction>>())
         {
             Grid grid = new()
             {
@@ -46,7 +46,7 @@ public partial class SheetPage : ContentPage
                 if (!border.Equals(priSelected))
                 {
                     border.Stroke = Application.Current.Resources.MergedDictionaries.First()["Primary"] as Color;
-                    _selected = grid.Children.First() as IAnAction;
+                    _selected = grid.Children.First() as AnAction;
                     priSelected.Stroke = Color.Parse("Transparent");
                     priSelected = border;
                     // When double clcked, perfom popup for roll, and send.
@@ -56,7 +56,7 @@ public partial class SheetPage : ContentPage
                 }
             };
             grid.Add(border);
-            SheetStackLayout.Add(grid);
+            SheetActionStackLayout.Add(grid);
         }        
     }
 

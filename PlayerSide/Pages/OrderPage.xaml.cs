@@ -1,5 +1,7 @@
 using PlayerSide.Views;
 using SharedClassLibrary;
+using SharedClassLibrary.Actions;
+using SharedClassLibrary.MessageStrings;
 
 namespace PlayerSide.Pages;
 
@@ -10,8 +12,23 @@ public partial class OrderPage : ContentPage
     public OrderPage()
     {
         InitializeComponent();
-        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue));
+        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue.JsonToType<Queue<Character>>()));
+        MauiProgram.Hub.UpdateEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => UpdateActionList(args.Messege));
         MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
+    }
+
+    private void UpdateActionList(UpdateMessage messege)
+    {
+        if (messege.PossibleActionsJson is null || messege.PossibleActionsJson.JsonToType<List<AnAction>>().Count == 0)
+            return;
+        foreach (AnAction p in messege.PossibleActionsJson.JsonToType<List<AnAction>>())
+        {
+            Grid grid = new()
+                {
+                new AnActionView(p)
+            };
+            QueueStackLayout.Add(grid);
+        }
     }
 
     public void RefreshQueue(Queue<Character> q)
@@ -23,8 +40,8 @@ public partial class OrderPage : ContentPage
         {
             Grid grid = new()
                 {
-                    new CharView((MauiPlayer)p)
-                };
+                new CharView((MauiPlayer)p)
+            };
             QueueStackLayout.Add(grid);
         }
     }
