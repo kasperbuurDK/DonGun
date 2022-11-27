@@ -1,9 +1,10 @@
 using CommunityToolkit.Maui.Views;
-using Java.Lang;
 using Microsoft.Extensions.Configuration;
 using PlayerSide.Views;
 using SharedClassLibrary;
+using SharedClassLibrary.Actions;
 using SharedClassLibrary.MessageStrings;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Net;
 
@@ -23,6 +24,7 @@ public partial class OptionsPage : ContentPage
     {
         // Sent dirty data back to server.
         MauiProgram.Connectivity = null;
+        MauiProgram.Hub = null;
         Application.Current.MainPage = new LoginPage();
     }
 
@@ -67,6 +69,7 @@ public partial class OptionsPage : ContentPage
             }
             if (!string.IsNullOrEmpty(SKey.Text))
             {
+                MauiProgram.Sheet = MauiProgram.Sheets[IntResult];
                 await MauiProgram.Hub.JoinRoom(SKey.Text, MauiProgram.Sheets[IntResult]);
             }
         }
@@ -79,13 +82,16 @@ public partial class OptionsPage : ContentPage
         {
             SKey.IsEnabled = false;
             Join.IsEnabled = false;
+            UserOptions.IsEnabled = false;
         }
         if (args.ActionName == "LeaveGameRoom" && args.Code == (int)HttpStatusCode.OK)
         {
             SKey.IsEnabled = true;
             Join.IsEnabled = true;
+            UserOptions.IsEnabled = true ;
         }
     }
+
 
     private async void LeaveBtnClicked(object sender, EventArgs e)
     {

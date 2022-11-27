@@ -38,7 +38,7 @@ public partial class LoginPage : ContentPage
                 }
                 catch (Exception ex)
                 {
-                    errorLabel.Text = $"An error accured - Logger: \"{RestUserInfo.Logger}\"\n Ex: \"{ex.Message}\"";
+                    errorLabel.Text = $"An error accured - Logger: \"{RestUserInfo.Logger}\"\n Ex: \"{ex.Message}\" - \"{ex.InnerException}\"";
                 }
                 if (RestUserInfo.Response is not null && RestUserInfo.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     errorLabel.Text = "Invalid Username or Password!";

@@ -1,3 +1,5 @@
+using SharedClassLibrary;
+
 namespace PlayerSide.Views;
 
 public partial class SheetView : ContentView

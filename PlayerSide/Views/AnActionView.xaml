@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlayerSide.Views.AnActionView">
+    <Frame x:Name="UpdateFrame" 
+            CornerRadius="10"
+               Padding="5"
+               BorderColor="Black">
+        <Grid Padding="2"
+              RowSpacing="2"
+              ColumnSpacing="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="0.25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="Res" 
+                   Grid.Row="1"
+                   VerticalTextAlignment="Center"
+                   TextColor="Black"/>
+            <Label x:Name="Send"
+                   Grid.Row="1"
+                   Grid.Column="2"
+                   VerticalTextAlignment="Center"
+                   TextColor="Black"/>
+            <Image Source="arrow"
+                   Grid.Column="1"/>
+            <Image x:Name="sendImg"
+                   HeightRequest="50"/>
+            <Image x:Name="resImg"
+                   HeightRequest="50"
+                   Grid.Column="2" />
+        </Grid>
+    </Frame>
+</ContentView>

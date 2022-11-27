@@ -13,10 +13,8 @@ public partial class DicePage : ContentPage
         _cup = new Cup(8);
         _cup.Rolled += OnCupRolled;
     }
-    async void OnCupRolled(object sender, EventArgs e)
+    void OnCupRolled(object sender, EventArgs e)
     {
-        if (MauiProgram.Hub is not null && MauiProgram.Hub.IsConnected)
-            await MauiProgram.Hub.Send(new ActionMessage(_cup));
         ToggleIsEnable(true);
     }
 
