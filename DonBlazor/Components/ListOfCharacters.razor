@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@using SharedClassLibrary
+
+<h3>ListOfCharacters</h3>
+
+ <QuickGrid Items="@listToShow.AsQueryable()">
+        <PropertyColumn Property="@(p => p.Name)" title="Name" Sortable="true" />
+        <PropertyColumn Property="@(p => p.Team)" title="Team" Sortable="true" />
+  
+  </QuickGrid>
+
+
+@code {
+    [Parameter]
+    public List<Character> listToShow { get; set; } = new List<Character> {};
+
+
+    protected override void OnParametersSet()
+    {
+        
+    }
+}

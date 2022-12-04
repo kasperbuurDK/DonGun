@@ -8,20 +8,28 @@ namespace DonBlazor.Client
     public class GameMaster : GameMasterHelpers
     {
         private Game _game;
-
-        public GameMaster() { }
-
         private List<IAnAction>? _possibleActions = new() { };
         private List<HelperAction>? _possibleHelperActions = new() { };
         private List<OffensiveAction>? _possibleOffensiveActions = new() { };
+        private Queue<Character> _queue;
+
+
+        public GameMaster() 
+        {
+            _game = new();
+            
+        }
 
         public List<IAnAction>? PossibleActions { get => _possibleActions; set => _possibleActions = value; }
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
-        public Queue<Character> Queue { get; set; }
+        public Queue<Character> Queue { get => _queue; set => _queue = value; }
         public Game Game { get => _game; set => _game = value; }
-
         public Dictionary<string, string> connectionsId = new Dictionary<string, string>() { };
+
+
+
+
 
         public string Move(Character character, MoveDirections direction, int distance)
         {
@@ -102,15 +110,19 @@ namespace DonBlazor.Client
 
                     if (otherCharacter.Team == character.Team)
                     {
-                        HealAlly healAction = new HealAlly(character.Signature, otherSignature);
-                        healAction.SenderSignature = character.Signature;
-                        healAction.RecieverSignature = otherSignature;
+                        HealAlly healAction = new HealAlly(character.Signature, otherSignature)
+                        {
+                            SenderSignature = character.Signature,
+                            RecieverSignature = otherSignature
+                        };
                         _possibleHelperActions.Add(healAction);
                         character.PossibleHelperActionsSignatures.Add(healAction.Signature);
 
-                        InspireAlly inspireAction = new InspireAlly(character.Signature, otherSignature);
-                        inspireAction.SenderSignature = character.Signature;
-                        inspireAction.RecieverSignature = otherSignature;
+                        InspireAlly inspireAction = new InspireAlly(character.Signature, otherSignature)
+                        {
+                            SenderSignature = character.Signature,
+                            RecieverSignature = otherSignature
+                        };
                         _possibleHelperActions.Add(inspireAction);
                         character.PossibleHelperActionsSignatures.Add(inspireAction.Signature);
 
@@ -121,7 +133,6 @@ namespace DonBlazor.Client
                         int distToOther = (int)Math.Floor(DetermineDistanceBetweenCharacters(character, otherCharacter));
                         int baseChance = distToOther > character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
                         int dexModifier = RandomRange(0, character.Dexterity) * 2;
-
 
                         anOffensiveAction.SenderSignature = character.Signature;
                         anOffensiveAction.RecieverSignature = otherCharacter.Signature;
@@ -169,15 +180,16 @@ namespace DonBlazor.Client
         {
 
             Console.WriteLine("in addCharacter");
+            Console.WriteLine(characterToAdd);
             SetMaxValuesBasedOnMainStats(characterToAdd);
 
-            if (characterToAdd is Player)
+            if (characterToAdd is Player player)
             {
-                Game.HumanPlayers.Add((Player)characterToAdd);
+                _game.HumanPlayers.Add(player);
             }
-            else if (characterToAdd is Npc)
+            else if (characterToAdd is Npc npc)
             {
-                Game.NonHumanPlayers.Add((Npc)characterToAdd);
+                _game.NonHumanPlayers.Add(npc);
             }
 
             Console.WriteLine("numbers of characteres in game: " + Game.AllCharacters.Count);
@@ -201,7 +213,7 @@ namespace DonBlazor.Client
         {
             Game.CharacterToAct = Queue.Dequeue();
             Queue.Enqueue(Game.CharacterToAct);
-            // Game.CharacterToAct.
+            Game.CharacterToAct = Queue.Peek();
         }
     }
 }

@@ -1,0 +1,60 @@
+﻿@using DonBlazor.Containers;
+@using SharedClassLibrary;
+@using static SharedClassLibrary.Npc;
+
+
+<div class="card my-4">
+    <h1 class="card-header">
+        Add a NPC
+    </h1>
+
+    @foreach (var type in nPCtypes)
+    {
+
+        <div class="card-body">
+            <div class="card-text">
+                <button @onclick="(() => AddNpc(type))">Add @type.ToString() </button>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+
+
+
+@code {
+
+    ActiveGameContainer? _activeGame;
+    ActiveGameMasterContainer? _activeGameMaster;
+    List<NPCtype> nPCtypes;
+
+
+    protected override void OnInitialized()
+    {
+        _activeGame = ActiveGameContainer.GetGameInstance;
+        _activeGameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+        nPCtypes = new List<NPCtype> { NPCtype.Orc_Brute, NPCtype.Orc_Mage, NPCtype.Undead_Brute, NPCtype.Undead_Mage };
+    }
+
+
+    private void AddNpc(NPCtype type)
+    {
+            Npc newPlayer = new Npc(type, _activeGame.AllCharacters.Count + 1);
+            // Should be made possisble to choose
+            if (_activeGameMaster != null)
+            {
+                _activeGameMaster.AddCharacterToGame(newPlayer);
+            } else
+            {
+                _activeGameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+                _activeGameMaster.AddCharacterToGame(newPlayer);
+
+            }
+
+        
+
+    }
+
+}

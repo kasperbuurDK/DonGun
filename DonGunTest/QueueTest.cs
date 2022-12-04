@@ -13,13 +13,11 @@ namespace DonGunTest
         Npc _npc2;
         Npc _npc3;
         GameMaster _gameMaster;
-        Game _game;
-
+        
         [SetUp]
         public void SetUp()
         {
-            _game = new Game();
-            _gameMaster = new GameMaster(_game);
+            _gameMaster = new GameMaster();
             _player1 = new Player("Player1");
             _player2 = new Player("Player2");
             _player3 = new Player("Player3");
@@ -55,7 +53,7 @@ namespace DonGunTest
             _gameMaster.StartEncounter();
 
 
-            Assert.That(_game.CharacterToAct, Is.EqualTo(_player1));
+            Assert.That(_gameMaster.Game.CharacterToAct, Is.EqualTo(_player1));
         }
 
         [Test]
@@ -64,7 +62,7 @@ namespace DonGunTest
             _gameMaster.StartEncounter();
             _gameMaster.EndTurn();
 
-            Assert.That(_game.CharacterToAct, Is.EqualTo(_player2));
+            Assert.That(_gameMaster.Game.CharacterToAct, Is.EqualTo(_player2));
         }
 
 

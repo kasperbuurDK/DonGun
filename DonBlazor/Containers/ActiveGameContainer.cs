@@ -22,7 +22,7 @@ namespace DonBlazor.Containers
 
         private ActiveGameContainer()
         {
-
+            
         }
 
         public void DestroyGameInstance()
@@ -33,14 +33,7 @@ namespace DonBlazor.Containers
         // Properties      
 
         // Methods
-        public void UpdateToNewGame(Game newGame)
-        {
-            Name = newGame.Name;
-            HumanPlayers = newGame.HumanPlayers;
-            AllCharacters.Clear();
-            AllCharacters.AddRange(newGame.HumanPlayers); // At start of game, there are only Humanplayers  
-            CurrentTurn = 0;
-        }
+       
 
         public void NextTurn()
         {

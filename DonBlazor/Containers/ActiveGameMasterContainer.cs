@@ -17,18 +17,25 @@ namespace DonBlazor.Containers
             }
         }
 
-        private ActiveGameMasterContainer()
+        public ActiveGameMasterContainer()
         {
-
+            Game = ActiveGameContainer.GetGameInstance;
+            
         }
+       
 
         public string UserName { get; set; }
         public HubService Hub { get; set; }
 
+       
+
+       
         public async Task<bool> SetupHub(string roomName)
         {
             try
             {
+
+                // TODO 
                 string authHeader = "dXNlcjpwYXNzd29yZA==";              // Should be set a global place
                 string baseUrl = "https://dungun.azurewebsites.net";
                 string hubUri = "/gamehub";
@@ -43,15 +50,8 @@ namespace DonBlazor.Containers
                 Hub.JoinEvent += (object? sender, HubEventArgs<GameSessionOptions> e) =>
                 {
                     Console.WriteLine(e.Messege?.Sheet);
-                    var player = e.Messege?.Sheet;
-
-
                     AddCharacterToGame(e.Messege?.Sheet);
                     connectionsId.Add(e.Messege.Sheet.OwnerName, e.Messege.ConnectionId);
-
-                    // TODO add to dictionary
-                    // e.Messege.ConnectionId
-
                 };
                 // Hub.MoveEvent +=
                 // Hub.ActionEvent +=

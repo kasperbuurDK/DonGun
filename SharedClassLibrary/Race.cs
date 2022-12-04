@@ -1,22 +1,22 @@
 
 namespace SharedClassLibrary
 {
-    public class Race_abstract
+    public class Race
     {
         // Main stat amplifiers
         // Main meter amplifiers
 
         public RaceType Type { set; get; } = RaceType.Elf;
 
-        public Race_abstract()
+        public Race()
         { }
 
-        public Race_abstract(int type)
+        public Race(int type)
         {
             Type = (RaceType)type;
         }
 
-        public Race_abstract(RaceType type)
+        public Race(RaceType type)
         {
             Type = type;
         }

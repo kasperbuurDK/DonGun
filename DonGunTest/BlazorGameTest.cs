@@ -1,49 +1,41 @@
 using DonBlazor.Client;
 using DonBlazor.Containers;
+using NUnit.Framework;
 using SharedClassLibrary;
+
 
 namespace DonGunTest
 {
     public class BlazorGameTest
     {
-        private ActiveGameContainer _activeGame;
-        private GameMaster _gameMaster;
+      //  private ActiveGameContainer _activeGame;
+        private ActiveGameMasterContainer _gameMaster;
 
 
         [SetUp]
         public void SetUp()
         {
-            _gameMaster = new GameMaster();
 
-            _activeGame = ActiveGameContainer.GetGameInstance;
-            _activeGame.Name = "Active test";
-            _activeGame.HumanPlayers = new List<Player> { };
-            _activeGame.NonHumanPlayers = new List<Npc> { };
-            _activeGame.Created = DateTime.Now;
-            _activeGame.LastSaved = DateTime.Now;
-            _activeGame.CurrentTurn = 999;
+         //   _activeGame = ActiveGameContainer.GetGameInstance;
+            _gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+            //_gameMaster.AddActiveGame();
+
+            _gameMaster.Game.Name = "Active test";
+            _gameMaster.Game.HumanPlayers = new List<Player> { };
+            _gameMaster.Game.NonHumanPlayers = new List<Npc> { };
+            _gameMaster.Game.Created = DateTime.Now;
+            _gameMaster.Game.LastSaved = DateTime.Now;
+            _gameMaster.Game.CurrentTurn = 999;
         }
 
 
         [Test]
-        public void Is_Game_Created_Correctly()
-        {
-            //Assert
-            Assert.That(_activeGame, Is.Not.EqualTo(null));
+        public void Gamemaster_has_the_right_gameinstance()
+        {   
+             Assert.That(_gameMaster.Game, Is.EqualTo(ActiveGameContainer.GetGameInstance));
         }
 
-        [Test]
-        public void NextTurn_Adds_1_Turn()
-        {
-            // Arrange
-            _activeGame.CurrentTurn = 0;
-            // Act
-            _activeGame.NextTurn();
-
-            //Assert
-            Assert.That(_activeGame.CurrentTurn, Is.EqualTo(1));
-        }
-
+     
         [TestCase(1)]
         [TestCase(5)]
         public void Adding_New_Players_Result_In_Correct_Number(int numberOfPlayersToAdd)
@@ -51,23 +43,11 @@ namespace DonGunTest
             for (int i = 0; i < numberOfPlayersToAdd; i++)
             {
                 Player player = new Player($"player{i}");
-
+                _gameMaster.AddCharacterToGame(player);
             }
 
-            Assert.That(_activeGame.HumanPlayers.Count, Is.EqualTo(numberOfPlayersToAdd));
+            Assert.That(_gameMaster.Game.HumanPlayers.Count, Is.EqualTo(numberOfPlayersToAdd));
         }
-
-        [Test]
-        public void Destroy_Activegame_Results_in_an_empty_game()
-        {
-            // Act
-            _activeGame.DestroyGameInstance();
-            _activeGame = ActiveGameContainer.GetGameInstance;
-
-            Assert.That(_activeGame.Name, Is.EqualTo("Empty Game"));
-        }
-
-
 
         [Test]
         public void AllCharacters_Are_The_Sum_Of_Human_And_NPCs()
@@ -75,22 +55,22 @@ namespace DonGunTest
             int noOfHumans = 2;
             int noOfNPCs = 6;
 
-            _activeGame.HumanPlayers = new List<Player>() { };
-            _activeGame.NonHumanPlayers = new List<Npc>() { };
+            _gameMaster.Game.HumanPlayers = new List<Player>() { };
+            _gameMaster.Game.NonHumanPlayers = new List<Npc>() { };
 
             for (int i = 0; i < noOfHumans; i++)
             {
                 Player player = new($"player{i}");
-                _activeGame.HumanPlayers.Add(player);
+                _gameMaster.Game.HumanPlayers.Add(player);
             }
 
             for (int i = 0; i < noOfNPCs; i++)
             {
                 Npc npc = new();
-                _activeGame.NonHumanPlayers.Add(npc);
+                _gameMaster.Game.NonHumanPlayers.Add(npc);
             }
 
-            Assert.That(_activeGame.AllCharacters, Has.Count.EqualTo(noOfHumans + noOfNPCs));
+            Assert.That(_gameMaster.Game.AllCharacters, Has.Count.EqualTo(noOfHumans + noOfNPCs));
         }
     }
 }

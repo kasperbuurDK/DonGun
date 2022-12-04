@@ -41,7 +41,7 @@ namespace SharedClassLibrary
         private List<string> _possibleOffensiveActionsSignatures = new() { };
 
 
-        private Race_abstract _race;
+        private Race _race;
         private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 };
 
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue)
@@ -161,7 +161,7 @@ namespace SharedClassLibrary
         public int MpMax { get => _mpMax; set => _mpMax = value; }
         public int MpCur { get => _mpCur; set => _mpCur = value; }
 
-        public Race_abstract Race
+        public Race Race
         {
             set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
@@ -179,7 +179,7 @@ namespace SharedClassLibrary
         public Character()
         {
             Signature = Guid.NewGuid().ToString();
-            _race = new Race_abstract(0);
+            _race = new Race();
         }
 
         // Methods
