@@ -5,11 +5,14 @@ using SharedClassLibrary;
 using SharedClassLibrary.MessageStrings;
 using System.Windows.Input;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
+using SharedClassLibrary.Actions;
 
 namespace PlayerSide.Pages;
 
 public partial class MovePage : ContentPage
 {
+    IConfiguration _configuration;
     private ImageButton _selected;
     private static readonly IconTintColorBehavior _selectedBehavior = new()
     {
@@ -23,7 +26,7 @@ public partial class MovePage : ContentPage
             UpdateLabel.Text = e.Messege.UpdateStr;
         };
         UpdateFrame.BackgroundColor = Color.FromRgba(255, 255, 255, 128); // Workaround
-        UpdateLabel.Text = "Done";
+        _configuration = MauiProgram.Services.GetService<IConfiguration>();
     }
 
     enum DirectionMapping
@@ -33,6 +36,50 @@ public partial class MovePage : ContentPage
         Down,
         Left
     };
+
+    // Debug -- Remove
+    /*
+    private async void UpdateBtnClicked(object sender, EventArgs e)
+    {
+        Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
+        string authHeder = await SecureStorage.Default.GetAsync("authHeader");
+        HubService don = new(authHeder, settings.BaseUrl, settings.HubUri, true);
+        don.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => PrintDonResult(don, args.Messege));
+        await don.Initialise();
+        await don.JoinRoom("kage");
+        UpdateMessage msg = new()
+        {
+            ConnectionId = MauiProgram.Hub.ConnectionId,
+            UpdateStr = "Hello?",
+        };
+        List<IAnAction> PossibleActions = new();
+        PossibleActions.Add(new OffensiveAction("SomeDude1", "SomeDude2"));
+        msg.PossibleActionsJson = PossibleActions.TypeToJson();
+        await don.Send(msg);
+    } */
+
+    /*
+    // Debug -- Remove
+    private async void NewTurnBtnClicked(object sender, EventArgs e)
+    {
+        Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
+        string authHeder = await SecureStorage.Default.GetAsync("authHeader");
+        HubService don = new(authHeder, settings.BaseUrl, settings.HubUri, true);
+        don.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => PrintDonResult(don, args.Messege));
+        await don.Initialise();
+        await don.JoinRoom("kage");
+        Queue<Character> myQ = new();
+        myQ.Enqueue(new Player() { Signature = "SomeDude1" });
+        myQ.Enqueue(new Npc() { Signature = "SomeDude2" });
+        List<string> misHaps = new() { "What ", "Is ", "This ", "For ", "? " };
+        NewTurnMessage msg = new("kage", myQ, misHaps);
+        await don.Send(msg);
+    }*/
+    /*
+    private void PrintDonResult(HubService don, HubServiceException messege)
+    {
+        ErrorLabel.Text = messege.Messege;
+    }*/
 
     private async void ArrowBtnClicked(object sender, EventArgs e)
     {

@@ -10,7 +10,7 @@ public partial class CharView : ContentView
         if (sender is MauiPlayer)
         {
             MauiPlayer player = (MauiPlayer)sender;
-            if (e.PropertyName.Contains("HealthMax"))
+            if (e.PropertyName.Contains("Health"))
             {
                 MainThread.BeginInvokeOnMainThread(() => UpdateHpBar(player));
             }
@@ -50,6 +50,25 @@ public partial class CharView : ContentView
         UpdateResBar(_character);
         _character.PropertyChanged += UpdateBars;
         charaBinding.Character = _character;
+        if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
+            charaBinding.Character.ImageName = "no_data.png";
+    }
+
+    public CharView(Character _character)
+    {
+        InitializeComponent();
+        charaBinding.Character = new()
+        {
+            HealthMax = _character.HealthMax,
+            HealthCurrent = _character.HealthCurrent,
+            ResourceCurrent = _character.ResourceCurrent,
+            ResourceMax = _character.ResourceMax,
+            Name = _character.Name,
+            ImageName = _character.ImageName
+        };
+        UpdateHpBar(charaBinding.Character);
+        UpdateResBar(charaBinding.Character);
+        charaBinding.Character.PropertyChanged += UpdateBars;
         if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
             charaBinding.Character.ImageName = "no_data.png";
     }

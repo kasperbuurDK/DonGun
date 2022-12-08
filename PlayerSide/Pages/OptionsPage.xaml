@@ -6,11 +6,8 @@
         <VerticalStackLayout Spacing="10"
                              Padding="10">
             <Button x:Name="logoutBtn"
-                    Text="Logout"
+                    Text="Quit"
                     Clicked="LogoutBtnClicked" />
-            <Button x:Name="SendFileUpEvent"
-                    Text="DG_SendFileUpdateEvent"
-                    Clicked="SendFileUpdateBtnClicked" />
             <Button x:Name="UserOptions"
                     Text="User options"
                     Clicked="UserOptionsBtnClicked" />
@@ -30,7 +27,7 @@
                     Text="Leave Room"
                     Clicked="LeaveBtnClicked" />
             <Button x:Name="deleteUserAct"
-                    Text="Remove Acount"
+                    Text="Remove Account"
                     Clicked="RemoveActBtnClicked" />
             <Label x:Name="ErrorLabel"
                     TextColor="{StaticResource ErrorRed}"/>

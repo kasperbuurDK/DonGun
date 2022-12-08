@@ -3,28 +3,113 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlayerSide.Pages.SheetPage"
              Title="Sheet"
+             xmlns:custom="clr-namespace:PlayerSide.Views"
              IconImageSource="order_icon">
-    <Grid BackgroundColor="WhiteSmoke">
-        <Image x:Name="backgroundImage"
+   
+    <Grid BackgroundColor="WhiteSmoke"
+          x:Name="MainGridSheet">
+        <Image Source="simple_border"
                Aspect="Fill"
-               Source="simple_border.png" />
-        <Border Stroke="Black"
-                StrokeThickness="3"
-                BackgroundColor="Transparent"
-                Padding="5">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="10,10,10,10" />
-            </Border.StrokeShape>
-            <ScrollView Padding="0"
-                        Margin="0,0,0,0">
-                <StackLayout x:Name="SheetStackLayout"
-                    Padding="2">
-
-                </StackLayout>
-            </ScrollView>
-        </Border>
-        <ActivityIndicator x:Name="ActivityIndicator"
-                           BackgroundColor="White"
-                           IsRunning="False"/>
+               BackgroundColor="Transparent"/>
+        <Grid Padding="10"
+              Margin="0,0,0,0"
+              RowSpacing="2"
+              ColumnSpacing="2"
+              Grid.Row="1"
+              BackgroundColor="Transparent"
+              Opacity="0"
+              x:Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.1*" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="0.1*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Image x:Name="charaImgBorder"
+                   Aspect="Fill"
+                   Source="border_smalla.png"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Grid.RowSpan="2" />
+            <Grid Grid.Row="1"
+                  Grid.Column="1"
+                  Grid.RowSpan="2"
+                  Margin="20,0,25,0"
+                  Padding="5"
+                  BackgroundColor="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.4*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label x:Name="NameText"
+                       Margin="25,0,25,22"
+                       FontSize="Small"
+                       FontFamily="DalelandsRegular"
+                       TextColor="Black"
+                       BackgroundColor="Transparent"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.Row="0" />
+                <Border Grid.Row="1"
+                        Stroke="Black"
+                        StrokeThickness="5"
+                        BackgroundColor="Transparent"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10,10,10,10" />
+                    </Border.StrokeShape>
+                    <Image x:Name="CharaImg"
+                           Source="char_icon.png"
+                           Aspect="Fill"
+                           HorizontalOptions="Fill"
+                           Grid.RowSpan="2" />
+                </Border>
+            </Grid>
+            <custom:BlobStatView x:Name="IconDex"
+                                 Border="main_stat_dex.png"
+                                 Grid.Row="1" />
+            <custom:BlobStatView x:Name="IconStr"
+                                 Border="main_stat_str.png"
+                                 Grid.Row="2" />
+            <custom:BlobStatView x:Name="IconWis"
+                                 Border="main_stat_wis.png"
+                                 Grid.Row="3" />
+            <custom:BlobStatView x:Name="IconInt"
+                                 Border="main_stat_int.png"
+                                 Grid.Row="4" />
+            <custom:BlobStatView x:Name="IconCon"
+                                 Border="main_stat_con.png"
+                                 Grid.Row="5" />
+            <custom:BlobStatView x:Name="IconCha"
+                                 Border="main_stat_cha.png"
+                                 Grid.Row="6" />
+            <Grid Grid.Row="3"
+                  Grid.Column="1"
+                  Grid.RowSpan="4">
+                <Border Stroke="Black"
+                        StrokeThickness="3"
+                        BackgroundColor="Transparent"
+                        Padding="5">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10,10,10,10" />
+                    </Border.StrokeShape>
+                    <ScrollView Padding="0"
+                                Margin="0,0,0,0">
+                        <StackLayout x:Name="SheetActionStackLayout"
+                                     Padding="2">
+                            <Label Text="Action go here!" />
+                        </StackLayout>
+                    </ScrollView>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
 </ContentPage>

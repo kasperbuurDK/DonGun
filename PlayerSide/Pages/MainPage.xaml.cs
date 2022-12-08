@@ -9,14 +9,10 @@ public partial class MainPage : TabbedPage
 	{
         Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
         MauiProgram.Hub = new(authHeder, settings.BaseUrl, settings.HubUri);
-        MauiProgram.Hub.ExceptionHandlerEvent += (object sender, HubEventArgs<HubServiceException> e) => 
-        {
-            //await DisplayAlert("Exception!", $"{e.Messege.Messege}", "Close");
-        };
         InitializeComponent();
         RetriveSheets(settings, authHeder);
-
     }
+
     private static async void RetriveSheets(Settings s, string auth)
     {
         string user = await SecureStorage.Default.GetAsync("username");

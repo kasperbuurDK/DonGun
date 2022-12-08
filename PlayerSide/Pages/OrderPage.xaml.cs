@@ -1,30 +1,51 @@
 using PlayerSide.Views;
 using SharedClassLibrary;
+using SharedClassLibrary.Actions;
+using SharedClassLibrary.MessageStrings;
 
 namespace PlayerSide.Pages;
 
 public partial class OrderPage : ContentPage
 {
-    private MauiPlayer timedPlayer;
-    Random rnd = new Random();
-    Timer _timer1, _timer2;
+    private CharView _cVChild;
 
     public OrderPage()
     {
         InitializeComponent();
-        timedPlayer = new() { Name = "hello", HealthMax = 10, HealthCurrent = 5, ResourceMax = 20, ResourceCurrent = 15 };
-        MainGrid.Add(new CharView(timedPlayer));
-        _timer1 = new Timer(TimerCallBack1, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-        _timer2 = new Timer(TimerCallBack2, timedPlayer, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue.JsonToType<Queue<Character>>()));
+        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
     }
 
-    private void TimerCallBack1(object state)
+    public void RefreshQueue(Queue<Character> q)
     {
-        //timedPlayer.HealthCurrent = rnd.Next(0, timedPlayer.HealthMax); 
+        QueueStackLayout.Clear();
+        MauiProgram.GameOrder = q.CopyObject();
+        foreach (Character p in q)
+        {
+            if (MauiProgram.Sheet.Signature == p.Signature)
+            {
+                MauiProgram.Sheet.HealthCurrent = p.HealthCurrent;
+                MauiProgram.Sheet.ResourceCurrent = p.ResourceCurrent;
+                //_cVChild.UpdateResBar((MauiPlayer)p);
+            }
+            Grid grid = new()
+            {
+                new CharView((MauiPlayer)p)
+            };
+            QueueStackLayout.Add(grid);
+        }
     }
 
-    private void TimerCallBack2(object state)
+    public void SetCharView(HubServiceException args)
     {
-        //timedPlayer.ResourceCurrent = rnd.Next(0, timedPlayer.ResourceMax);
+        if (args.ActionName == "JoinGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
+        {
+            _cVChild = new(MauiProgram.Sheet);
+            MainGrid.Add(_cVChild);
+        }
+        if (args.ActionName == "LeaveGameRoom" && args.Code == (int)System.Net.HttpStatusCode.OK)
+        {
+            MainGrid.Remove(_cVChild);
+        }
     }
 }

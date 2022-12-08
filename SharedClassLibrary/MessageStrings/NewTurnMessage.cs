@@ -2,14 +2,20 @@
 {
     public class NewTurnMessage : Message
     {
-        public Queue<Character> TheQueue { get; set; }
-        public List<string> Happenings { get; set; }
+        //***LIST ARE NOT VALID IN SIGNALR***
+        // Serialize the list before hand
+        // Queue<Character> -> string
+        public string TheQueue { get; set; }
+        //***LIST ARE NOT VALID IN SIGNALR***
+        // Serialize the list before hand
+        // List<string> -> string
+        public string Happenings { get; set; }
 
 
         public NewTurnMessage(string sessionKey, Queue<Character> queue, List<string> happenings) : base(MessageType.NewTurn, sessionKey)
         {
-            TheQueue = queue;
-            Happenings = happenings;
+            TheQueue = queue.TypeToJson();
+            Happenings = happenings.TypeToJson();
         }
 
         public override string ToString()
