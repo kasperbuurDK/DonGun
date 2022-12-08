@@ -7,39 +7,29 @@ namespace PlayerSide.Pages;
 
 public partial class OrderPage : ContentPage
 {
-    public Queue<Character> Queue{ get; set; }
     private CharView _cVChild;
+
     public OrderPage()
     {
         InitializeComponent();
         MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue.JsonToType<Queue<Character>>()));
-        MauiProgram.Hub.UpdateEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => UpdateActionList(args.Messege));
         MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
-    }
-
-    private void UpdateActionList(UpdateMessage messege)
-    {
-        if (messege.PossibleActionsJson is null || messege.PossibleActionsJson.JsonToType<List<AnAction>>().Count == 0)
-            return;
-        foreach (AnAction p in messege.PossibleActionsJson.JsonToType<List<AnAction>>())
-        {
-            Grid grid = new()
-                {
-                new AnActionView(p)
-            };
-            QueueStackLayout.Add(grid);
-        }
     }
 
     public void RefreshQueue(Queue<Character> q)
     {
-        Queue = q;
-        MauiProgram.GameOrder = q;
         QueueStackLayout.Clear();
-        foreach (Character p in Queue)
+        MauiProgram.GameOrder = q.CopyObject();
+        foreach (Character p in q)
         {
+            if (MauiProgram.Sheet.Signature == p.Signature)
+            {
+                MauiProgram.Sheet.HealthCurrent = p.HealthCurrent;
+                MauiProgram.Sheet.ResourceCurrent = p.ResourceCurrent;
+                //_cVChild.UpdateResBar((MauiPlayer)p);
+            }
             Grid grid = new()
-                {
+            {
                 new CharView((MauiPlayer)p)
             };
             QueueStackLayout.Add(grid);

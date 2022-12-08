@@ -22,10 +22,8 @@ public partial class OptionsPage : ContentPage
 
     private void LogoutBtnClicked(object sender, EventArgs e)
     {
-        // Sent dirty data back to server.
-        MauiProgram.Connectivity = null;
-        MauiProgram.Hub = null;
         Application.Current.MainPage = new LoginPage();
+        MauiProgram.Hub.Close();
     }
 
     private async void SendFileUpdateBtnClicked(object sender, EventArgs e)
@@ -70,6 +68,7 @@ public partial class OptionsPage : ContentPage
             if (!string.IsNullOrEmpty(SKey.Text))
             {
                 MauiProgram.Sheet = MauiProgram.Sheets[IntResult];
+                MauiProgram.Hub.SessionKey = SKey.Text;
                 await MauiProgram.Hub.JoinRoom(SKey.Text, MauiProgram.Sheets[IntResult]);
             }
         }

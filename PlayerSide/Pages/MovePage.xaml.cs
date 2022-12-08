@@ -38,6 +38,7 @@ public partial class MovePage : ContentPage
     };
 
     // Debug -- Remove
+    /*
     private async void UpdateBtnClicked(object sender, EventArgs e)
     {
         Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
@@ -55,8 +56,9 @@ public partial class MovePage : ContentPage
         PossibleActions.Add(new OffensiveAction("SomeDude1", "SomeDude2"));
         msg.PossibleActionsJson = PossibleActions.TypeToJson();
         await don.Send(msg);
-    }
+    } */
 
+    /*
     // Debug -- Remove
     private async void NewTurnBtnClicked(object sender, EventArgs e)
     {
@@ -72,12 +74,12 @@ public partial class MovePage : ContentPage
         List<string> misHaps = new() { "What ", "Is ", "This ", "For ", "? " };
         NewTurnMessage msg = new("kage", myQ, misHaps);
         await don.Send(msg);
-    }
-
-    private async void PrintDonResult(HubService don, HubServiceException messege)
+    }*/
+    /*
+    private void PrintDonResult(HubService don, HubServiceException messege)
     {
         ErrorLabel.Text = messege.Messege;
-    }
+    }*/
 
     private async void ArrowBtnClicked(object sender, EventArgs e)
     {

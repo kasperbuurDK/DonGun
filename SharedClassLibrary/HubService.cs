@@ -7,7 +7,7 @@ namespace SharedClassLibrary
     public class HubService
     {
         // Fields
-        private readonly HubConnection hubConnection;
+        private readonly HubConnection hubConnection;   
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
@@ -110,7 +110,7 @@ namespace SharedClassLibrary
         /// Close Connection to Hub
         /// </summary>
         /// <returns></returns>
-        public async Task Close()
+        public async void Close()
         {
             if (IsConnected)
                 await hubConnection.StopAsync();
@@ -123,6 +123,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task JoinRoom(string key)
         {
+            await Initialise();
             GameOptions = new GameSessionOptions() { SessionKey = key };
             SessionKey = key;
             await hubConnection.SendAsync("JoinGameRoom", GameOptions);
@@ -136,6 +137,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task JoinRoom(string key, Player p)
         {
+            await Initialise();
             GameOptions = new GameSessionOptions() { SessionKey = key, Sheet = p };
             SessionKey = key;
             await hubConnection.SendAsync("JoinGameRoom", GameOptions);
@@ -148,6 +150,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task LeaveRoom(string key)
         {
+            await Initialise();
             GameOptions = new GameSessionOptions() { SessionKey = key };
             await hubConnection.SendAsync("LeaveGameRoom", GameOptions);
         }
@@ -158,6 +161,7 @@ namespace SharedClassLibrary
         /// <returns></returns>
         public async Task Send<T>(T msg) where T : Message
         {
+            await Initialise();
             if (SessionKey is null)
                 throw new ArgumentNullException(nameof(SessionKey));
             msg.SessionKey = SessionKey;
