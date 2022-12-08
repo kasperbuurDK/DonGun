@@ -35,6 +35,11 @@ public partial class DicePopUp : Popup
         dice.Rolled += OnDiceRolled;
         _dice = dice;
         Button button = new() { Opacity = 0, Padding = 1 };
+        button.Clicked += delegate (object sender, EventArgs e)
+        {
+            dice.Roll();
+            button.IsEnabled = false;
+        };
         mainGrid.Add(image);
         mainGrid.Add(button);
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CommunityToolkit.Maui.Views;
+using Microsoft.Extensions.Configuration;
 using PlayerSide.Views;
 using SharedClassLibrary;
 using SharedClassLibrary.Actions;
@@ -10,7 +11,6 @@ namespace PlayerSide.Pages;
 
 public partial class SheetPage : ContentPage
 {
-    private AnAction _selected;
     private Border priSelected = new();
 
     public SheetPage()
@@ -25,7 +25,6 @@ public partial class SheetPage : ContentPage
         SheetActionStackLayout.Clear();
         if (messege.PossibleActionsJson is null || messege.PossibleActionsJson.JsonToType<List<AnAction>>().Count == 0)
             return;
-        _selected = null;
         foreach (AnAction p in messege.PossibleActionsJson.JsonToType<List<AnAction>>())
         {
             Grid grid = new()
@@ -41,18 +40,24 @@ public partial class SheetPage : ContentPage
                 Margin = new Thickness(1.5, 1.5, 1.5, 1.5),
                 Content = button
             };
-            button.Clicked += delegate (object sender, EventArgs e)
+            button.Clicked += async delegate (object sender, EventArgs e)
             {
                 if (!border.Equals(priSelected))
                 {
                     border.Stroke = Application.Current.Resources.MergedDictionaries.First()["Primary"] as Color;
-                    _selected = grid.Children.First() as AnAction;
                     priSelected.Stroke = Color.Parse("Transparent");
                     priSelected = border;
                     // When double clcked, perfom popup for roll, and send.
                 } else
                 {
-
+                    // D20 Default for now.
+                    DicePopUp popup = new("dtwenty", 1, 20);
+                    var result = await this.ShowPopupAsync(popup);
+                    if (result is not null)
+                    {
+                        await MauiProgram.Hub.Send(new ActionMessage(MauiProgram.Hub.SessionKey, p.Signature, (int)result));
+                        SheetActionStackLayout.Clear();
+                    }
                 }
             };
             grid.Add(border);

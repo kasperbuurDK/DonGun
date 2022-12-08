@@ -10,16 +10,7 @@ public partial class MainPage : TabbedPage
         Settings settings = MauiProgram.Services.GetService<IConfiguration>().GetRequiredSection("Settings").Get<Settings>();
         MauiProgram.Hub = new(authHeder, settings.BaseUrl, settings.HubUri);
         InitializeComponent();
-        MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => ThrowPopUp(args.Messege));
         RetriveSheets(settings, authHeder);
-    }
-
-    private async void ThrowPopUp(HubServiceException args)
-    {
-        if (args.Code != (int)System.Net.HttpStatusCode.OK)
-        {
-            await DisplayAlert("Exception:", $"{args.Messege}", "Close");
-        }
     }
 
     private static async void RetriveSheets(Settings s, string auth)

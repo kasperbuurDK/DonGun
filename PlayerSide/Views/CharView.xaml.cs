@@ -53,4 +53,23 @@ public partial class CharView : ContentView
         if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
             charaBinding.Character.ImageName = "no_data.png";
     }
+
+    public CharView(Character _character)
+    {
+        InitializeComponent();
+        charaBinding.Character = new()
+        {
+            HealthMax = _character.HealthMax,
+            HealthCurrent = _character.HealthCurrent,
+            ResourceCurrent = _character.ResourceCurrent,
+            ResourceMax = _character.ResourceMax,
+            Name = _character.Name,
+            ImageName = _character.ImageName
+        };
+        UpdateHpBar(charaBinding.Character);
+        UpdateResBar(charaBinding.Character);
+        charaBinding.Character.PropertyChanged += UpdateBars;
+        if (string.IsNullOrEmpty(charaBinding.Character.ImageName))
+            charaBinding.Character.ImageName = "no_data.png";
+    }
 }

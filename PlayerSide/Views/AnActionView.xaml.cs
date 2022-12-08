@@ -15,10 +15,17 @@ public partial class AnActionView : ContentView
         {
             Character target = MauiProgram.GameOrder.Where(c => c.Signature == action.RecieverSignature).First();
             Res.Text = target.Name;
-            resImg.Source = target.ImageName;
+            if (string.IsNullOrEmpty(target.ImageName))
+                resImg.Source = "no_data.png";
+            else
+                resImg.Source = target.ImageName;
             Character sender = MauiProgram.GameOrder.Where(c => c.Signature == action.SenderSignature).First();
             Res.Text = sender.Name;
-            resImg.Source = sender.ImageName;
+            if (string.IsNullOrEmpty(sender.ImageName))
+                resImg.Source = "no_data.png";
+            else
+                resImg.Source = sender.ImageName;
+
             if (target.Team == sender.Team)
                 UpdateFrame.BackgroundColor = Color.FromRgba(26, 178, 54, 80); // Workaround - Green
             else
@@ -26,10 +33,4 @@ public partial class AnActionView : ContentView
         } else
             UpdateFrame.BackgroundColor = Color.FromRgba(255, 255, 255, 80); // Workaround - White
     }
-
-    /**
-        public string SenderSignature { get; set; }
-        public string RecieverSignature { get; set; }
-        public string Signature { get; init; }
-     **/
 }

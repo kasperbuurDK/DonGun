@@ -30,9 +30,9 @@
             <Image Source="arrow"
                    Grid.Column="1"/>
             <Image x:Name="sendImg"
-                   HeightRequest="50"/>
+                   HeightRequest="40"/>
             <Image x:Name="resImg"
-                   HeightRequest="50"
+                   HeightRequest="40"
                    Grid.Column="2" />
         </Grid>
     </Frame>

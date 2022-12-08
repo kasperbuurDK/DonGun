@@ -5,7 +5,7 @@
              Title="Order"
              IconImageSource="char_icon">
     <Grid x:Name="MainGrid"
-            Padding="2"
+            Padding="0"
           RowSpacing="2"
           ColumnSpacing="2">
         <Grid.RowDefinitions>
