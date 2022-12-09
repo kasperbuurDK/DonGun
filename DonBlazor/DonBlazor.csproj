@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Components\ListOfUsers.razor" />
     <Content Remove="Pages\ListOfUsers.razor" />
   </ItemGroup>
 
@@ -28,10 +27,6 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\ListOfUsers.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Components\" />
   </ItemGroup>
 
 </Project>

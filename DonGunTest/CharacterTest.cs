@@ -8,14 +8,12 @@ namespace DonGunTest
 
         Player _player;
         GameMaster _gameMaster;
-        Game _game;
-
+        
         [SetUp]
         public void SetUp()
         {
             _player = new Player("Test Plsyer");
-            _game = new Game();
-            _gameMaster = new GameMaster(_game);
+            _gameMaster = new GameMaster(new Game());
             _gameMaster.AddCharacterToGame(_player);
         }
 

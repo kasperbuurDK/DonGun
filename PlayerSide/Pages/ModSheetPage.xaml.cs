@@ -56,7 +56,7 @@ public partial class ModSheetPage : ContentPage
     private async void PopulateRacePicker()
     {
         List<string> RaceList = new();
-        foreach (string race in Enum.GetNames(typeof(Race_abstract.RaceType)))
+        foreach (string race in Enum.GetNames(typeof(Race.RaceType)))
         {
             RaceList.Add(race);
         }
@@ -128,7 +128,7 @@ public partial class ModSheetPage : ContentPage
 
     private void SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (Enum.TryParse((string)RacePicker.SelectedItem, out Race_abstract.RaceType tempRace))
-            MPlayer.Race = new Race_abstract(tempRace);
+        if (Enum.TryParse((string)RacePicker.SelectedItem, out Race.RaceType tempRace))
+            MPlayer.Race = new Race(tempRace);
     }
 }

@@ -1,0 +1,48 @@
+﻿@using DonBlazor.Containers;
+@using SharedClassLibrary;
+@using static SharedClassLibrary.Npc;
+@inject ActiveContainer ActiveContainer;
+
+
+<div class="card my-4">
+    <h1 class="card-header">
+        Add a NPC
+    </h1>
+
+    @foreach (var type in nPCtypes)
+    {
+
+        <div class="card-body">
+            <div class="card-text">
+                <button @onclick="(() => AddNpc(type))">Add @type.ToString() </button>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+
+
+
+@code {
+
+
+    List<NPCtype> nPCtypes;
+
+    protected override void OnInitialized()
+    {
+        nPCtypes = new List<NPCtype> { NPCtype.Orc_Brute, NPCtype.Orc_Mage, NPCtype.Undead_Brute, NPCtype.Undead_Mage };
+    }
+
+
+    private void AddNpc(NPCtype type)
+    {
+        Npc newPlayer = new Npc(type, ActiveContainer.GameMaster.Game.AllCharacters.Count + 1);
+        ActiveContainer.GameMaster.AddCharacterToGame(newPlayer);
+        ActiveContainer.NotifyCharactersChanged();
+
+       
+    }
+
+}
