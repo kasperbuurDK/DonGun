@@ -14,6 +14,7 @@ namespace ServerSideApiSsl.Hubs
         {
             if (options is not null && !string.IsNullOrEmpty(options.SessionKey))
             {
+                Console.WriteLine("Hello!!!!!");
                 await Groups.AddToGroupAsync(Context.ConnectionId, options.SessionKey);
                 await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = $"{options.Sheet.Name} Joined room {options.SessionKey}", ActionName = nameof(JoinGameRoom) });
                 await Clients.OthersInGroup(options.SessionKey).SendAsync("JoinEvent", new GameSessionOptions() { ConnectionId = Context.ConnectionId, Sheet = options.Sheet, UserName = options.UserName });
@@ -64,11 +65,12 @@ namespace ServerSideApiSsl.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
-        public async Task NewTurn(NewTurnMessage msg) // From Don to Maui
+        public async Task NewTurn(ActionMessage msg) // From Don to Maui
         {
-            await Clients.OthersInGroup(msg.SessionKey).SendAsync(Message.MessageType.NewTurn.ToString(), msg);
             //Debug echo
-            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() + msg.TheQueue + msg.Happenings, ActionName = Message.MessageType.NewTurn.ToString() });
+            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString(), ActionName = "fff" });
+
+            await Clients.OthersInGroup(msg.SessionKey).SendAsync(Message.MessageType.NewTurn.ToString(), msg);
         }
 
         public async Task ActionEvent(ActionMessage msg) // To Don from Maui
