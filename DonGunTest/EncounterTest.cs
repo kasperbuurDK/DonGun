@@ -24,7 +24,7 @@ namespace DonGunTest
             };
             _mainCharacter.MpCur = _mainCharacter.MpMax;
 
-            _gameMaster = new GameMaster();
+            _gameMaster = new GameMaster(new Game());
             _gameMaster.AddCharacterToGame(_mainCharacter);
 
 

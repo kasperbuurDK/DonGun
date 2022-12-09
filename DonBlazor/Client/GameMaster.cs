@@ -7,25 +7,29 @@ namespace DonBlazor.Client
 {
     public class GameMaster : GameMasterHelpers
     {
-        private Game _game;
+        private Game? _game;
         private List<IAnAction>? _possibleActions = new() { };
         private List<HelperAction>? _possibleHelperActions = new() { };
         private List<OffensiveAction>? _possibleOffensiveActions = new() { };
-        private Queue<Character> _queue;
+        private Queue<Character>? _queue;
+       
 
-
-        public GameMaster() 
+        public GameMaster()
         {
-            _game = new();
-            
+
+        }
+
+        public GameMaster(Game game) 
+        {
+            _game = game;
         }
 
         public List<IAnAction>? PossibleActions { get => _possibleActions; set => _possibleActions = value; }
         public List<HelperAction>? PossibleHelperActions { get => _possibleHelperActions; set => _possibleHelperActions = value; }
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
-        public Queue<Character> Queue { get => _queue; set => _queue = value; }
+        public Queue<Character>? Queue { get => _queue; set => _queue = value; }
         public Game Game { get => _game; set => _game = value; }
-        public Dictionary<string, string> connectionsId = new Dictionary<string, string>() { };
+        public Dictionary<string, string> ConnectionsId = new Dictionary<string, string>() { };
 
 
 
@@ -182,6 +186,8 @@ namespace DonBlazor.Client
             Console.WriteLine("in addCharacter");
             Console.WriteLine(characterToAdd);
             SetMaxValuesBasedOnMainStats(characterToAdd);
+            SetAllCurrentValuesToMax(characterToAdd);
+            SetStartPosition(characterToAdd);
 
             if (characterToAdd is Player player)
             {
@@ -192,7 +198,21 @@ namespace DonBlazor.Client
                 _game.NonHumanPlayers.Add(npc);
             }
 
+           
+
             Console.WriteLine("numbers of characteres in game: " + Game.AllCharacters.Count);
+        }
+
+        private void SetStartPosition(Character characterToAdd)
+        {
+            characterToAdd.Position = new Position(1000 + RandomRange(-10, 10), 1000 + RandomRange(-10, 10));
+        }
+
+        private void SetAllCurrentValuesToMax(Character characterToAdd)
+        {
+            characterToAdd.MpCur = characterToAdd.MpMax;
+            characterToAdd.HealthCurrent = characterToAdd.HealthMax;
+            characterToAdd.ResourceCurrent = characterToAdd.ResourceMax;
         }
 
         public void SetMaxValuesBasedOnMainStats(Character character)

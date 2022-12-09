@@ -1,0 +1,163 @@
+﻿using DonBlazor.Client;
+using SharedClassLibrary;
+using SharedClassLibrary.AuxUtils;
+using SharedClassLibrary.MessageStrings;
+using System.Collections.ObjectModel;
+using System.Net;
+
+namespace DonBlazor.Containers
+{
+    public class ActiveContainer
+    {
+        private GameMaster? _gameMaster;
+        private Game? _game;
+        private ObservableCollection<BlazorCharacter> _characters;
+
+        private HubService? _hub;
+
+        public GameMaster GameMaster
+        {
+            get
+            {
+                if (_gameMaster == null)
+                {
+                    _game = new Game();
+                    _gameMaster = new GameMaster(_game);
+                }
+
+                return _gameMaster;
+            }
+
+            set
+            {
+                _gameMaster = value;
+                NotifyGameMasterChanged();
+            }
+        }
+
+        public Game Game
+        {
+            get
+            {
+                _game ??= GameMaster.Game;
+                return _game;
+            }
+            set
+            {
+                NotifyGameChanged();
+                _game = value;
+            }
+        }
+
+
+
+
+
+        public event Action? GameMasterChanged;
+        public event Action? GameChanged;
+        public event Action? CharactersChanged;
+
+        public void NotifyGameMasterChanged() => GameMasterChanged?.Invoke();
+        public void NotifyGameChanged() => GameChanged?.Invoke();
+        public void NotifyCharactersChanged() => CharactersChanged?.Invoke();
+
+        public HubService? Hub { get => _hub; set => _hub = value; }
+
+        public async Task<bool> SetupHub(string roomName)
+        {
+            try
+            {
+                // TODO 
+                string authHeader = "dXNlcjpwYXNzd29yZA==";              // Should be set a global place
+                string baseUrl = "https://dungun.azurewebsites.net";
+                string hubUri = "/gamehub";
+                bool clientDon = true;
+
+                Hub = new HubService(authHeader, baseUrl, hubUri, clientDon);
+
+                await Hub.Initialise();
+
+                Hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
+                Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); // Subscribe to Exceptionhandler
+                Hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
+                {
+                    Console.WriteLine(e.Messege?.Sheet);
+                    var newPlayer = e.Messege?.Sheet;
+                    if (newPlayer != null)
+                    {
+                        if (GameMaster.ConnectionsId.ContainsKey(e.Messege.Sheet.OwnerName))
+                        {
+
+                            // await Hub.Send(new ExceptionMessage() { Messege = "User already logged in", Code = (int)HttpStatusCode.AlreadyReported });
+                        }
+                        else
+                        {
+                            newPlayer.Team = 1;
+                            GameMaster.AddCharacterToGame(newPlayer);
+                            GameMaster.ConnectionsId.Add(e.Messege.Sheet.OwnerName, e.Messege.ConnectionId);
+                            NotifyCharactersChanged();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Wrogfully attempt to add player");
+                        Console.WriteLine(e.ToString());
+                    }
+
+                };
+                Hub.MoveEvent += async (object? sender, HubEventArgs<MoveMessage> e) =>
+                {
+                    Console.WriteLine(e.Messege?.ToString());
+                    if (e.Messege?.ConnectionId != null)
+                    {
+                        Player foundPlayer = FindPLayer(e.Messege.ConnectionId);
+                        if (foundPlayer != null)
+                        {
+                            MoveDirections direction = Enum.Parse<MoveDirections>(e.Messege.Direction);
+                          
+                            var moveRespone = GameMaster.Move(foundPlayer, direction, e.Messege.Distence); 
+                            if (moveRespone != StandardMessages.AllOK)
+                            {
+                                // error
+                            }
+                            else 
+                            {
+                                string actionsJson = GameMaster.PossibleActions.TypeToJson();
+                                await Hub.Send(new UpdateMessage() 
+                                { 
+                                    ConnectionId = e.Messege.ConnectionId,
+                                    PossibleActionsJson = actionsJson,
+                                    UpdateStr = "Super" 
+                                });
+                            }
+                            
+                        }
+                    }
+
+                };
+                Hub.ActionEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
+                {
+                    Console.WriteLine(e.Messege?.ToString());
+                };
+                // Hub.LeaveaEvent +=
+                // Hub.EndTurn += 
+
+                await Hub.JoinRoom(roomName);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        private Player? FindPLayer(string connectionId)
+        {
+            string foundKey = _gameMaster.ConnectionsId.FirstOrDefault(entry => EqualityComparer<string>.Default.Equals(entry.Value, connectionId)).Key;
+            Player foundPLayer = _game.HumanPlayers.Where(x => x.OwnerName == foundKey).First();
+            return foundPLayer != null ? foundPLayer : null;    
+        }
+    }
+}

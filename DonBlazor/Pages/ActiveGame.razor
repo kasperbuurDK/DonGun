@@ -3,8 +3,9 @@
 @using Client;
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using SharedClassLibrary.MessageStrings;
-@using DonBlazor.Components;
-@inject DonBlazor.Containers.ActiveGameContainer _activeGame;
+@using System.Collections.ObjectModel;
+@inject DonBlazor.Containers.ActiveContainer ActiveContainer;
+
 
 @page "/activegame"
 
@@ -14,21 +15,10 @@
 
 Welcome to your game.
 <br />
-@_activeGame.Name
+@ActiveContainer.GameMaster.Game.Name;
 <br />
 
-<ListOfCharacters listToShow="_activeGame.AllCharacters"></ListOfCharacters>
-
-@if (_activeGame.AllCharacters.Count > 0)
-{
-    <QuickGrid Items="@_activeGame.AllCharacters.AsQueryable()">
-        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-    </QuickGrid>
-    <br />
-
-} else {
-    <p>No characters in the game</p>
-}
+<ListOfCharacters></ListOfCharacters>
 
 <AddNpcButton></AddNpcButton>
 
@@ -36,25 +26,30 @@ Welcome to your game.
 
 
 @code {
-    //private ActiveGameContainer _activeGame;
-    ActiveGameMasterContainer? _activeGameMaster;
-
 
     protected override void OnInitialized()
     {
-      //  _activeGame = ActiveGameContainer.GetGameInstance;
-        _activeGameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
+        ActiveContainer.CharactersChanged += StateHasChanged;
+        ActiveContainer.CharactersChanged += UpdateOurList;
     }
-
-
 
     private async void StartGame()
     {
-        var gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
-        await gameMaster.Hub.Send<StartGameMessage>(new StartGameMessage(gameMaster.Game.Name) {  }); 
+        Game thisGame = ActiveContainer.GameMaster.Game;
+        GameMaster thisMaster = ActiveContainer.GameMaster;
+
+        await  ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) {  });
+
+        string queueJson = thisMaster.Queue.TypeToJson();
+        string happeningsJson = (new List<string> { "Noget", "skete" }).TypeToJson();
+
+        await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete"}));
     }
 
-    
+    private void UpdateOurList()
+    {
+        
+    }
 
     private void IndicateTurn()
     {

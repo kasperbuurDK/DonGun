@@ -10,6 +10,7 @@
         public Npc(NPCtype type, int number)
         {
             Number = number;
+            Name = type.ToString() + $" {number}";
 
             AdjustStatsAccordingToType(type);
         }
@@ -56,7 +57,7 @@
 
         public int Number { get; set; }
         public NPCtype Type { get; set; }
-
+       
 
         public enum NPCtype
         {
