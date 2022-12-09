@@ -53,13 +53,14 @@ public partial class ModSheetPage : ContentPage
         EditState = true;
     }
 
-    private void PopulateRacePicker()
+    private async void PopulateRacePicker()
     {
         List<string> RaceList = new();
         foreach (string race in Enum.GetNames(typeof(Race.RaceType)))
         {
             RaceList.Add(race);
         }
+        MPlayer.OwnerName = await SecureStorage.Default.GetAsync("username");
         RacePicker.ItemsSource = RaceList;
         RacePicker.SelectedItem = MPlayer.Race.Type.ToString();
     }

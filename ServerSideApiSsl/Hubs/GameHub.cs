@@ -95,7 +95,14 @@ namespace ServerSideApiSsl.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
+        public async Task ExceptionEvent(ExceptionMessage msg) // Client to Client
+        {
+            if (msg.ConnectionId is not null)
+                await Clients.Client(msg.ConnectionId).SendAsync(Message.MessageType.ExceptionEvent.ToString(), new HubServiceException() { Messege = msg.ToString() });
+            else
+                await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = "ConnectionId not found", Code = (int)HttpStatusCode.NotFound, ActionName = nameof(ExceptionEvent) });
 
+        }
 
     }
 

@@ -21,7 +21,7 @@
 
         public enum MessageType
         {
-            ErrorEvent,
+            ExceptionEvent,
             FileEvent,
             ActionEvent,
             StdEvent,
