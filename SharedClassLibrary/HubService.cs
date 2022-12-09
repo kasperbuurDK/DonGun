@@ -26,6 +26,7 @@ namespace SharedClassLibrary
         public event EventHandler<HubEventArgs<GameSessionOptions>>? LeaveEvent;
         public event EventHandler<HubEventArgs<NewTurnMessage>>? NewTurnEvent;
         public event EventHandler<HubEventArgs<EndMyTurnMessage>>? EndTurnEvent;
+        public event EventHandler<HubEventArgs<ExceptionMessage>>? ExceptionEvent;
 
         // Constructor
         public HubService(string authHeader, string baseUrl, string hubUri, bool clientDon = false)
@@ -90,6 +91,11 @@ namespace SharedClassLibrary
             hubConnection.On<HubServiceException>("ExceptionHandler", msg =>
             {
                 ExceptionHandlerEvent?.Invoke(this, new HubEventArgs<HubServiceException>() { Messege = msg });
+            });
+            // Exception from client to client
+            hubConnection.On<ExceptionMessage>(Message.MessageType.ExceptionEvent.ToString(), msg =>
+            {
+                ExceptionEvent?.Invoke(this, new HubEventArgs<ExceptionMessage>() { Messege = msg });
             });
 
         }

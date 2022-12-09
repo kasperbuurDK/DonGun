@@ -6,7 +6,7 @@ using SharedClassLibrary.MessageStrings;
 using System.Windows.Input;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
-using SharedClassLibrary.Actions;
+using SharedClassLibrary.AuxUtils;
 
 namespace PlayerSide.Pages;
 
@@ -28,14 +28,6 @@ public partial class MovePage : ContentPage
         UpdateFrame.BackgroundColor = Color.FromRgba(255, 255, 255, 128); // Workaround
         _configuration = MauiProgram.Services.GetService<IConfiguration>();
     }
-
-    enum DirectionMapping
-    {
-        Up = 1,
-        Right,
-        Down,
-        Left
-    };
 
     // Debug -- Remove
     /*
@@ -99,7 +91,7 @@ public partial class MovePage : ContentPage
                 if (MauiProgram.Hub is not null && MauiProgram.Hub.IsConnected) {
                     try
                     {
-                        await MauiProgram.Hub.Send(new MoveMessage() { Direction = ((DirectionMapping)int.Parse(_selected.ClassId)).ToString(), Distence = (int)_stepper.Value });
+                        await MauiProgram.Hub.Send(new MoveMessage() { Direction = ((MoveDirections)int.Parse(_selected.ClassId)).ToString(), Distence = (int)_stepper.Value });
                     } catch (Microsoft.AspNetCore.SignalR.HubException ex)
                     {
                         ErrorLabel.Text = ex.Message;
