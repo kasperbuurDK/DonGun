@@ -4,6 +4,9 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using SharedClassLibrary.MessageStrings;
 @using System.Collections.ObjectModel;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using SharedClassLibrary.MessageStrings;
+@using System.Net;
 @inject DonBlazor.Containers.ActiveContainer ActiveContainer;
 
 
@@ -30,33 +33,47 @@ Welcome to your game.
     protected override void OnInitialized()
     {
         ActiveContainer.CharactersChanged += StateHasChanged;
-        ActiveContainer.CharactersChanged += UpdateOurList;
     }
 
     private async void StartGame()
     {
         Game thisGame = ActiveContainer.GameMaster.Game;
         GameMaster thisMaster = ActiveContainer.GameMaster;
+        thisMaster.StartEncounter();
 
-        await  ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) {  });
+        await ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) { });
 
-        string queueJson = thisMaster.Queue.TypeToJson();
-        string happeningsJson = (new List<string> { "Noget", "skete" }).TypeToJson();
-
-        await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete"}));
-    }
-
-    private void UpdateOurList()
-    {
+        await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete" }));
+        await ActiveContainer.Hub.Send(new ExceptionMessage(thisGame.Name, "test"));
+        await ActiveContainer.Hub.Initialise();
+        await ActiveContainer.Hub.hubConnection.SendAsync("NewTurn", new ActionMessage(thisGame.Name, "TTTT", 8));
         
+
+        if (thisGame.CharacterToAct is Player thisPlayer)
+        {
+            if (thisMaster.ConnectionsId.TryGetValue(thisPlayer.OwnerName, out string? connectionId))
+            {
+                var actionsJson = thisMaster.PossibleActions.TypeToJson();
+
+                await ActiveContainer.Hub.Send(new UpdateMessage()
+                    {
+                        ConnectionId = connectionId,
+                        PossibleActionsJson = actionsJson,
+                        UpdateStr = "Super"
+
+                    });
+            }
+        } 
+        else
+        {
+            Console.WriteLine("It is Don to act");
+            // let the Don act
+        }
     }
 
     private void IndicateTurn()
     {
-
-
-     // take from queue and find connectionId    
-    
+        // take from queue and find connectionId
     }
 
 }

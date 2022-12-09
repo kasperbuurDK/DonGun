@@ -9,12 +9,13 @@
         //***LIST ARE NOT VALID IN SIGNALR***
         // Serialize the list before hand
         // List<string> -> string
-        public string Happenings { get; set; }7
+        public string Happenings { get; set; }
 
 
         public NewTurnMessage(string sessionKey, Queue<Character> queue, List<string> happenings) : base(MessageType.NewTurn, sessionKey)
         {
-            TheQueue = queue.TypeToJson();
+            var asList = new List<Character>(queue);
+            TheQueue = asList.TypeToJson();
             Happenings = happenings.TypeToJson();
         }
 

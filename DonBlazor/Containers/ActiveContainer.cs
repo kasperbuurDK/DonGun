@@ -78,7 +78,7 @@ namespace DonBlazor.Containers
                 await Hub.Initialise();
 
                 Hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
-                Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); // Subscribe to Exceptionhandler
+                Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); 
                 Hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
                 {
                     Console.WriteLine(e.Messege?.Sheet);
@@ -139,7 +139,12 @@ namespace DonBlazor.Containers
                 {
                     Console.WriteLine(e.Messege?.ToString());
                 };
-                // Hub.LeaveaEvent +=
+               
+                /*   Hub.LeaveEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
+                   {
+
+                   };
+                */
                 // Hub.EndTurn += 
 
                 await Hub.JoinRoom(roomName);

@@ -7,7 +7,7 @@ namespace SharedClassLibrary
     public class HubService
     {
         // Fields
-        private readonly HubConnection hubConnection;   
+        public readonly HubConnection hubConnection;   
 
         //Properties
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
