@@ -1,0 +1,80 @@
+﻿@using DonBlazor.Client;
+@using SharedClassLibrary;
+@using SharedClassLibrary.MessageStrings;
+@inject Containers.ActiveContainer ActiveContainer;
+@inject Containers.StateContainer StateContainer;
+@inject IJSRuntime JsRuntime;
+
+
+<p> Welcome to the game: @ActiveContainer.GameMaster.Game.Name; </p>
+<p> @ActiveContainer.Game.HumanPlayers.Count have joined the game </p>
+<p> You have added @ActiveContainer.Game.NonHumanPlayers.Count NPCs </p>
+<button @onclick="StartGame"> Start Game  </button>
+
+<ListOfCharacters/>
+<AddNpcButton/>
+
+
+@code {
+    private int minimumRequeriedCharacters = 2;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ActiveContainer.CharactersChanged += StateHasChanged;
+
+    }
+
+    private async void StartGame()
+    {
+        Game thisGame = ActiveContainer.GameMaster.Game;
+        GameMaster thisMaster = ActiveContainer.GameMaster;
+
+        if (thisGame.AllCharacters.Count < minimumRequeriedCharacters)
+        {
+            AlertJS($"There need to be at least {minimumRequeriedCharacters} characters in the game");
+            return;
+        }
+
+        thisMaster.StartEncounter();
+
+        if (ActiveContainer.Hub != null)
+        {
+            await ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) { });
+            await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete" }));
+        } 
+        else
+        {
+            AlertJS("Hub Error, anuble to create game");
+            return;
+        }
+
+        StateContainer.GameStatus = Containers.GameStatus.Started;
+
+        if (thisGame.CharacterToAct is Player thisPlayer)
+        {
+            if (thisMaster.ConnectionsId.TryGetValue(thisPlayer.OwnerName, out string? connectionId))
+            {
+                var actionsJson = thisMaster.PossibleActions.TypeToJson();
+
+                await ActiveContainer.Hub.Send(new UpdateMessage()
+                    {
+                        ConnectionId = connectionId,
+                        PossibleActionsJson = actionsJson,
+                        UpdateStr = "Super"
+                    });
+            }
+        }
+        else
+        {
+            Console.WriteLine("It is Don to act");
+            // let the Don act
+        }
+    }
+
+    public async void AlertJS(string alertMessage)
+    {
+        await JsRuntime.InvokeVoidAsync("alert", alertMessage);
+    }
+
+}

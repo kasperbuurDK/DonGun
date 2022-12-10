@@ -1,13 +1,41 @@
 ﻿@page "/"
 @using DonBlazor.Client;
 @using DonBlazor.Containers;
+@using DonBlazor.Shared;
+@inject Containers.StateContainer StateContainer;
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <h1>Hello, Don!</h1>
+<h2>What will you do today?</h2>
 
-Welcome to your mansion.
+@{
+    if (StateContainer.GameStatus == GameStatus.NoRunningGame)
+    {
+        <div class=" ">
+        <p> You can create a new Game</p>
+        <CreateNewGame></CreateNewGame>
+        <br>
+        <p> Or <a href="/loadgame"> reload</a> an old one</p>
+        </div>
+
+    }  
+    else
+    {
+        <p> Your <a href="/activegame"> game</a>  is active, go be the Gamemaster  </p>
+    }
+}
+
+
 
 @code {
-   
+
+    protected override void OnInitialized()
+    {
+        if (StateContainer.GameStatus == GameStatus.Unknown)
+        {
+            StateContainer.GameStatus = GameStatus.NoRunningGame;
+        }
+    }
+
 }

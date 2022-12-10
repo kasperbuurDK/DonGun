@@ -33,7 +33,7 @@ namespace SharedClassLibrary
 
         public int CurrentPlayer { get; set; } = 0;
 
-        public Character CharacterToAct { get; set; }
+        public Character? CharacterToAct { get; set; }
 
         public Game()
         {

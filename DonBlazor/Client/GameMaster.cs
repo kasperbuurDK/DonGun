@@ -29,7 +29,7 @@ namespace DonBlazor.Client
         public List<OffensiveAction>? PossibleOffensiveActions { get => _possibleOffensiveActions; set => _possibleOffensiveActions = value; }
         public Queue<Character>? Queue { get => _queue; set => _queue = value; }
         public Game Game { get => _game; set => _game = value; }
-        public Dictionary<string, string> ConnectionsId = new Dictionary<string, string>() { };
+        public Dictionary<string, string> ConnectionsId = new() { };
 
 
 
@@ -77,7 +77,7 @@ namespace DonBlazor.Client
 
         private void DetermineOthersInSight(Character character)
         {
-            List<string> othersInSight = new List<string>();
+            List<string> othersInSight = new();
 
             foreach (Character otherCharacter in Game.AllCharacters)
             {
@@ -114,7 +114,7 @@ namespace DonBlazor.Client
 
                     if (otherCharacter.Team == character.Team)
                     {
-                        HealAlly healAction = new HealAlly(character.Signature, otherSignature)
+                        HealAlly healAction = new(character.Signature, otherSignature)
                         {
                             SenderSignature = character.Signature,
                             RecieverSignature = otherSignature
@@ -122,7 +122,7 @@ namespace DonBlazor.Client
                         _possibleHelperActions.Add(healAction);
                         character.PossibleHelperActionsSignatures.Add(healAction.Signature);
 
-                        InspireAlly inspireAction = new InspireAlly(character.Signature, otherSignature)
+                        InspireAlly inspireAction = new(character.Signature, otherSignature)
                         {
                             SenderSignature = character.Signature,
                             RecieverSignature = otherSignature
@@ -133,7 +133,7 @@ namespace DonBlazor.Client
                     }
                     else if (otherCharacter.Team != character.Team)
                     {
-                        OffensiveAction anOffensiveAction = new OffensiveAction(character.Signature, otherSignature);
+                        OffensiveAction anOffensiveAction = new(character.Signature, otherSignature);
                         int distToOther = (int)Math.Floor(DetermineDistanceBetweenCharacters(character, otherCharacter));
                         int baseChance = distToOther > character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
                         int dexModifier = RandomRange(0, character.Dexterity) * 2;
@@ -152,11 +152,11 @@ namespace DonBlazor.Client
             }
             else
             {
-                // make empty lists
+                _possibleActions.Clear();
             }
         }
 
-        private int CostOfTurningCharacter(Character character, MoveDirections turnTowards)
+        private static int CostOfTurningCharacter(Character character, MoveDirections turnTowards)
         {
             int costOfturning = 0;
 
@@ -215,7 +215,7 @@ namespace DonBlazor.Client
             characterToAdd.ResourceCurrent = characterToAdd.ResourceMax;
         }
 
-        public void SetMaxValuesBasedOnMainStats(Character character)
+        public static void SetMaxValuesBasedOnMainStats(Character character)
         {
             character.HealthMax = 50 + character.Constitution * 2;
             character.SightRange = 5 + character.Intelligence / 3;

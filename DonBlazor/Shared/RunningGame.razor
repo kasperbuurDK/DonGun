@@ -1,0 +1,16 @@
+﻿@inject Containers.ActiveContainer ActiveContainer;
+@inject Containers.StateContainer StateContainer;
+
+<h3>Game: @ActiveContainer.Game.Name</h3>
+
+<p> It is @ActiveContainer.Game.CharacterToAct.Name 's turn  </p>
+
+<CurrentCharacterStats/>
+
+
+<TheQueue/>
+
+
+@code {
+
+}
