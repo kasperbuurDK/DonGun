@@ -28,7 +28,7 @@ namespace DonGunTest
         public void Player_has_correct_health(int consScore, int expectedResult)
         {
             _player.Constitution = consScore;
-            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
+            GameMaster.SetMaxValuesBasedOnMainStats(_player);
             Assert.That(_player.HealthMax, Is.EqualTo(expectedResult));
         }
 
@@ -41,7 +41,7 @@ namespace DonGunTest
         public void Player_has_correct_Sightrange(int intScore, int expectedResult)
         {
             _player.Intelligence = intScore;
-            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
+            GameMaster.SetMaxValuesBasedOnMainStats(_player);
 
             Assert.That(_player.SightRange, Is.EqualTo(expectedResult));
         }
@@ -55,7 +55,7 @@ namespace DonGunTest
         public void Player_has_correct_RessourceMax(int wisScore, int expectedResult)
         {
             _player.Wisdome = wisScore;
-            _gameMaster.SetMaxValuesBasedOnMainStats(_player);
+            GameMaster.SetMaxValuesBasedOnMainStats(_player);
 
             Assert.That(_player.ResourceMax, Is.EqualTo(expectedResult));
         }

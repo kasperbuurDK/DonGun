@@ -5,27 +5,40 @@
 @using SharedClassLibrary.MessageStrings;
 @using System.Collections.ObjectModel;
 @using Microsoft.AspNetCore.SignalR.Client;
-@using SharedClassLibrary.MessageStrings;
 @using System.Net;
 @inject DonBlazor.Containers.ActiveContainer ActiveContainer;
+@inject DonBlazor.Containers.StateContainer StateContainer;
+@inject NavigationManager Navigation;
 
 
 @page "/activegame"
 
 <PageTitle>Active Game</PageTitle>
 
-<h1>Welcome Don</h1>
+<h1>Hello Don</h1>
+@{
 
-Welcome to your game.
-<br />
-@ActiveContainer.GameMaster.Game.Name;
-<br />
+    switch (StateContainer.GameStatus )
+    { 
+        case GameStatus.PreStart:
+            <PreStart/>
+        break;
+        case GameStatus.NoRunningGame:
+            <NoRunningGame/>
+        break;
+        case GameStatus.Started:
+            <RunningGame />
+        break;
 
-<ListOfCharacters></ListOfCharacters>
 
-<AddNpcButton></AddNpcButton>
 
-<button @onclick="StartGame"> Start Game  </button>
+    }
+
+}
+
+
+
+
 
 
 @code {
@@ -33,37 +46,10 @@ Welcome to your game.
     protected override void OnInitialized()
     {
         ActiveContainer.CharactersChanged += StateHasChanged;
+        StateContainer.GameStatusChanged += StateHasChanged;
     }
 
-    private async void StartGame()
-    {
-        Game thisGame = ActiveContainer.GameMaster.Game;
-        GameMaster thisMaster = ActiveContainer.GameMaster;
-        thisMaster.StartEncounter();
-
-        await ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) { });
-        await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete" }));
-
-        if (thisGame.CharacterToAct is Player thisPlayer)
-        {
-            if (thisMaster.ConnectionsId.TryGetValue(thisPlayer.OwnerName, out string? connectionId))
-            {
-                var actionsJson = thisMaster.PossibleActions.TypeToJson();
-
-                await ActiveContainer.Hub.Send(new UpdateMessage()
-                    {
-                        ConnectionId = connectionId,
-                        PossibleActionsJson = actionsJson,
-                        UpdateStr = "Super"
-                    });
-            }
-        } 
-        else
-        {
-            Console.WriteLine("It is Don to act");
-            // let the Don act
-        }
-    }
+    
 
     private void IndicateTurn()
     {

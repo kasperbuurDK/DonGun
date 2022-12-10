@@ -11,8 +11,6 @@ namespace DonBlazor.Containers
     {
         private GameMaster? _gameMaster;
         private Game? _game;
-        private ObservableCollection<BlazorCharacter> _characters;
-
         private HubService? _hub;
 
         public GameMaster GameMaster
@@ -50,9 +48,6 @@ namespace DonBlazor.Containers
         }
 
 
-
-
-
         public event Action? GameMasterChanged;
         public event Action? GameChanged;
         public event Action? CharactersChanged;
@@ -67,19 +62,19 @@ namespace DonBlazor.Containers
         {
             try
             {
-                // TODO 
-                string authHeader = "dXNlcjpwYXNzd29yZA==";              // Should be set a global place
+                // TODO  Should be set a dynmic place
+                string authHeader = "dXNlcjpwYXNzd29yZA==";              
                 string baseUrl = "https://dungun.azurewebsites.net";
                 string hubUri = "/gamehub";
                 bool clientDon = true;
 
-                Hub = new HubService(authHeader, baseUrl, hubUri, clientDon);
+                _hub = new HubService(authHeader, baseUrl, hubUri, clientDon);
 
-                await Hub.Initialise();
+                await _hub.Initialise();
 
-                Hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
-                Hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); 
-                Hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
+                _hub.ExceptionHandlerEvent += (object? sender, HubEventArgs<HubServiceException> e) => Console.WriteLine(e.Messege?.Messege); // Subscribe to Exceptionhandler
+                _hub.FileEvent += (object? sender, HubEventArgs<FileUpdateMessage> e) => Console.WriteLine(e.Messege?.ToString()); 
+                _hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
                 {
                     Console.WriteLine(e.Messege?.Sheet);
                     var newPlayer = e.Messege?.Sheet;
@@ -105,7 +100,7 @@ namespace DonBlazor.Containers
                     }
 
                 };
-                Hub.MoveEvent += async (object? sender, HubEventArgs<MoveMessage> e) =>
+                _hub.MoveEvent += async (object? sender, HubEventArgs<MoveMessage> e) =>
                 {
                     Console.WriteLine(e.Messege?.ToString());
                     if (e.Messege?.ConnectionId != null)
@@ -135,7 +130,7 @@ namespace DonBlazor.Containers
                     }
 
                 };
-                Hub.ActionEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
+                _hub.ActionEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
                 {
                     Console.WriteLine(e.Messege?.ToString());
                 };
@@ -147,12 +142,13 @@ namespace DonBlazor.Containers
                 */
                 // Hub.EndTurn += 
 
-                await Hub.JoinRoom(roomName);
+                await _hub.JoinRoom(roomName);
 
                 return true;
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -160,9 +156,9 @@ namespace DonBlazor.Containers
 
         private Player? FindPLayer(string connectionId)
         {
-            string foundKey = _gameMaster.ConnectionsId.FirstOrDefault(entry => EqualityComparer<string>.Default.Equals(entry.Value, connectionId)).Key;
-            Player foundPLayer = _game.HumanPlayers.Where(x => x.OwnerName == foundKey).First();
-            return foundPLayer != null ? foundPLayer : null;    
+            string foundKey = GameMaster.ConnectionsId.FirstOrDefault(entry => EqualityComparer<string>.Default.Equals(entry.Value, connectionId)).Key;
+            Player foundPLayer = Game.HumanPlayers.Where(x => x.OwnerName == foundKey).First();
+            return foundPLayer ?? null;    
         }
     }
 }

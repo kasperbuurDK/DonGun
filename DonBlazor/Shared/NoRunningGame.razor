@@ -1,0 +1,15 @@
+﻿@inject NavigationManager Navigation;
+
+
+<p> No active game </p>
+<button @onclick="GoToHome"> Go to home </button>
+
+
+@code {
+
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+}

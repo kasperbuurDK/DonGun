@@ -3,6 +3,7 @@
     public class StateContainer
     {
         private GameStatus? _gameStatus;
+        private EncounterStatus? _encounterStatus;
 
         public GameStatus GameStatus
         {
@@ -14,9 +15,25 @@
             }
         }
 
-        public event Action? OnChange;
+        public EncounterStatus EncounterStatus
+        {
+            get => _encounterStatus ??= EncounterStatus.Unknown;
+            set
+            {
+                _encounterStatus = value;
+                NotifyEncounterStatusChanged();
+            }
+        }
 
-        private void NotifyStateChanged() => OnChange?.Invoke();
+
+
+
+        public event Action? GameStatusChanged;
+        public event Action? EncounterStatusChanged;
+
+        private void NotifyStateChanged() => GameStatusChanged?.Invoke();
+
+        public void NotifyEncounterStatusChanged() => EncounterStatusChanged?.Invoke();
     }
 
     public enum GameStatus
@@ -24,7 +41,19 @@
         Unknown,
         PreStart,
         Started,
-        Finished
+        Finished,
+        NoRunningGame
+    }
+
+    public enum EncounterStatus
+    {
+        Unknown,
+        NewTurnStarted,
+        MidTurn,
+        UsedAction,
+        UsedMove,
+        UsedMoveAndAction,
+        EndingTurn
     }
 
 }

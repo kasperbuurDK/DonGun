@@ -14,9 +14,11 @@ namespace DonBlazor
 
             builder.Services.AddSingleton<ActiveContainer>();
             builder.Services.AddSingleton<StateContainer>();
+            
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
+
         }
     }
 }

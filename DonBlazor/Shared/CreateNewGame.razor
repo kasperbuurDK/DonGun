@@ -1,31 +1,23 @@
-﻿@page "/createnewgame"
-@using Models;
+﻿@using Models;
 @using SharedClassLibrary;
 @using Containers;
 @using System.Text;
 @using SharedClassLibrary.MessageStrings;
 @inject NavigationManager Navigation
 @inject ActiveContainer ActiveContainer;
+@inject StateContainer StateContainer;
+@inject IJSRuntime JsRuntime;
 
-<PageTitle>Create New Game</PageTitle>
 
-<h1>Welcome Don!</h1>
-
-<p> Game Name </p>
 <input placeholder="Give the game a name" @bind="gameName" />
 
-<br />
-
 <button @onclick="CreateGame" >Create Game</button>
-
-
 
 @code{
 
     private string? playerName;
     private string? gameName;
     private StringBuilder creationStatus = new StringBuilder("");
-
 
     private async void CreateGame()
     {
@@ -35,23 +27,23 @@
             if (hubStatus)
             {
                 await ActiveContainer.Hub.Send(new FileUpdateMessage(gameName));
+                StateContainer.GameStatus = GameStatus.PreStart;
                 Navigation.NavigateTo("/activegame");
             }
             else
             {
-                WarnOfSomethingWrong("Failed to connect to hub");
+                AlertJS("Failed to connect to hub");
             }
         }
         else {
-            WarnOfSomethingWrong("Game must have a name");
+            AlertJS("Game must have a name");
         }
 
-        
+
     }
 
-    private void WarnOfSomethingWrong(string message) 
+    public async void AlertJS(string alertMessage)
     {
-        // MAKE SOME KIND OF ALERT
+        await JsRuntime.InvokeVoidAsync("alert", alertMessage);
     }
-
 }
