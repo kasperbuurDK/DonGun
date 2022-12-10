@@ -30,10 +30,16 @@ namespace ServerSideApiSsl
                             policy =>
                             {
                                 policy.WithOrigins("https://localhost:7116")
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()
+                                        .AllowAnyHeader()
+                                        .AllowCredentials();
                             });
             });
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+                o.MaximumReceiveMessageSize = 65536; // bytes
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<ISqlDbService<Player>, SqlDbService<Player>>();
@@ -54,7 +60,7 @@ namespace ServerSideApiSsl
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("DevPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

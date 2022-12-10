@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Data;
+using System.IO.Compression;
 using System.Reflection;
+using System.Text;
 
 namespace SharedClassLibrary
 {
@@ -74,6 +76,30 @@ namespace SharedClassLibrary
                 return type;
             else
                 return new();
+        }
+
+        public static string Compress(this string str)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(str);
+            using MemoryStream msgIn = new(bytes);
+            using MemoryStream msgOut = new();
+            using (GZipStream gZipMsg = new(msgOut, CompressionMode.Compress))
+            {
+                msgIn.CopyTo(gZipMsg);
+            }
+            return Convert.ToBase64String(msgOut.ToArray());
+        }
+
+        public static string Decompress(this string str)
+        {
+            byte[] bytes = Convert.FromBase64String(str);
+            using MemoryStream msgIn = new(bytes);
+            using MemoryStream msgOut = new();
+            using (var gs = new GZipStream(msgIn, CompressionMode.Decompress))
+            {
+                gs.CopyTo(msgOut);
+            }
+            return Encoding.Unicode.GetString(msgOut.ToArray());
         }
     }
 

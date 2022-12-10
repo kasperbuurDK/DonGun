@@ -7,6 +7,10 @@
         {
 
         }
+        public EndMyTurnMessage() : base(MessageType.EndMyTurn)
+        {
+
+        }
 
         public override string ToString()
         {

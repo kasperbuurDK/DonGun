@@ -40,7 +40,7 @@ public partial class SheetPage : ContentPage
                 Margin = new Thickness(1.5, 1.5, 1.5, 1.5),
                 Content = button
             };
-            button.Clicked += async delegate (object sender, EventArgs e)
+            button.Clicked += (sender, args) => MainThread.BeginInvokeOnMainThread(async () => 
             {
                 if (!border.Equals(priSelected))
                 {
@@ -59,7 +59,7 @@ public partial class SheetPage : ContentPage
                         SheetActionStackLayout.Clear();
                     }
                 }
-            };
+            });
             grid.Add(border);
             SheetActionStackLayout.Add(grid);
         }        

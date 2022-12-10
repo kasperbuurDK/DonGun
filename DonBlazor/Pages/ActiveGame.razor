@@ -42,12 +42,7 @@ Welcome to your game.
         thisMaster.StartEncounter();
 
         await ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) { });
-
         await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete" }));
-        await ActiveContainer.Hub.Send(new ExceptionMessage(thisGame.Name, "test"));
-        await ActiveContainer.Hub.Initialise();
-        await ActiveContainer.Hub.hubConnection.SendAsync("NewTurn", new ActionMessage(thisGame.Name, "TTTT", 8));
-        
 
         if (thisGame.CharacterToAct is Player thisPlayer)
         {
@@ -60,7 +55,6 @@ Welcome to your game.
                         ConnectionId = connectionId,
                         PossibleActionsJson = actionsJson,
                         UpdateStr = "Super"
-
                     });
             }
         } 

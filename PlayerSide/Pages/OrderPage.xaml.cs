@@ -12,7 +12,7 @@ public partial class OrderPage : ContentPage
     public OrderPage()
     {
         InitializeComponent();
-        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue.JsonToType<Queue<Character>>()));
+        MauiProgram.Hub.NewTurnEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => RefreshQueue(args.Messege.TheQueue.Decompress().JsonToType<Queue<Character>>()));
         MauiProgram.Hub.ExceptionHandlerEvent += (sender, args) => MainThread.BeginInvokeOnMainThread(() => SetCharView(args.Messege));
     }
 
@@ -24,14 +24,25 @@ public partial class OrderPage : ContentPage
         {
             if (MauiProgram.Sheet.Signature == p.Signature)
             {
+                MauiProgram.Sheet.HealthMax = p.HealthMax;
                 MauiProgram.Sheet.HealthCurrent = p.HealthCurrent;
+                MauiProgram.Sheet.ResourceMax = p.ResourceMax;
                 MauiProgram.Sheet.ResourceCurrent = p.ResourceCurrent;
-                //_cVChild.UpdateResBar((MauiPlayer)p);
             }
-            Grid grid = new()
+            Grid grid;
+            if (p is MauiPlayer player)
             {
-                new CharView((MauiPlayer)p)
-            };
+                grid = new()
+                {
+                    new CharView(player)
+                };
+            } else
+            {
+                grid = new()
+                {
+                    new CharView(p)
+                };
+            }
             QueueStackLayout.Add(grid);
         }
     }

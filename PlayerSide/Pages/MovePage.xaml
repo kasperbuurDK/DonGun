@@ -55,7 +55,7 @@
                      Rotation="270"
                      Aspect="Fill"
                     Clicked="ArrowBtnClicked"
-                     ClassId="1"
+                     ClassId="0"
                      Scale="0.9" />
         <ImageButton x:Name="RightArrow"
                      BackgroundColor="Transparent"
@@ -65,7 +65,7 @@
                      Rotation="0"
                      Aspect="Fill"
                     Clicked="ArrowBtnClicked"
-                     ClassId="2"
+                     ClassId="1"
                      Scale="0.9" />
         <ImageButton x:Name="DownArrow"
                      BackgroundColor="Transparent"
@@ -74,7 +74,7 @@
                      Grid.Row="3"
                      Rotation="90"
                     Clicked="ArrowBtnClicked"
-                     ClassId="3"
+                     ClassId="2"
                      Aspect="Fill"
                      Scale="0.9" />
         <ImageButton x:Name="LeftArrow"
@@ -84,7 +84,7 @@
                      Grid.Row="2"
                      Rotation="180"
                     Clicked="ArrowBtnClicked"
-                     ClassId="4"
+                     ClassId="3"
                      Aspect="Fill"
                      Scale="0.9" />
         <ImageButton x:Name="DoneBtn"
