@@ -3,6 +3,12 @@
 @using Client;
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using SharedClassLibrary.MessageStrings;
+@using System.Collections.ObjectModel;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using SharedClassLibrary.MessageStrings;
+@using System.Net;
+@inject DonBlazor.Containers.ActiveContainer ActiveContainer;
+
 
 @page "/activegame"
 
@@ -10,42 +16,58 @@
 
 <h1>Welcome Don</h1>
 
-Welcome to your game. 
+Welcome to your game.
+<br />
+@ActiveContainer.GameMaster.Game.Name;
+<br />
 
-@if (_activeGame.AllCharacters.Count > 0)
-{
-    <br />
-    @_activeGame.Name
-    <br />
+<ListOfCharacters></ListOfCharacters>
 
-    <QuickGrid Items="@_activeGame.AllCharacters.AsQueryable()">
-        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-    </QuickGrid>
-    <br />
-
-} else {
-    <p>No characters in the game</p>
-}
+<AddNpcButton></AddNpcButton>
 
 <button @onclick="StartGame"> Start Game  </button>
 
 
 @code {
-    private ActiveGameContainer _activeGame = ActiveGameContainer.GetGameInstance;
 
+    protected override void OnInitialized()
+    {
+        ActiveContainer.CharactersChanged += StateHasChanged;
+    }
 
     private async void StartGame()
     {
-        var gameMaster = ActiveGameMasterContainer.GetGameMasterInstance;
-        await gameMaster.Hub.Send<StartGameMessage>(new StartGameMessage(gameMaster.Game.Name) {  }); 
+        Game thisGame = ActiveContainer.GameMaster.Game;
+        GameMaster thisMaster = ActiveContainer.GameMaster;
+        thisMaster.StartEncounter();
+
+        await ActiveContainer.Hub.Send<StartGameMessage>(new StartGameMessage(ActiveContainer.GameMaster.Game.Name) { });
+        await ActiveContainer.Hub.Send(new NewTurnMessage(thisGame.Name, thisMaster.Queue, new List<string> { "Noget", "skete" }));
+
+        if (thisGame.CharacterToAct is Player thisPlayer)
+        {
+            if (thisMaster.ConnectionsId.TryGetValue(thisPlayer.OwnerName, out string? connectionId))
+            {
+                var actionsJson = thisMaster.PossibleActions.TypeToJson();
+
+                await ActiveContainer.Hub.Send(new UpdateMessage()
+                    {
+                        ConnectionId = connectionId,
+                        PossibleActionsJson = actionsJson,
+                        UpdateStr = "Super"
+                    });
+            }
+        } 
+        else
+        {
+            Console.WriteLine("It is Don to act");
+            // let the Don act
+        }
     }
 
     private void IndicateTurn()
     {
-
-
-     // take from queue and find connectionId    
-    
+        // take from queue and find connectionId
     }
 
 }

@@ -11,6 +11,8 @@ namespace SharedClassLibrary
          * 
          */
 
+        private string _name = "DJON DOE";
+
         // Data fields
         // 6 main stats
         private int _str = 10;
@@ -40,9 +42,11 @@ namespace SharedClassLibrary
         private List<string> _possibleHelperActionsSignatures = new() { };
         private List<string> _possibleOffensiveActionsSignatures = new() { };
 
-
-        private Race_abstract _race;
+        private Race _race;
         private int[] _hitModifierProfile = new int[] { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100 };
+
+        private CharacterLifeStatus _status;
+
 
         protected virtual void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
@@ -52,7 +56,7 @@ namespace SharedClassLibrary
             }
         }
 
-        private string _name = "DJON DOE";
+        
 
         public string Name
         {
@@ -161,7 +165,7 @@ namespace SharedClassLibrary
         public int MpMax { get => _mpMax; set => _mpMax = value; }
         public int MpCur { get => _mpCur; set => _mpCur = value; }
 
-        public Race_abstract Race
+        public Race Race
         {
             set { SetPropertyField(nameof(Race), ref _race, value); }
             get { return _race; }
@@ -174,12 +178,13 @@ namespace SharedClassLibrary
 
 
         public int[] HitModifierProfile { get => _hitModifierProfile; set => _hitModifierProfile = value; }
+        public CharacterLifeStatus Status { get => _status; set => _status = value; }
 
         // Constructors
         public Character()
         {
             Signature = Guid.NewGuid().ToString();
-            _race = new Race_abstract(0);
+            _race = new Race();
         }
 
         // Methods
@@ -190,8 +195,11 @@ namespace SharedClassLibrary
 
         public void RecieveDamage(int damage)
         {
-
             _hpCur -= damage;
+            if (_hpCur < 1)
+            {
+                Status = CharacterLifeStatus.Unconcinous;
+            }
         }
 
         internal void RecieveHealing(int healing)
@@ -219,6 +227,15 @@ namespace SharedClassLibrary
         {
             return String.Format($"[{Strength}, {Dexterity}, {Constitution}, {Wisdome}, {Intelligence}, {Charisma}, {HealthMax}, {ResourceMax}, {Race}] \n" +
                 $"sign: {Signature} - Team: {Team}");
+        }
+
+
+        public enum CharacterLifeStatus
+        {
+            AllGood,
+            Unconcinous,
+            Death
+
         }
     }
 }

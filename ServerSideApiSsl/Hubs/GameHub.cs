@@ -45,8 +45,6 @@ namespace ServerSideApiSsl.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() });
         }
 
-
-
         public async Task UpdateEvent(UpdateMessage msg) // From Don to Maui
         {
             if (msg.ConnectionId != null)
@@ -68,7 +66,7 @@ namespace ServerSideApiSsl.Hubs
         {
             await Clients.OthersInGroup(msg.SessionKey).SendAsync(Message.MessageType.NewTurn.ToString(), msg);
             //Debug echo
-            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString() + msg.TheQueue + msg.Happenings, ActionName = Message.MessageType.NewTurn.ToString() });
+            await Clients.Client(Context.ConnectionId).SendAsync("ExceptionHandler", new HubServiceException() { Messege = msg.ToString(), ActionName = nameof(NewTurn ) });
         }
 
         public async Task ActionEvent(ActionMessage msg) // To Don from Maui

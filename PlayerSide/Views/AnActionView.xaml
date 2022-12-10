@@ -10,29 +10,33 @@
               RowSpacing="2"
               ColumnSpacing="2">
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="0.25"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.40*" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Label x:Name="Res" 
+            <Label x:Name="Send" 
                    Grid.Row="1"
                    VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="End"
                    TextColor="Black"/>
-            <Label x:Name="Send"
+            <Label x:Name="Res"
                    Grid.Row="1"
                    Grid.Column="2"
                    VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Start"
                    TextColor="Black"/>
             <Image Source="arrow"
                    Grid.Column="1"/>
             <Image x:Name="sendImg"
-                   HeightRequest="40"/>
+                   Source="no_data"
+                   HeightRequest="80"/>
             <Image x:Name="resImg"
-                   HeightRequest="40"
+                   Source="no_data"
+                   HeightRequest="80"
                    Grid.Column="2" />
         </Grid>
     </Frame>

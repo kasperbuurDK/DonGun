@@ -3,7 +3,7 @@
     public class MoveMessage : Message
     {
         public string Direction { get; set; } = string.Empty;
-        public int Distence { get; set; }
+        public int Distence { get; set; } = default;
 
         public MoveMessage() : base(MessageType.MoveEvent) { }
 

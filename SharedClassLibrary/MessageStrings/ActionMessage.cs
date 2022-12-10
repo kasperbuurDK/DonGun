@@ -7,14 +7,17 @@ namespace SharedClassLibrary.MessageStrings
         // Maui can't return the action, BC of the serializing and deserializing.
         // Retruns the string signature insted.
         // IAnAction -> string
-        public string ActionToPerform;
+        public string ActionToPerform { get; set; } = string.Empty;
 
-        public int DiceValue;
+        public int DiceValue { get; set; } = default;
 
         public ActionMessage(string SKey, string anAction, int diceResult) : base(MessageType.ActionEvent, SKey)
         {
             ActionToPerform = anAction;
             DiceValue = diceResult;
+        }
+        public ActionMessage() : base(MessageType.ActionEvent)
+        {
         }
 
 

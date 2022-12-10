@@ -11,8 +11,7 @@ namespace DonGunTest
     {
         private Player _mainCharacter;
         private GameMaster _gameMaster;
-        private Game _game;
-
+       
         [SetUp]
         public void Setup()
         {
@@ -25,8 +24,7 @@ namespace DonGunTest
             };
             _mainCharacter.MpCur = _mainCharacter.MpMax;
 
-            _game = new Game();
-            _gameMaster = new GameMaster(_game);
+            _gameMaster = new GameMaster(new Game());
             _gameMaster.AddCharacterToGame(_mainCharacter);
 
 
@@ -254,7 +252,7 @@ namespace DonGunTest
             int diceValue = 10;
 
             CreateNewEnemyNearby();
-            Npc enemyCharacter = _game.NonHumanPlayers[0];
+            Npc enemyCharacter =   _gameMaster.Game.NonHumanPlayers[0];
             enemyCharacter.HealthMax = startHealth;
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
@@ -280,7 +278,7 @@ namespace DonGunTest
             int startHealth = 1;
             int diceValue = 10;
             CreateNewFriendNearby();
-            Player friend = _game.HumanPlayers.Find(player => player.Name == "Friend");
+            Player friend = _gameMaster.Game.HumanPlayers.Find(player => player.Name == "Friend");
             friend.HealthCurrent = startHealth;
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
 

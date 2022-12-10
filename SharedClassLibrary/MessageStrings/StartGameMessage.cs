@@ -2,11 +2,13 @@
 {
     public class StartGameMessage : Message
     {
-        public StartGameMessage(string sessionKey) : base(MessageType.StartGame, sessionKey)
+        public StartGameMessage() : base(MessageType.StartGame)
         {
-
         }
 
+        public StartGameMessage(string sessionKey) : base(MessageType.StartGame, sessionKey)
+        {
+        }
 
         public override string ToString()
         {

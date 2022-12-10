@@ -1,0 +1,44 @@
+﻿@using DonBlazor.Client;
+@using DonBlazor.Containers;
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SharedClassLibrary
+@using System.Collections.ObjectModel;
+@inject ActiveContainer ActiveContainer;
+
+<h3>ListOfCharacters</h3>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+        <th> Name </th>
+        <th> Team </th>
+        </tr>
+    </thead>
+    <tbody >
+        @foreach (Character charater in ActiveContainer.Game.AllCharacters)
+        {
+            <tr @key=charater>
+           <td> @charater.Name </td> 
+           <td> @charater.Team </td> 
+           </tr>
+        }
+
+    </tbody>
+
+</table>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        // ActiveContainer.
+        ActiveContainer.CharactersChanged += StateHasChanged;
+  
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+}

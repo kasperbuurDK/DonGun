@@ -12,8 +12,8 @@ namespace DonBlazor
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddSingleton<ActiveGameContainer>();
-            builder.Services.AddSingleton<ActiveGameMasterContainer>();
+            builder.Services.AddSingleton<ActiveContainer>();
+            builder.Services.AddSingleton<StateContainer>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
