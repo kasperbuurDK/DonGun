@@ -21,13 +21,13 @@
             <Label x:Name="Send" 
                    Grid.Row="1"
                    VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="End"
+                   HorizontalTextAlignment="Center"
                    TextColor="Black"/>
             <Label x:Name="Res"
                    Grid.Row="1"
                    Grid.Column="2"
                    VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Start"
+                   HorizontalTextAlignment="Center"
                    TextColor="Black"/>
             <Image Source="arrow"
                    Grid.Column="1"/>
