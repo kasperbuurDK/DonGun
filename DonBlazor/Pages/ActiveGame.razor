@@ -1,18 +1,7 @@
 ﻿@using Containers;
-@using SharedClassLibrary;
-@using Client;
-@using Microsoft.AspNetCore.Components.QuickGrid
-@using SharedClassLibrary.MessageStrings;
-@using System.Collections.ObjectModel;
-@using Microsoft.AspNetCore.SignalR.Client;
-@using System.Net;
-@inject DonBlazor.Containers.ActiveContainer ActiveContainer;
-@inject DonBlazor.Containers.StateContainer StateContainer;
-@inject NavigationManager Navigation;
-
-
+@inject ActiveContainer ActiveContainer;
+@inject StateContainer StateContainer;
 @page "/activegame"
-
 <PageTitle>Active Game</PageTitle>
 
 <h1>Hello Don</h1>
@@ -28,29 +17,18 @@
         break;
         case GameStatus.Started:
             <RunningGame />
-        break;
-
-
-
+            break;
+        case GameStatus.Unknown:
+            default:
+            <p> Unknown state go to <a href="/"> home</a> and try again. If problems persists hard reload browser </p>
+            break;
     }
-
 }
 
-
 @code {
-
     protected override void OnInitialized()
     {
-        ActiveContainer.CharactersChanged += StateHasChanged;
         StateContainer.GameStatusChanged += StateHasChanged;
-    }
-
-    
-
-    private void IndicateTurn()
-    {
-        // take from queue and find connectionId
-    }
-
+    }  
 }
 

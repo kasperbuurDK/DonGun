@@ -38,7 +38,6 @@
     protected override void OnInitialized()
     {
         UpdateCurrent();
-        // ActiveContainer.
         ActiveContainer.CharactersChanged += StateHasChanged;
         StateContainer.EncounterStatusChanged += UpdateCurrent;
         ActiveContainer.CurrentCharacterChanged += StateHasChanged;

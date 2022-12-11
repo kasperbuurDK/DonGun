@@ -32,13 +32,6 @@
 
     protected override void OnInitialized()
     {
-        // ActiveContainer.
         ActiveContainer.CharactersChanged += StateHasChanged;
-  
-    }
-
-    protected override void OnParametersSet()
-    {
-        StateHasChanged();
     }
 }
