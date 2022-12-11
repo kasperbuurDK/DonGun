@@ -6,14 +6,11 @@ using SharedClassLibrary.MessageStrings;
 
 namespace DonBlazor.Containers
 {
-
-    
     public class ActiveContainer
     {
         private GameMaster? _gameMaster;
         private Game? _game;
         private HubService? _hub;
-
 
         public GameMaster GameMaster
         {
@@ -81,13 +78,13 @@ namespace DonBlazor.Containers
                 _hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
                 {
                     Console.WriteLine(e.Messege?.Sheet);
-                    var newPlayer = e.Messege?.Sheet;
+                    Player newPlayer = e.Messege?.Sheet;
                     if (newPlayer != null)
                     {
                         if (GameMaster.ConnectionsId.ContainsKey(e.Messege.Sheet.OwnerName))
                         {
-
-                            // await Hub.Send(new ExceptionMessage() { Messege = "User already logged in", Code = (int)HttpStatusCode.AlreadyReported });
+    
+                            // User is already connected, do not allow user to have more than on character connected
                         }
                         else
                         {
