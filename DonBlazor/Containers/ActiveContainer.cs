@@ -2,16 +2,18 @@
 using SharedClassLibrary;
 using SharedClassLibrary.AuxUtils;
 using SharedClassLibrary.MessageStrings;
-using System.Collections.ObjectModel;
-using System.Net;
+
 
 namespace DonBlazor.Containers
 {
+
+    
     public class ActiveContainer
     {
         private GameMaster? _gameMaster;
         private Game? _game;
         private HubService? _hub;
+
 
         public GameMaster GameMaster
         {
@@ -51,10 +53,12 @@ namespace DonBlazor.Containers
         public event Action? GameMasterChanged;
         public event Action? GameChanged;
         public event Action? CharactersChanged;
+        public event Action? CurrentCharacterChanged;
 
         public void NotifyGameMasterChanged() => GameMasterChanged?.Invoke();
         public void NotifyGameChanged() => GameChanged?.Invoke();
         public void NotifyCharactersChanged() => CharactersChanged?.Invoke();
+        public void NotifyCurrentCharacterChanged() => CurrentCharacterChanged?.Invoke();
 
         public HubService? Hub { get => _hub; set => _hub = value; }
 
@@ -124,8 +128,9 @@ namespace DonBlazor.Containers
                                     PossibleActionsJson = actionsJson,
                                     UpdateStr = "Super" 
                                 });
+
                             }
-                            
+                            NotifyCurrentCharacterChanged();
                         }
                     }
 
