@@ -15,6 +15,7 @@
         <th> Health </th>
         <th> Move </th>
         <th> Resources </th>
+        <th> Position </th>
         </tr>
     </thead>
     <tbody >
@@ -23,6 +24,7 @@
             <td> @current.HealthCurrent / @current.HealthMax </td>
             <td> @current.MpCur / @current.MpMax </td>
             <td> @current.ResourceCurrent / @current.ResourceMax </td>
+            <td> @current.Position.ToString();</td>
         </tr>
 
     </tbody>
@@ -39,6 +41,7 @@
         // ActiveContainer.
         ActiveContainer.CharactersChanged += StateHasChanged;
         StateContainer.EncounterStatusChanged += UpdateCurrent;
+        ActiveContainer.CurrentCharacterChanged += StateHasChanged;
     }
 
     private void UpdateCurrent()
