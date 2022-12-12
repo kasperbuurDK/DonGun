@@ -78,12 +78,13 @@ namespace DonBlazor.Containers
                 _hub.JoinEvent += async (object? sender, HubEventArgs<GameSessionOptions> e) =>
                 {
                     Console.WriteLine(e.Messege?.Sheet);
-                    Player newPlayer = e.Messege?.Sheet;
-                    if (newPlayer != null)
+
+                    if (e?.Messege?.Sheet != null)
                     {
+                        Player newPlayer = e?.Messege?.Sheet;
                         if (GameMaster.ConnectionsId.ContainsKey(e.Messege.Sheet.OwnerName))
                         {
-    
+
                             // User is already connected, do not allow user to have more than on character connected
                         }
                         else
@@ -100,6 +101,7 @@ namespace DonBlazor.Containers
                         Console.WriteLine(e.ToString());
                     }
 
+                    
                 };
                 _hub.MoveEvent += async (object? sender, HubEventArgs<MoveMessage> e) =>
                 {

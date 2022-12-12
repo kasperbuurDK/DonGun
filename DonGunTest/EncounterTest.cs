@@ -114,7 +114,7 @@ namespace DonGunTest
             _mainCharacter.Facing = MoveDirections.North;
 
             // Act
-            string moveStatus = _gameMaster.Move(_mainCharacter, MoveDirections.South, 4);
+            string moveStatus = _gameMaster.Move(_mainCharacter, MoveDirections.South, distance);
 
             // Assert
             Assert.That(_mainCharacter.MpCur, Is.EqualTo(10 - expectedCost));
@@ -138,29 +138,27 @@ namespace DonGunTest
 
             for (int i = 0; i < noOfOtherCharacteres; i++)
             {
-                Character otherCharacter = new Npc()
-                {
-                    Position = new Position(9, 9),
-                };
+                Character otherCharacter = new Npc();
                 _gameMaster.AddCharacterToGame(otherCharacter);
                 otherCharacter.Position= new Position(_mainCharacter.Position.X + 2*i, _mainCharacter.Position.Y );
             }
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(noOfOtherCharacteres));
+            Assert.That(_mainCharacter.OthersInSight, Has.Count.EqualTo(noOfOtherCharacteres));
         }
 
         [Test]
         public void Current_character_dont_see_any_when_there_are_none_in_range()
         {
-
             _mainCharacter.SightRange = 2;
             _mainCharacter.Position = new Position(10, 10);
 
-            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) });
+            Npc npc = new Npc();
+            _gameMaster.AddCharacterToGame(npc);
+            npc.Position = new Position(_mainCharacter.Position.X + 2*_mainCharacter.SightRange, _mainCharacter.Position.Y);
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(0));
+            Assert.That(_mainCharacter.OthersInSight, Has.Count.EqualTo(0));
         }
 
         [Test]
@@ -213,21 +211,19 @@ namespace DonGunTest
         public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit(int distanceToMainChar)
         {
             int timesTakingAction = 1000000;
-
             Npc npc = new Npc()
             {
                 Team = _mainCharacter.Team +1
             };
             _gameMaster.AddCharacterToGame(npc);
             npc.Position = new Position(_mainCharacter.Position.X + distanceToMainChar, _mainCharacter.Position.Y);
-
             _mainCharacter.SightRange = 200;
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
 
             int timesHit = 0;
             int diceValue = 10;
 
-            Parallel.For(0, timesTakingAction,
+             var  result = Parallel.For(0, timesTakingAction,
                            index =>
                            {
                                if (_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, npc))
@@ -243,7 +239,6 @@ namespace DonGunTest
 
             if (maxBoundary > timesTakingAction) { maxBoundary = timesTakingAction; }
             if (minBoundary > timesTakingAction) { minBoundary = timesTakingAction; }
-
 
             Assert.That(timesHit, Is.AtLeast(minBoundary));
             Assert.That(timesHit, Is.AtMost(maxBoundary));
