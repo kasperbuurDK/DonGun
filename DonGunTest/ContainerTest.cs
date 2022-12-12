@@ -32,6 +32,13 @@ namespace DonGunTest
         }
 
         [Test]
+        public void GameMasters_game_is_the_same_as_containers_game() 
+        {
+        
+            Assert.That(container.GameMaster.Game, Is.EqualTo(container.Game));
+        }
+
+        [Test]
         public void GameMaster_is_always_the_same()
         {
             var first = container.GameMaster;
