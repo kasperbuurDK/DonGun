@@ -96,7 +96,7 @@ namespace DonBlazor.Client
 
         public void UpdatePossibleActions(Character character)
         {
-
+            // TODO move inside if statement and invert if
             _possibleHelperActions = new List<HelperAction>();
             _possibleOffensiveActions = new List<OffensiveAction>();
             _possibleActions = new List<IAnAction>();
