@@ -17,9 +17,10 @@
     @foreach (var anAction in ActiveContainer.GameMaster.PossibleActions)
     {
         <tr @key=anAction>
-            <td> @CharacterFromSignature(anAction.RecieverSignature); </td> 
+            <td> @CharacterFromSignature(anAction.RecieverSignature).Name </td> 
             <td> @anAction.ChanceToSucced </td> 
-            <td> @ResolveType(anAction);  </td> 
+            <td> @ResolveType(anAction)  </td> 
+            <td> <button @onclick="() => MakeAction(anAction)" >Make Action</button>  </td>
         </tr>
     }
 
@@ -34,9 +35,9 @@
         ActiveContainer.CurrentCharacterChanged += StateHasChanged;
     }
 
-    string CharacterFromSignature(string locatorSignature)
+    Character CharacterFromSignature(string locatorSignature)
     {
-        return ActiveContainer.Game.AllCharacters.Single(character => character.Signature == locatorSignature).Name;
+        return ActiveContainer.Game.AllCharacters.Single(character => character.Signature == locatorSignature);
     }
 
     private string ResolveType(IAnAction theAction)
@@ -48,6 +49,12 @@
             InspireAlly => "Inspire",
             _ => "unknown"
             };
+    }
+
+    private void MakeAction(IAnAction theAction)
+    {
+        var diceValue = SharedClassLibrary.AuxUtils.GameMasterHelpers.RandomRange(1, 20);
+        ActiveContainer.GameMaster.PossibleActions.Single(action => action.Signature == theAction.Signature).MakeBasicAction(diceValue, ActiveContainer.Game.CharacterToAct, CharacterFromSignature(theAction.RecieverSignature) );
     }
 
 }

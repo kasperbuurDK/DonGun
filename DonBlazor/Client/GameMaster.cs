@@ -206,8 +206,6 @@ namespace DonBlazor.Client
                 _game.NonHumanPlayers.Add(npc);
             }
 
-           
-
             Console.WriteLine("numbers of characteres in game: " + Game.AllCharacters.Count);
         }
 
@@ -244,6 +242,10 @@ namespace DonBlazor.Client
             Game.CharacterToAct = Queue.Dequeue();
             Queue.Enqueue(Game.CharacterToAct);
             Game.CharacterToAct = Queue.Peek();
+            PossibleActions?.Clear();
+            PossibleHelperActions?.Clear();
+            PossibleOffensiveActions?.Clear();
+            DetermineOthersInSight(Game.CharacterToAct);
             Game.CharacterToAct.MpCur = Game.CharacterToAct.MpMax;
         }
     }
