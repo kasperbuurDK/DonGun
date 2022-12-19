@@ -1,0 +1,20 @@
+﻿@using SharedClassLibrary.AuxUtils
+@using DonBlazor.Containers
+@inject ActiveContainer ActiveContainer;
+<h3>DonMover</h3>
+
+<button @onclick="(() => MakeMove(MoveDirections.North))"> North </button>
+<button @onclick="(() => MakeMove(MoveDirections.East))"> East </button>
+<button @onclick="(() => MakeMove(MoveDirections.South))"> South </button>
+<button @onclick="(() => MakeMove(MoveDirections.West))"> West </button>
+
+@code {
+    private void MakeMove(MoveDirections direction)
+    {
+        ActiveContainer.GameMaster.Move(ActiveContainer.Game.CharacterToAct, direction, 1);
+        ActiveContainer.NotifyCurrentCharacterChanged();
+
+        var tempGM = ActiveContainer.GameMaster;
+        var tempGame = ActiveContainer.Game;
+    }
+}

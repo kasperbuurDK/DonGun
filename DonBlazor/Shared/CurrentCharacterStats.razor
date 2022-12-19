@@ -20,11 +20,11 @@
     </thead>
     <tbody >
         <tr>
-            <td> @current.Team </td>
-            <td> @current.HealthCurrent / @current.HealthMax </td>
-            <td> @current.MpCur / @current.MpMax </td>
-            <td> @current.ResourceCurrent / @current.ResourceMax </td>
-            <td> @current.Position.ToString();</td>
+            <td> @ActiveContainer.Game.CharacterToAct.Team </td>
+            <td> @ActiveContainer.Game.CharacterToAct.HealthCurrent / @ActiveContainer.Game.CharacterToAct.HealthMax </td>
+            <td> @ActiveContainer.Game.CharacterToAct.MpCur / @ActiveContainer.Game.CharacterToAct.MpMax </td>
+            <td> @ActiveContainer.Game.CharacterToAct.ResourceCurrent / @ActiveContainer.Game.CharacterToAct.ResourceMax </td>
+            <td> @ActiveContainer.Game.CharacterToAct.Position.ToString();</td>
         </tr>
 
     </tbody>
@@ -33,22 +33,11 @@
 
 
 @code {
-    Character current; 
 
     protected override void OnInitialized()
     {
-        UpdateCurrent();
         ActiveContainer.CharactersChanged += StateHasChanged;
-        StateContainer.EncounterStatusChanged += UpdateCurrent;
         ActiveContainer.CurrentCharacterChanged += StateHasChanged;
     }
 
-    private void UpdateCurrent()
-    {
-        current = ActiveContainer.Game.CharacterToAct;
-    }
-
-
-
-    
 }

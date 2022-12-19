@@ -111,13 +111,20 @@ namespace DonBlazor.Client
                 {
                     var otherCharacter = Game.AllCharacters.Find(chara => chara.Signature == otherSignature);
                     if (otherCharacter == null) continue;
+                    
+                    int distToOther = (int)Math.Floor(DetermineDistanceBetweenCharacters(character, otherCharacter));
+                    int baseChance = distToOther > character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
+                    int dexModifier = RandomRange(0, character.Dexterity) * 2;
+                    var chanceToSuceed = baseChance + dexModifier;
 
                     if (otherCharacter.Team == character.Team)
                     {
+                        
                         HealAlly healAction = new(character.Signature, otherSignature)
                         {
                             SenderSignature = character.Signature,
-                            RecieverSignature = otherSignature
+                            RecieverSignature = otherSignature,
+                            ChanceToSucced = chanceToSuceed
                         };
                         _possibleHelperActions.Add(healAction);
                         character.PossibleHelperActionsSignatures.Add(healAction.Signature);
@@ -125,7 +132,9 @@ namespace DonBlazor.Client
                         InspireAlly inspireAction = new(character.Signature, otherSignature)
                         {
                             SenderSignature = character.Signature,
-                            RecieverSignature = otherSignature
+                            RecieverSignature = otherSignature,
+                            ChanceToSucced = chanceToSuceed
+
                         };
                         _possibleHelperActions.Add(inspireAction);
                         character.PossibleHelperActionsSignatures.Add(inspireAction.Signature);
@@ -133,14 +142,13 @@ namespace DonBlazor.Client
                     }
                     else if (otherCharacter.Team != character.Team)
                     {
-                        OffensiveAction anOffensiveAction = new(character.Signature, otherSignature);
-                        int distToOther = (int)Math.Floor(DetermineDistanceBetweenCharacters(character, otherCharacter));
-                        int baseChance = distToOther > character.HitModifierProfile.Length ? -100000 : character.HitModifierProfile[distToOther];
-                        int dexModifier = RandomRange(0, character.Dexterity) * 2;
-
-                        anOffensiveAction.SenderSignature = character.Signature;
-                        anOffensiveAction.RecieverSignature = otherCharacter.Signature;
-                        anOffensiveAction.ChanceToSucced = baseChance + dexModifier;
+                        OffensiveAction anOffensiveAction = new(character.Signature, otherSignature)
+                        {
+                            SenderSignature = character.Signature,
+                            RecieverSignature = otherSignature,
+                            ChanceToSucced = chanceToSuceed
+                        };
+                            
                         character.PossibleOffensiveActionsSignatures.Add(anOffensiveAction.Signature);
                         _possibleOffensiveActions.Add(anOffensiveAction);
                     }
@@ -198,8 +206,6 @@ namespace DonBlazor.Client
                 _game.NonHumanPlayers.Add(npc);
             }
 
-           
-
             Console.WriteLine("numbers of characteres in game: " + Game.AllCharacters.Count);
         }
 
@@ -227,6 +233,8 @@ namespace DonBlazor.Client
         {
             Queue = new Queue<Character>(Game.AllCharacters);
             Game.CharacterToAct = Queue.Peek();
+            Game.CharacterToAct.MpCur = Game.CharacterToAct.MpMax;
+
         }
 
         public void EndTurn()
@@ -234,6 +242,11 @@ namespace DonBlazor.Client
             Game.CharacterToAct = Queue.Dequeue();
             Queue.Enqueue(Game.CharacterToAct);
             Game.CharacterToAct = Queue.Peek();
+            PossibleActions?.Clear();
+            PossibleHelperActions?.Clear();
+            PossibleOffensiveActions?.Clear();
+            DetermineOthersInSight(Game.CharacterToAct);
+            Game.CharacterToAct.MpCur = Game.CharacterToAct.MpMax;
         }
     }
 }

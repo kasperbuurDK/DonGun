@@ -1,0 +1,23 @@
+﻿@using SharedClassLibrary
+@inject Containers.ActiveContainer ActiveContainer;
+
+<h3>DonActionBar</h3>
+
+<button @onclick="PressedEndTurn"> End Turn</button>
+
+@if (ActiveContainer.Game.CharacterToAct is Npc)
+{
+    <DonMover/>
+    <DonActions/>
+}
+
+@code {
+
+    private void PressedEndTurn()
+    {
+        ActiveContainer.GameMaster.EndTurn();
+        ActiveContainer.NotifyQueueHasChanged();
+        ActiveContainer.NotifyCurrentCharacterChanged();
+    }
+
+}

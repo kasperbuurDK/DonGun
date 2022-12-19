@@ -1,12 +1,35 @@
 @using DonBlazor.Containers;
+@using SharedClassLibrary
 @inject ActiveContainer ActiveContainer;
 @inject StateContainer StateContainer;
 
+<p>The Game Queue</p>
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th> Name </th>
+        <th> Team </th>
+    </tr>
+    </thead>
+    <tbody >
+    @foreach (Character character in ActiveContainer.GameMaster.Queue)
+    {
+        <tr @key=character>
+            <td> @character.Name </td> 
+            <td> @character.Team </td> 
+        </tr>
+    }
 
+    </tbody>
+
+</table>
 
 
 
 @code{
-
+    protected override void OnInitialized()
+    {
+        ActiveContainer.QueueHasChanged += StateHasChanged;
+    }
 
 }

@@ -7,10 +7,14 @@
 
 <CurrentCharacterStats/>
 
+<DonActionBar/>
 
 <TheQueue/>
 
 
 @code {
-
+    protected override void OnInitialized()
+    {
+        ActiveContainer.CurrentCharacterChanged += StateHasChanged;
+    }
 }

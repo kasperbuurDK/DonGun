@@ -1,0 +1,60 @@
+﻿@using SharedClassLibrary.Actions
+@using DonBlazor.Containers
+@using SharedClassLibrary;
+@inject ActiveContainer ActiveContainer;
+<h3>DonActions: Possible @ActiveContainer.GameMaster.PossibleActions.Count</h3>
+<p>In sight: @ActiveContainer.Game.CharacterToAct.OthersInSight.Count </p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th> Reciever </th>
+        <th> ChanceToSuceed </th>
+        <th> Type </th>
+    </tr>
+    </thead>
+    <tbody >
+    @foreach (var anAction in ActiveContainer.GameMaster.PossibleActions)
+    {
+        <tr @key=anAction>
+            <td> @CharacterFromSignature(anAction.RecieverSignature).Name </td> 
+            <td> @anAction.ChanceToSucced </td> 
+            <td> @ResolveType(anAction)  </td> 
+            <td> <button @onclick="() => MakeAction(anAction)" >Make Action</button>  </td>
+        </tr>
+    }
+
+    </tbody>
+
+</table>
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        ActiveContainer.CurrentCharacterChanged += StateHasChanged;
+    }
+
+    Character CharacterFromSignature(string locatorSignature)
+    {
+        return ActiveContainer.Game.AllCharacters.Single(character => character.Signature == locatorSignature);
+    }
+
+    private string ResolveType(IAnAction theAction)
+    {
+        return theAction switch
+        {
+            OffensiveAction => "Attack",
+            HealAlly => "Heal",
+            InspireAlly => "Inspire",
+            _ => "unknown"
+            };
+    }
+
+    private void MakeAction(IAnAction theAction)
+    {
+        var diceValue = SharedClassLibrary.AuxUtils.GameMasterHelpers.RandomRange(1, 20);
+        ActiveContainer.GameMaster.PossibleActions.Single(action => action.Signature == theAction.Signature).MakeBasicAction(diceValue, ActiveContainer.Game.CharacterToAct, CharacterFromSignature(theAction.RecieverSignature) );
+    }
+
+}
