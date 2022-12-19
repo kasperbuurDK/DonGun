@@ -1,4 +1,5 @@
 ﻿@using SharedClassLibrary
+@using SharedClassLibrary.MessageStrings
 @inject Containers.ActiveContainer ActiveContainer;
 
 <h3>DonActionBar</h3>
@@ -13,11 +14,12 @@
 
 @code {
 
-    private void PressedEndTurn()
+    private async void PressedEndTurn()
     {
         ActiveContainer.GameMaster.EndTurn();
         ActiveContainer.NotifyQueueHasChanged();
         ActiveContainer.NotifyCurrentCharacterChanged();
+        await ActiveContainer.Hub.Send(new NewTurnMessage(ActiveContainer.GameMaster.Game.Name, ActiveContainer.GameMaster.Queue, new List<string> { ActiveContainer.GameMaster.Game.CharacterToAct.Name, " - Turn To Act!"}));
     }
 
 }

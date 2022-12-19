@@ -138,7 +138,8 @@ namespace DonBlazor.Containers
                 };
                 _hub.ActionEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
                 {
-                    Console.WriteLine(e.Messege?.ToString());
+                    var temp = _gameMaster.PossibleActions.Single(action => action.Signature == e.Messege?.ActionToPerform);
+                    temp.MakeBasicAction(e.Messege.DiceValue, Game.CharacterToAct, Game.AllCharacters.Single(character => character.Signature == temp.RecieverSignature));
                 };
                
                 /*   Hub.LeaveEvent += (object? sender, HubEventArgs<ActionMessage> e) =>
