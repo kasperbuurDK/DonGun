@@ -51,11 +51,13 @@ namespace DonBlazor.Containers
         public event Action? GameChanged;
         public event Action? CharactersChanged;
         public event Action? CurrentCharacterChanged;
+        public event Action? QueueHasChanged;
 
         public void NotifyGameMasterChanged() => GameMasterChanged?.Invoke();
         public void NotifyGameChanged() => GameChanged?.Invoke();
         public void NotifyCharactersChanged() => CharactersChanged?.Invoke();
         public void NotifyCurrentCharacterChanged() => CurrentCharacterChanged?.Invoke();
+        public void NotifyQueueHasChanged() => QueueHasChanged?.Invoke();
 
         public HubService? Hub { get => _hub; set => _hub = value; }
 
