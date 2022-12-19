@@ -17,7 +17,6 @@ namespace DonGunTest
         {
             _mainCharacter = new Player("Main Player")
             {
-                Position = new Position(10, 10),
                 MpMax = 10,
                 Team = 0,
                 SightRange = 2,
@@ -27,26 +26,26 @@ namespace DonGunTest
             _gameMaster = new GameMaster(new Game());
             _gameMaster.AddCharacterToGame(_mainCharacter);
 
-
         }
 
         private void CreateNewEnemyNearby()
         {
             _gameMaster.AddCharacterToGame(new Npc()
             {
-                Position = new Position(_mainCharacter.Position.X - 1, _mainCharacter.Position.Y - 1),
                 Team = _mainCharacter.Team + 1,
             });
+
+            _gameMaster.Game.NonHumanPlayers.First().Position = new Position(_mainCharacter.Position.X +1, _mainCharacter.Position.Y);
 
         }
 
         private void CreateNewFriendNearby()
         {
-            _gameMaster.AddCharacterToGame(new Player("Friend")
-            {
-                Position = new Position(_mainCharacter.Position.X + 1, _mainCharacter.Position.Y + 1),
-                Team = _mainCharacter.Team,
-            });
+            Player friend = new Player("Friend");
+            friend.Team= _mainCharacter.Team;
+            _gameMaster.AddCharacterToGame(friend);
+            
+            friend.Position = new Position(_mainCharacter.Position.X + 1, _mainCharacter.Position.Y);
 
         }
 
@@ -54,9 +53,9 @@ namespace DonGunTest
         [TestCase(MoveDirections.East, 1, 11, 10)]
         [TestCase(MoveDirections.South, 1, 10, 9)]
         [TestCase(MoveDirections.West, 1, 9, 10)]
-
         public void Character_moves_correct(MoveDirections direction, int distance, int endX, int endY)
         {
+            _mainCharacter.Position = new Position(10, 10);
             _gameMaster.Move(_mainCharacter, direction, distance);
 
             Assert.That(_mainCharacter.Position, Is.EqualTo(new Position(endX, endY)));
@@ -115,7 +114,7 @@ namespace DonGunTest
             _mainCharacter.Facing = MoveDirections.North;
 
             // Act
-            string moveStatus = _gameMaster.Move(_mainCharacter, MoveDirections.South, 4);
+            string moveStatus = _gameMaster.Move(_mainCharacter, MoveDirections.South, distance);
 
             // Assert
             Assert.That(_mainCharacter.MpCur, Is.EqualTo(10 - expectedCost));
@@ -139,29 +138,27 @@ namespace DonGunTest
 
             for (int i = 0; i < noOfOtherCharacteres; i++)
             {
-                Character otherCharacter = new Npc()
-                {
-                    Position = new Position(9, 9),
-                };
-
+                Character otherCharacter = new Npc();
                 _gameMaster.AddCharacterToGame(otherCharacter);
+                otherCharacter.Position= new Position(_mainCharacter.Position.X + 2*i, _mainCharacter.Position.Y );
             }
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(noOfOtherCharacteres));
+            Assert.That(_mainCharacter.OthersInSight, Has.Count.EqualTo(noOfOtherCharacteres));
         }
 
         [Test]
         public void Current_character_dont_see_any_when_there_are_none_in_range()
         {
-
             _mainCharacter.SightRange = 2;
             _mainCharacter.Position = new Position(10, 10);
 
-            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) });
+            Npc npc = new Npc();
+            _gameMaster.AddCharacterToGame(npc);
+            npc.Position = new Position(_mainCharacter.Position.X + 2*_mainCharacter.SightRange, _mainCharacter.Position.Y);
 
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
-            Assert.That(_mainCharacter.OthersInSight.Count, Is.EqualTo(0));
+            Assert.That(_mainCharacter.OthersInSight, Has.Count.EqualTo(0));
         }
 
         [Test]
@@ -176,11 +173,16 @@ namespace DonGunTest
         private void CreateTwoNPSInSightAndOneOutOfSight()
         {
             _mainCharacter.SightRange = 2;
-            _mainCharacter.Position = new Position(10, 10);
+            
+            _gameMaster.AddCharacterToGame(new Npc()); 
+            _gameMaster.AddCharacterToGame(new Npc()); 
+            _gameMaster.AddCharacterToGame(new Npc()); 
 
-            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 7) }); // Not in range
-            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(10, 9) }); // In range
-            _gameMaster.AddCharacterToGame(new Npc() { Position = new Position(9, 9) }); // In range
+            for (int i = 0; i < _gameMaster.Game.NonHumanPlayers.Count; i++)
+            {
+                _gameMaster.Game.NonHumanPlayers[i].Position = new Position(_mainCharacter.Position.X + 1 + i, _mainCharacter.Position.Y);
+            }
+
         }
 
         [Test]
@@ -209,20 +211,19 @@ namespace DonGunTest
         public void Taking_offensive_action_hits_approx_as_much_as_ChanceToHit(int distanceToMainChar)
         {
             int timesTakingAction = 1000000;
-
             Npc npc = new Npc()
             {
-                Position = new Position(_mainCharacter.Position.X - distanceToMainChar, _mainCharacter.Position.Y),
-                Team = 1,
+                Team = _mainCharacter.Team +1
             };
             _gameMaster.AddCharacterToGame(npc);
+            npc.Position = new Position(_mainCharacter.Position.X + distanceToMainChar, _mainCharacter.Position.Y);
             _mainCharacter.SightRange = 200;
             _gameMaster.Move(_mainCharacter, MoveDirections.North, 0);
 
             int timesHit = 0;
             int diceValue = 10;
 
-            Parallel.For(0, timesTakingAction,
+             var  result = Parallel.For(0, timesTakingAction,
                            index =>
                            {
                                if (_gameMaster.PossibleOffensiveActions[0].MakeBasicAction(diceValue, _mainCharacter, npc))
@@ -239,7 +240,6 @@ namespace DonGunTest
             if (maxBoundary > timesTakingAction) { maxBoundary = timesTakingAction; }
             if (minBoundary > timesTakingAction) { minBoundary = timesTakingAction; }
 
-
             Assert.That(timesHit, Is.AtLeast(minBoundary));
             Assert.That(timesHit, Is.AtMost(maxBoundary));
         }
@@ -247,7 +247,6 @@ namespace DonGunTest
         [Test]
         public void Hitting_character_applies_damage()
         {
-
             int startHealth = 100;
             int diceValue = 10;
 

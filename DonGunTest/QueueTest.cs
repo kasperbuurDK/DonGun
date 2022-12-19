@@ -41,9 +41,7 @@ namespace DonGunTest
         [Test]
         public void Queue_lengt_match_lengt_og_all_characters()
         {
-
             _gameMaster.StartEncounter();
-
             Assert.That(_gameMaster.Queue.Count, Is.EqualTo(6));
         }
 
